@@ -4,7 +4,7 @@
 
 // BACKEND HOOK: Move to a server-side environment variable.
 // Never expose real passwords in client JS for production use.
-const CORRECT_PASSWORD = 'test123';
+const CORRECT_PASSWORD = 'FXWc8bG0&xmsNm(n=cAG1F#%&=r$WVP9*CS2%zB^r?E(#XD^yFR&9';
 
 // Path to the gated file.
 // BACKEND HOOK: Replace with a server-generated signed URL (e.g. AWS S3
