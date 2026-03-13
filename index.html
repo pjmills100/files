@@ -207,6 +207,7 @@
       font-size:1.3rem;border:1px solid var(--border);
     }
     .flip-front{background:var(--surface2)}
+    .flip-num{font-family:var(--font-mono);font-size:.75rem;color:var(--muted);pointer-events:none;}
     .flip-back{background:var(--accent-dim);border-color:var(--accent);transform:rotateY(180deg)}
     .flip-card.matched .flip-front,.flip-card.matched .flip-back{border-color:var(--success);background:#00ffb318}
     .flip-card.wrong-pair .flip-inner{animation:wrongFlip .5s ease}
@@ -635,12 +636,29 @@ function advancePuzzle(){
   puzzleIndex++;
   const remaining=TOTAL_PUZZLES-puzzleIndex;
   if(puzzleIndex<TOTAL_PUZZLES){
-    showMsg(document.getElementById('puzzleMsg'),'success',`✓ Correct! ${remaining} challenge${remaining>1?'s':''} remaining…`);
+    showMsg(document.getElementById('puzzleMsg'),'success',`Correct! ${remaining} challenge${remaining>1?'s':''} remaining...`);
     setTimeout(()=>{showStep('step-puzzle');loadPuzzle()},900);
   }else{
-    showMsg(document.getElementById('puzzleMsg'),'success','All 5 challenges solved! Unlocking…');
+    showMsg(document.getElementById('puzzleMsg'),'success','All 5 challenges solved! Unlocking...');
     setTimeout(()=>showStep('step-download'),900);
   }
+}
+
+// FAIL A PUZZLE: step back one, replace that slot with a new puzzle of same type
+function failPuzzle(){
+  const failedType=puzzleQueue[puzzleIndex].uiType;
+  // Step back (never below 0)
+  puzzleIndex=Math.max(0,puzzleIndex-1);
+  // Pick a fresh puzzle of the same type that isn't already in the queue
+  const pool=PUZZLE_BANK.filter(p=>p.uiType===failedType);
+  const usedQs=new Set(puzzleQueue.map(p=>p.question));
+  const fresh=shuffle(pool).find(p=>!usedQs.has(p.question));
+  puzzleQueue[puzzleIndex]=fresh||pool[Math.floor(Math.random()*pool.length)];
+  // Show fail message then reload
+  const goingTo=puzzleIndex+1;
+  showMsg(document.getElementById('puzzleMsg'),'error',
+    `Wrong! Sent back to Challenge ${goingTo} with a new puzzle...`);
+  setTimeout(()=>{showStep('step-puzzle');loadPuzzle();},1400);
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -718,17 +736,17 @@ function checkPuzzle(){
     const inp=document.getElementById('puzzleInput');
     if(!raw){showMsg(msg,'error','Please enter an answer.');return}
     if(raw.toLowerCase()===p.answer.toLowerCase()){setInput(inp,'ok');advancePuzzle();}
-    else{setInput(inp,'error');showMsg(msg,'error','Not quite — try again!');shake(inp);}
+    else{setInput(inp,'error');failPuzzle();}
 
   }else if(p.uiType==='order'){
     const current=[...document.querySelectorAll('.drag-item')].map(el=>el.dataset.val);
     if(JSON.stringify(current)===JSON.stringify(p.answer)){advancePuzzle();}
-    else{showMsg(msg,'error','Wrong order — keep rearranging!');shake(document.getElementById('puzzleWidget'));}
+    else{failPuzzle();}
 
   }else if(p.uiType==='slider'){
     const val=parseInt(document.getElementById('puzzleSlider').value);
     if(val===p.answer){advancePuzzle();}
-    else{showMsg(msg,'error',`You set ${val} — that's not right!`);shake(document.getElementById('puzzleWidget'));}
+    else{failPuzzle();}
   }
 }
 
@@ -746,8 +764,7 @@ function buildChoiceWidget(p,container){
       if(opt===p.answer){btn.classList.add('correct');advancePuzzle();}
       else{
         btn.classList.add('wrong');
-        setTimeout(()=>btn.classList.remove('wrong'),500);
-        showMsg(document.getElementById('puzzleMsg'),'error','Wrong — try another!');
+        setTimeout(()=>{btn.classList.remove('wrong');failPuzzle();},500);
       }
     });
     grid.appendChild(btn);
@@ -868,9 +885,8 @@ function buildSeqWidget(p,container){
       const step=userInput.length-1;
       if(userInput[step]!==p.sequence[step]){
         accepting=false;cell.classList.add('wrong');
-        hint.textContent='Wrong! Replaying…';
-        showMsg(document.getElementById('puzzleMsg'),'error','Wrong tile — watch again!');
-        setTimeout(()=>{cell.classList.remove('wrong');clearMsg(document.getElementById('puzzleMsg'));playSequence()},1000);
+        hint.textContent='Wrong!';
+        setTimeout(()=>{cell.classList.remove('wrong');failPuzzle();},700);
         return;
       }
       if(userInput.length===p.sequence.length){accepting=false;hint.textContent='✓ Correct!';advancePuzzle();}
@@ -884,14 +900,54 @@ function buildSeqWidget(p,container){
 //  WIDGET: MATCH / WIRE
 // ════════════════════════════════════════════════════════════════
 function buildWireWidget(p,container){
+  const MAX_ATTEMPTS = 10;
   const leftItems =shuffle(p.pairs.map(pr=>pr.left));
   const rightItems=shuffle(p.pairs.map(pr=>pr.right));
   const pairMap={};p.pairs.forEach(pr=>{pairMap[pr.left]=pr.right});
   const wrap=document.createElement('div');wrap.className='wire-wrap';
+
+  // Attempts counter bar
+  const attemptsBar=document.createElement('div');
+  attemptsBar.style.cssText='display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;';
+  const attemptsLabel=document.createElement('span');
+  attemptsLabel.id='wireAttemptsLabel';
+  attemptsLabel.style.cssText='font-family:var(--font-mono);font-size:.7rem;color:var(--muted);';
+  attemptsLabel.textContent='Attempts: 0 / '+MAX_ATTEMPTS;
+  const pipRow=document.createElement('div');pipRow.style.cssText='display:flex;gap:4px;';
+  const attemptPips=[];
+  for(let i=0;i<MAX_ATTEMPTS;i++){
+    const pip=document.createElement('div');
+    pip.style.cssText='width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .2s;';
+    pipRow.appendChild(pip);attemptPips.push(pip);
+  }
+  attemptsBar.appendChild(attemptsLabel);attemptsBar.appendChild(pipRow);
+  wrap.appendChild(attemptsBar);
+
   const cols=document.createElement('div');cols.className='wire-cols';
   const leftCol=document.createElement('div');leftCol.className='wire-col';
   const rightCol=document.createElement('div');rightCol.className='wire-col';
   let selectedLeft=null;const matched=new Set();
+  let attempts=0;
+
+  function updateAttempts(wasWrong){
+    if(wasWrong){
+      const pip=attemptPips[attempts];
+      if(pip)pip.style.background='var(--error)';
+      attempts++;
+      attemptsLabel.textContent='Attempts: '+attempts+' / '+MAX_ATTEMPTS;
+      attemptsLabel.style.color=attempts>=MAX_ATTEMPTS-2?'var(--error)':'var(--muted)';
+      if(attempts>=MAX_ATTEMPTS){
+        setTimeout(()=>failPuzzle(),600);
+        return true; // failed
+      }
+    }else{
+      // correct match — fill pip green
+      const pip=attemptPips[attempts];
+      if(pip)pip.style.background='var(--success)';
+    }
+    return false;
+  }
+
   function makeItem(text,side,col){
     const el=document.createElement('div');
     el.className='wire-item';el.textContent=text;el.dataset.val=text;
@@ -905,13 +961,19 @@ function buildWireWidget(p,container){
           const lEl=[...leftCol.querySelectorAll('.wire-item')].find(i=>i.dataset.val===selectedLeft);
           lEl.classList.remove('selected');lEl.classList.add('matched');el.classList.add('matched');
           matched.add(selectedLeft);selectedLeft=null;
+          updateAttempts(false);
           if(matched.size===p.pairs.length)setTimeout(()=>advancePuzzle(),400);
         }else{
           const lEl=[...leftCol.querySelectorAll('.wire-item')].find(i=>i.dataset.val===selectedLeft);
           [lEl,el].forEach(e=>{e.classList.add('wrong-flash');setTimeout(()=>e.classList.remove('wrong-flash'),400)});
           lEl.classList.remove('selected');selectedLeft=null;
-          showMsg(document.getElementById('puzzleMsg'),'error','Not a match — try again!');
-          setTimeout(()=>clearMsg(document.getElementById('puzzleMsg')),1200);
+          const failed=updateAttempts(true);
+          if(!failed){
+            const remaining=MAX_ATTEMPTS-attempts;
+            showMsg(document.getElementById('puzzleMsg'),'error',
+              `Not a match! ${remaining} attempt${remaining!==1?'s':''} remaining.`);
+            setTimeout(()=>clearMsg(document.getElementById('puzzleMsg')),1200);
+          }
         }
       }
     });
@@ -927,35 +989,66 @@ function buildWireWidget(p,container){
 //  WIDGET: FLIP / MEMORY MATCH
 // ════════════════════════════════════════════════════════════════
 function buildFlipWidget(p,container){
-  const hint=document.createElement('div');hint.className='flip-hint';hint.id='flipHint';hint.textContent='Find all 4 matching pairs!';
+  const hint=document.createElement('div');hint.className='flip-hint';hint.id='flipHint';
+  hint.textContent='Find all 4 matching pairs! (Click tiles or press 1–8)';
   const grid=document.createElement('div');grid.className='flip-grid';
-  // Duplicate pairs and shuffle
+
   const tiles=shuffle([...p.pairs,...p.pairs]);
   let flipped=[],matched=0,locked=false;
+  const cardEls=[];
+
   tiles.forEach((emoji,i)=>{
-    const card=document.createElement('div');card.className='flip-card';card.dataset.emoji=emoji;card.dataset.idx=i;
-    card.innerHTML=`<div class="flip-inner"><div class="flip-front">?</div><div class="flip-back">${emoji}</div></div>`;
-    card.addEventListener('click',()=>{
-      if(locked||card.classList.contains('flipped')||card.classList.contains('matched'))return;
-      card.classList.add('flipped');flipped.push(card);
-      if(flipped.length===2){
-        locked=true;
-        const[a,b]=flipped;
-        if(a.dataset.emoji===b.dataset.emoji){
-          a.classList.add('matched');b.classList.add('matched');
-          matched++;flipped=[];locked=false;
-          hint.textContent=matched===p.pairs.length?'✓ All matched!':` ${p.pairs.length-matched} pair${p.pairs.length-matched>1?'s':''} left…`;
-          if(matched===p.pairs.length)setTimeout(()=>advancePuzzle(),500);
-        }else{
-          hint.textContent='No match — try to remember where they are!';
-          setTimeout(()=>{a.classList.remove('flipped');b.classList.remove('flipped');flipped=[];locked=false;hint.textContent=`${p.pairs.length-matched} pair${p.pairs.length-matched>1?'s':''} left…`},1100);
-        }
-      }
-    });
+    const card=document.createElement('div');card.className='flip-card';
+    card.dataset.emoji=emoji;card.dataset.idx=i;
+    card.innerHTML=`<div class="flip-inner"><div class="flip-front"><span class="flip-num">${i+1}</span></div><div class="flip-back">${emoji}</div></div>`;
+    card.addEventListener('click',()=>flipCard(card));
+    cardEls.push(card);
     grid.appendChild(card);
   });
+
+  function flipCard(card){
+    if(locked||card.classList.contains('flipped')||card.classList.contains('matched'))return;
+    card.classList.add('flipped');flipped.push(card);
+    if(flipped.length===2){
+      locked=true;
+      const[a,b]=flipped;
+      if(a.dataset.emoji===b.dataset.emoji){
+        a.classList.add('matched');b.classList.add('matched');
+        matched++;flipped=[];locked=false;
+        const left=p.pairs.length-matched;
+        hint.textContent=matched===p.pairs.length?'✓ All matched!':`${left} pair${left>1?'s':''} left…`;
+        if(matched===p.pairs.length)setTimeout(()=>advancePuzzle(),500);
+      }else{
+        hint.textContent='No match!';
+        setTimeout(()=>{a.classList.remove('flipped');b.classList.remove('flipped');flipped=[];locked=false;failPuzzle();},900);
+      }
+    }
+  }
+
+  // Physical keyboard: press 1-8 to flip the corresponding tile
+  let kbListener=function(e){
+    if(!document.getElementById('step-puzzle').classList.contains('active'))return;
+    if(e.ctrlKey||e.metaKey)return;
+    const n=parseInt(e.key);
+    if(n>=1&&n<=cardEls.length){
+      e.preventDefault();
+      flipCard(cardEls[n-1]);
+    }
+  };
+  document.addEventListener('keydown',kbListener);
+
+  // Clean up listener when widget is swapped out
+  const observer=new MutationObserver(()=>{
+    if(!document.body.contains(grid)){
+      document.removeEventListener('keydown',kbListener);
+      observer.disconnect();
+    }
+  });
+  observer.observe(document.getElementById('puzzleWidget'),{childList:true});
+
   container.appendChild(hint);container.appendChild(grid);
 }
+
 
 // ════════════════════════════════════════════════════════════════
 //  WIDGET: TYPE THE WORD (on-screen keyboard)
@@ -963,6 +1056,7 @@ function buildFlipWidget(p,container){
 function buildTypeWordWidget(p,container){
   const answer=p.answer.toUpperCase();
   let typed='';
+  let kbListener=null; // track so we can remove it when puzzle changes
 
   const wrap=document.createElement('div');wrap.className='typeword-wrap';
 
@@ -977,6 +1071,8 @@ function buildTypeWordWidget(p,container){
   // On-screen keyboard
   const rows=[['Q','W','E','R','T','Y','U','I','O','P'],['A','S','D','F','G','H','J','K','L'],['Z','X','C','V','B','N','M','1','2','3','4','5','6','7','8','9','0','⌫']];
   const kbWrap=document.createElement('div');kbWrap.className='typeword-keyboard';
+  // Map key char -> button element so we can highlight physical keypresses
+  const keyEls={};
 
   function updateDisplay(){
     const boxes=[...display.querySelectorAll('.typeword-letter')];
@@ -987,20 +1083,22 @@ function buildTypeWordWidget(p,container){
     });
   }
 
+  let inputLocked=false;
   function handleKey(k){
-    if(k==='⌫'){
+    if(inputLocked)return;
+    if(k==='⌫'||k==='BACKSPACE'){
       typed=typed.slice(0,-1);updateDisplay();
     }else if(typed.length<answer.length){
       typed+=k;updateDisplay();
       if(typed.length===answer.length){
+        inputLocked=true;
         const boxes=[...display.querySelectorAll('.typeword-letter')];
         if(typed===answer){
           boxes.forEach(b=>{b.classList.remove('filled');b.classList.add('correct-letter')});
           setTimeout(()=>advancePuzzle(),600);
         }else{
           boxes.forEach(b=>{b.classList.remove('filled');b.classList.add('wrong-letter')});
-          setTimeout(()=>{typed='';boxes.forEach(b=>{b.className='typeword-letter';b.textContent='_'});
-            showMsg(document.getElementById('puzzleMsg'),'error','Not right — try again!');},700);
+          setTimeout(()=>failPuzzle(),800);
         }
       }
     }
@@ -1013,14 +1111,47 @@ function buildTypeWordWidget(p,container){
       key.className='kb-key'+(k==='⌫'?' kb-del':'');
       key.textContent=k;
       key.addEventListener('click',()=>handleKey(k));
+      keyEls[k]=key;
       rowEl.appendChild(key);
     });
     kbWrap.appendChild(rowEl);
   });
 
+  // Physical keyboard listener — attach to document, clean up when widget is replaced
+  kbListener=function(e){
+    // Only fire when typeword puzzle is active
+    if(!document.getElementById('step-puzzle').classList.contains('active'))return;
+    if(e.ctrlKey||e.metaKey||e.altKey)return;
+    const k=e.key.toUpperCase();
+    if(k==='BACKSPACE'){
+      e.preventDefault();
+      // Flash the backspace key
+      const delBtn=keyEls['⌫'];
+      if(delBtn){delBtn.style.background='var(--accent-dim)';setTimeout(()=>delBtn.style.background='',150);}
+      handleKey('BACKSPACE');
+    }else if(/^[A-Z0-9]$/.test(k)){
+      e.preventDefault();
+      // Flash the on-screen key
+      const btn=keyEls[k];
+      if(btn){btn.style.background='var(--accent-dim)';setTimeout(()=>btn.style.background='',150);}
+      handleKey(k);
+    }
+  };
+  document.addEventListener('keydown',kbListener);
+
+  // Clean up listener when the widget container is removed (next puzzle loads)
+  const observer=new MutationObserver(()=>{
+    if(!document.body.contains(wrap)){
+      document.removeEventListener('keydown',kbListener);
+      observer.disconnect();
+    }
+  });
+  observer.observe(document.getElementById('puzzleWidget'),{childList:true});
+
   wrap.appendChild(kbWrap);
   container.appendChild(wrap);
 }
+
 
 // ════════════════════════════════════════════════════════════════
 //  BLOCK COPY/PASTE
