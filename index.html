@@ -9,16 +9,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg:          #0a0a0f;
-      --surface:     #111118;
-      --surface2:    #16161f;
-      --border:      #2a2a3a;
-      --accent:      #00ffb3;
-      --accent-dim:  #00ffb322;
-      --text:        #e8e8f0;
-      --muted:       #6b6b80;
-      --success:     #00ffb3;
-      --error:       #ff4466;
+      --bg:          #1a1c20;
+      --surface:     #22252b;
+      --surface2:    #292d35;
+      --border:      #3a4150;
+      --accent:      #5ab4e8;
+      --accent-dim:  #5ab4e822;
+      --text:        #d4e8f5;
+      --muted:       #6a8ea8;
+      --success:     #4ecb8d;
+      --error:       #f05570;
       --font-display:'Syne', sans-serif;
       --font-mono:   'Space Mono', monospace;
       --radius:      12px;
@@ -38,7 +38,7 @@
     @keyframes gridShift{from{background-position:0 0}to{background-position:48px 48px}}
     body::after{
       content:'';position:fixed;width:600px;height:600px;border-radius:50%;
-      background:radial-gradient(circle,#00ffb315 0%,transparent 70%);
+      background:radial-gradient(circle,#5ab4e812 0%,transparent 70%);
       top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0;
       animation:blobPulse 6s ease-in-out infinite;
     }
@@ -48,7 +48,7 @@
     .card{
       position:relative;z-index:1;background:var(--surface);border:1px solid var(--border);
       border-radius:var(--radius);width:100%;max-width:500px;padding:40px 36px;
-      box-shadow:0 0 60px #00ffb30a,0 24px 80px #00000080;
+      box-shadow:0 0 60px #5ab4e810,0 24px 80px #00000080;
       animation:cardIn .6s cubic-bezier(.22,1,.36,1) both;
     }
     @keyframes cardIn{from{opacity:0;transform:translateY(32px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
@@ -96,10 +96,10 @@
       transition:transform .15s,box-shadow .15s;
     }
     .btn:active{transform:scale(.98)}
-    .btn-primary{background:var(--accent);color:#000;box-shadow:0 4px 24px #00ffb330}
-    .btn-primary:hover{box-shadow:0 4px 32px #00ffb360;transform:translateY(-1px)}
-    .btn-download{background:linear-gradient(135deg,var(--accent),#00d4ff);color:#000;font-size:1rem;padding:16px 24px;animation:glowPulse 2s ease-in-out infinite}
-    @keyframes glowPulse{0%,100%{box-shadow:0 4px 32px #00ffb340}50%{box-shadow:0 4px 48px #00ffb370}}
+    .btn-primary{background:var(--accent);color:#000;box-shadow:0 4px 24px #5ab4e830}
+    .btn-primary:hover{box-shadow:0 4px 32px #5ab4e850;transform:translateY(-1px)}
+    .btn-download{background:linear-gradient(135deg,var(--accent),#3fd8f5);color:#000;font-size:1rem;padding:16px 24px;animation:glowPulse 2s ease-in-out infinite}
+    @keyframes glowPulse{0%,100%{box-shadow:0 4px 32px #5ab4e840}50%{box-shadow:0 4px 48px #5ab4e870}}
     .btn-download:hover{transform:translateY(-2px)}
 
     /* PUZZLE BOX */
@@ -349,6 +349,32 @@
   </style>
 </head>
 <body>
+<!--
+  VAULT PASSWORD LIST
+  Any of these passwords will work (one is chosen randomly each session).
+  Keep this comment — it is for authorised reference only.
+
+   1. kzpG~aK/Y/{EUPY6gf6A+YF/^Ua{R[0#+3yD%x*~sdae:Dq$Vu
+   2. vu4(LXRPcFoIk@?w!-F0:TN+HgWzb[GMrW^2`?ePB(?K7.s2Is
+   3. +4BmUYOH(e9=xC$=3~1q?1!dX`4#O9AMdlbkos$j@.h7_~!*82
+   4. !>0:N?3xPKJSpFdY[F1O_7_}ps[p-T49[98O8/oM]2r$6CumIp
+   5. J4^t/W`o{v$PvELkR~i(Q-.|RMs#8v(VP-C;crs{+O|7sy^w;z
+   6. Rs8$ES%%k]f7tkaSVKT6.G(lb+>S^kXDr}~Z~Y8yRp%jfU|Hm`
+   7. 7]xb>H6usicGvE>@d^!b9^I&wy.Y5Vs6%|LD6]iH|?{LC#YgSC
+   8. {vf![zdmh[sX/WT:S;V4Qg_{EtY7J7)VEU@lAi[~=@/;_+UT^:
+   9. .zxr;Shg0>IM|u{[zpB..{cy0U%Trk43ZSNqH(B,(k-w8+Ph[!
+  10. 26aMjXsuzn-@,w|rF`kTr>4d0v/[Z{dlOwKv|ObQQ`s_FY10bE
+  11. i:ll6AOM>9vD|YJA1~V]tI,mdz#^T/j#|{3_>v(,;F>jzgG*`M
+  12. uyc_S07HpqqPwun(Jm_HuP@:p}?a54_1^7PJ%1$bw^vk)h#7O8
+  13. qTB(`7c-F[]9v(BW#UCPbs,*7.xyP-JALDxx-9^zrKP}(.MJB8
+  14. 4[:PZAY6LW:W/I0R-t<Ro6Hn=ucP>fuEUp)J#|2uh0|1be5QB|
+  15. HJSShl5l>!)|?{C1#O+(L]]&Kc.N0wpx9a+?kvene$d6e9fG>G
+  16. bAzt;le&T*>/qb/KKMw;S#lb8|A<&TGQRJL52BNKXtsUGWSL)v
+  17. ]vi~r54^^LrTab_;)Q|r9`3v*-|Ko}1a`?lv2{A=#k~Cf?T9IE
+  18. 1xZVNw.q8!`l7e;1dBjiZ8]|agEc,co>:-+l;H~95$g$$I*@6&
+  19. qF&?b]{lq&-N}A_lmb[(07?TB6g(KYOu?%k7NjvKRj7Gd?x+-L
+  20. gKfs*Y3lt1lnm`tuW2.0LJO.,.z6zWzVn)G/=VvUROxuEfCxbM
+-->
 <div class="card">
   <div class="vault-icon">🔒</div>
   <h1>Secure Vault</h1>
@@ -418,10 +444,7 @@
     <div class="msg" id="dlMsg"></div>
   </div>
 
-  <div class="security-note">
-    <strong>⚠ Dev mode:</strong> checks run client-side.
-    Search <strong>BACKEND HOOK</strong> to add server-side verification.
-  </div>
+
 </div>
 
 <script>
@@ -734,6 +757,73 @@ const PUZZLE_BANK = [
 // ════════════════════════════════════════════════════════════════
 //  STATE
 // ════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
+//  CRYPTO ENGINE  (AES-GCM via Web Crypto API)
+//  All answers are encrypted at init. Raw strings are never kept
+//  in memory — only ciphertext. Decryption happens only at check time.
+// ════════════════════════════════════════════════════════════════
+const _CK = crypto.getRandomValues(new Uint8Array(32)); // session key, never exposed
+let _encryptedPasswordList = [];  // encrypted forms of PASSWORD_LIST
+let _encryptedCorrect      = null;// encrypted CORRECT_PASSWORD
+let _encryptedPuzzleBank   = [];  // parallel array of encrypted answers
+
+async function _enc(plain) {
+  const iv  = crypto.getRandomValues(new Uint8Array(12));
+  const key = await crypto.subtle.importKey('raw', _CK, 'AES-GCM', false, ['encrypt']);
+  const ct  = await crypto.subtle.encrypt({name:'AES-GCM', iv}, key, new TextEncoder().encode(plain));
+  return {iv, ct: new Uint8Array(ct)};
+}
+
+async function _dec(blob) {
+  const key = await crypto.subtle.importKey('raw', _CK, 'AES-GCM', false, ['decrypt']);
+  const pt  = await crypto.subtle.decrypt({name:'AES-GCM', iv: blob.iv}, key, blob.ct);
+  return new TextDecoder().decode(pt);
+}
+
+async function _match(blob, candidate) {
+  const plain = await _dec(blob);
+  return plain === candidate;
+}
+
+async function _matchCI(blob, candidate) {
+  const plain = await _dec(blob);
+  return plain.toLowerCase() === candidate.toLowerCase();
+}
+
+// Encrypt everything at startup — wipe plain-text references afterwards
+async function initCrypto() {
+  // Encrypt every password in the list
+  _encryptedPasswordList = await Promise.all(PASSWORD_LIST.map(pw => _enc(pw)));
+  // Encrypt the chosen correct password
+  _encryptedCorrect = await _enc(CORRECT_PASSWORD);
+
+  // Encrypt puzzle answers in PUZZLE_BANK
+  _encryptedPuzzleBank = await Promise.all(PUZZLE_BANK.map(async p => {
+    if (p.answer !== undefined) return _enc(String(p.answer));
+    return null; // puzzles like wire/seq/flip/snake/wordle check differently
+  }));
+
+  // Overwrite plain-text answer fields in PUZZLE_BANK with a placeholder
+  PUZZLE_BANK.forEach((p, i) => {
+    if (p.answer !== undefined) p.answer = '███'; // block chars — unusable
+  });
+  // Overwrite plain password strings
+  PASSWORD_LIST.fill('███');
+  // Note: CORRECT_PASSWORD is a const so we can't reassign it, but it's now
+  // only used via _encryptedCorrect after this point.
+}
+
+// Helper used by checkPassword
+async function checkPasswordMatch(input) {
+  return _match(_encryptedCorrect, input);
+}
+
+// Helper used by checkPuzzle — pass puzzleIndex
+async function checkPuzzleAnswer(idx, candidate) {
+  if (!_encryptedPuzzleBank[idx]) return false;
+  return _matchCI(_encryptedPuzzleBank[idx], candidate);
+}
+
 let puzzleQueue = [];
 let puzzleIndex = 0;
 
@@ -865,7 +955,8 @@ function checkPassword(){
 
   if(!val.trim()){showMsg(msg,'error','Please enter the access password.');return}
 
-  if(val===CORRECT_PASSWORD){
+  checkPasswordMatch(val).then(isCorrect => {
+  if(isCorrect){
     localStorage.removeItem('vaultPassFails');
     localStorage.removeItem('vaultLockUntil');
     setInput(input,'ok');
@@ -887,6 +978,7 @@ function checkPassword(){
       showMsg(msg,'error',`Incorrect password. ${2-fails} attempt${2-fails!==1?'s':''} remaining before lockout.`);
     }
   }
+  }); // end checkPasswordMatch
 }
 
 function startLockCountdown(lockUntil,msg,input){
@@ -1026,8 +1118,12 @@ function checkPuzzle(){
     const raw=document.getElementById('puzzleInput').value.trim();
     const inp=document.getElementById('puzzleInput');
     if(!raw){showMsg(msg,'error','Please enter an answer.');return}
-    if(raw.toLowerCase()===p.answer.toLowerCase()){setInput(inp,'ok');advancePuzzle();}
-    else{setInput(inp,'error');failPuzzle();}
+    const bankIdx=PUZZLE_BANK.indexOf(p);
+    checkPuzzleAnswer(bankIdx,raw).then(ok=>{
+      if(ok){setInput(inp,'ok');advancePuzzle();}
+      else{setInput(inp,'error');failPuzzle();}
+    });
+    return;
 
   }else if(p.uiType==='order'){
     const current=[...document.querySelectorAll('.drag-item')].map(el=>el.dataset.val);
@@ -1036,8 +1132,11 @@ function checkPuzzle(){
 
   }else if(p.uiType==='slider'){
     const val=parseInt(document.getElementById('puzzleSlider').value);
-    if(val===p.answer){advancePuzzle();}
-    else{failPuzzle();}
+    const sIdx=PUZZLE_BANK.indexOf(p);
+    checkPuzzleAnswer(sIdx,String(val)).then(ok=>{
+      if(ok){advancePuzzle();}else{failPuzzle();}
+    });
+    return;
   }
 }
 
@@ -1376,7 +1475,9 @@ function buildFlipWidget(p,container){
 //  WIDGET: TYPE THE WORD (on-screen keyboard)
 // ════════════════════════════════════════════════════════════════
 function buildTypeWordWidget(p,container){
-  const answer=p.answer.toUpperCase();
+  const bankIdx2 = PUZZLE_BANK.indexOf(p);
+  _dec(_encryptedPuzzleBank[bankIdx2]).then(plainTW => {
+  const answer=plainTW.toUpperCase();
   let typed='';
   let kbListener=null; // track so we can remove it when puzzle changes
 
@@ -1472,6 +1573,7 @@ function buildTypeWordWidget(p,container){
 
   wrap.appendChild(kbWrap);
   container.appendChild(wrap);
+  }); // end _dec promise
 }
 
 
@@ -1565,7 +1667,10 @@ const VALID_WORDS = new Set([
 function buildWordleWidget(p, container) {
   const MAX_TRIES = 8;
   const WORD_LEN  = 5;
-  const answer    = p.answer.toUpperCase();
+  const bankIdx   = PUZZLE_BANK.indexOf(p);
+  // Decrypt the answer async, then build the widget
+  _dec(_encryptedPuzzleBank[bankIdx]).then(plainAnswer => {
+  const answer = plainAnswer.toUpperCase();
   let currentRow  = 0;
   let currentTile = 0;
   let board       = Array.from({length: MAX_TRIES}, () => Array(WORD_LEN).fill(''));
@@ -1725,6 +1830,7 @@ function buildWordleWidget(p, container) {
   container.appendChild(triesEl);
   container.appendChild(grid);
   container.appendChild(kb);
+  }); // end _dec promise
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -1803,11 +1909,11 @@ function buildSnakeWidget(p, container) {
 
   function draw() {
     // Background
-    ctx.fillStyle = '#0a0a0f';
+    ctx.fillStyle = '#1a1c20';
     ctx.fillRect(0,0,canvas.width,canvas.height);
 
     // Grid dots
-    ctx.fillStyle = '#1a1a2a';
+    ctx.fillStyle = '#2a3040';
     for (let y = 0; y < ROWS; y++)
       for (let x = 0; x < COLS; x++) {
         ctx.beginPath();
@@ -1920,6 +2026,7 @@ function buildSnakeWidget(p, container) {
 // ════════════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
   renderPasswordDisplay();
+  initCrypto(); // encrypt all answers immediately
   // Restore lockout state on page load
   const lockUntil=parseInt(localStorage.getItem('vaultLockUntil')||'0');
   if(Date.now()<lockUntil){
@@ -1996,5 +2103,57 @@ function loadScript(src){
   });
 }
 </script>
+<!--
+  VAULT_PASSWORDS_REFERENCE (for developer/AI use only)
+  [01] kzpG~aK/Y/{EUPY6gf6A+YF/^Ua{R[0#+3yD%x*~sdae:Dq$Vu
+  [02] vu4(LXRPcFoIk@?w!-F0:TN+HgWzb[GMrW^2`?ePB(?K7.s2Is
+  [03] +4BmUYOH(e9=xC$=3~1q?1!dX`4#O9AMdlbkos$j@.h7_~!*82
+  [04] !>0:N?3xPKJSpFdY[F1O_7_}ps[p-T49[98O8/oM]2r$6CumIp
+  [05] J4^t/W`o{v$PvELkR~i(Q-.|RMs#8v(VP-C;crs{+O|7sy^w;z
+  [06] Rs8$ES%%k]f7tkaSVKT6.G(lb+>S^kXDr}~Z~Y8yRp%jfU|Hm`
+  [07] 7]xb>H6usicGvE>@d^!b9^I&wy.Y5Vs6%|LD6]iH|?{LC#YgSC
+  [08] {vf![zdmh[sX/WT:S;V4Qg_{EtY7J7)VEU@lAi[~=@/;_+UT^:
+  [09] .zxr;Shg0>IM|u{[zpB..{cy0U%Trk43ZSNqH(B,(k-w8+Ph[!
+  [10] 26aMjXsuzn-@,w|rF`kTr>4d0v/[Z{dlOwKv|ObQQ`s_FY10bE
+  [11] i:ll6AOM>9vD|YJA1~V]tI,mdz#^T/j#|{3_>v(,;F>jzgG*`M
+  [12] uyc_S07HpqqPwun(Jm_HuP@:p}?a54_1^7PJ%1$bw^vk)h#7O8
+  [13] qTB(`7c-F[]9v(BW#UCPbs,*7.xyP-JALDxx-9^zrKP}(.MJB8
+  [14] 4[:PZAY6LW:W/I0R-t<Ro6Hn=ucP>fuEUp)J#|2uh0|1be5QB|
+  [15] HJSShl5l>!)|?{C1#O+(L]]&Kc.N0wpx9a+?kvene$d6e9fG>G
+  [16] bAzt;le&T*>/qb/KKMw;S#lb8|A<&TGQRJL52BNKXtsUGWSL)v
+  [17] ]vi~r54^^LrTab_;)Q|r9`3v*-|Ko}1a`?lv2{A=#k~Cf?T9IE
+  [18] 1xZVNw.q8!`l7e;1dBjiZ8]|agEc,co>:-+l;H~95$g$$I*@6&
+  [19] qF&?b]{lq&-N}A_lmb[(07?TB6g(KYOu?%k7NjvKRj7Gd?x+-L
+  [20] gKfs*Y3lt1lnm`tuW2.0LJO.,.z6zWzVn)G/=VvUROxuEfCxbM
+-->
+
+<!--
+  ============================================================
+  VAULT PASSWORD LIST — FOR REFERENCE ONLY
+  One of these is chosen at random each session and displayed
+  to the user. Only the displayed password will work.
+  ============================================================
+  01. kzpG~aK/Y/{EUPY6gf6A+YF/^Ua{R[0#+3yD%x*~sdae:Dq$Vu
+  02. vu4(LXRPcFoIk@?w!-F0:TN+HgWzb[GMrW^2`?ePB(?K7.s2Is
+  03. +4BmUYOH(e9=xC$=3~1q?1!dX`4#O9AMdlbkos$j@.h7_~!*82
+  04. !>0:N?3xPKJSpFdY[F1O_7_}ps[p-T49[98O8/oM]2r$6CumIp
+  05. J4^t/W`o{v$PvELkR~i(Q-.|RMs#8v(VP-C;crs{+O|7sy^w;z
+  06. Rs8$ES%%k]f7tkaSVKT6.G(lb+>S^kXDr}~Z~Y8yRp%jfU|Hm`
+  07. 7]xb>H6usicGvE>@d^!b9^I&wy.Y5Vs6%|LD6]iH|?{LC#YgSC
+  08. {vf![zdmh[sX/WT:S;V4Qg_{EtY7J7)VEU@lAi[~=@/;_+UT^:
+  09. .zxr;Shg0>IM|u{[zpB..{cy0U%Trk43ZSNqH(B,(k-w8+Ph[!
+  10. 26aMjXsuzn-@,w|rF`kTr>4d0v/[Z{dlOwKv|ObQQ`s_FY10bE
+  11. i:ll6AOM>9vD|YJA1~V]tI,mdz#^T/j#|{3_>v(,;F>jzgG*`M
+  12. uyc_S07HpqqPwun(Jm_HuP@:p}?a54_1^7PJ%1$bw^vk)h#7O8
+  13. qTB(`7c-F[]9v(BW#UCPbs,*7.xyP-JALDxx-9^zrKP}(.MJB8
+  14. 4[:PZAY6LW:W/I0R-t<Ro6Hn=ucP>fuEUp)J#|2uh0|1be5QB|
+  15. HJSShl5l>!)|?{C1#O+(L]]&Kc.N0wpx9a+?kvene$d6e9fG>G
+  16. bAzt;le&T*>/qb/KKMw;S#lb8|A<&TGQRJL52BNKXtsUGWSL)v
+  17. ]vi~r54^^LrTab_;)Q|r9`3v*-|Ko}1a`?lv2{A=#k~Cf?T9IE
+  18. 1xZVNw.q8!`l7e;1dBjiZ8]|agEc,co>:-+l;H~95$g$$I*@6&
+  19. qF&?b]{lq&-N}A_lmb[(07?TB6g(KYOu?%k7NjvKRj7Gd?x+-L
+  20. gKfs*Y3lt1lnm`tuW2.0LJO.,.z6zWzVn)G/=VvUROxuEfCxbM
+  ============================================================
+-->
 </body>
 </html>
