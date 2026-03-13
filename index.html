@@ -11,6 +11,7 @@
     :root {
       --bg:          #0a0a0f;
       --surface:     #111118;
+      --surface2:    #16161f;
       --border:      #2a2a3a;
       --accent:      #00ffb3;
       --accent-dim:  #00ffb322;
@@ -18,743 +19,1079 @@
       --muted:       #6b6b80;
       --success:     #00ffb3;
       --error:       #ff4466;
-      --font-display: 'Syne', sans-serif;
-      --font-mono:    'Space Mono', monospace;
-      --radius:       12px;
-      --ease:         cubic-bezier(0.4, 0, 0.2, 1);
+      --font-display:'Syne', sans-serif;
+      --font-mono:   'Space Mono', monospace;
+      --radius:      12px;
+      --ease:        cubic-bezier(0.4,0,0.2,1);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{
+      background:var(--bg);color:var(--text);font-family:var(--font-display);
+      min-height:100vh;display:flex;align-items:center;justify-content:center;
+      padding:24px;overflow-x:hidden;
+    }
+    body::before{
+      content:'';position:fixed;inset:0;
+      background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+      background-size:48px 48px;opacity:.35;z-index:0;animation:gridShift 20s linear infinite;
+    }
+    @keyframes gridShift{from{background-position:0 0}to{background-position:48px 48px}}
+    body::after{
+      content:'';position:fixed;width:600px;height:600px;border-radius:50%;
+      background:radial-gradient(circle,#00ffb315 0%,transparent 70%);
+      top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0;
+      animation:blobPulse 6s ease-in-out infinite;
+    }
+    @keyframes blobPulse{0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}}
+
+    /* CARD */
+    .card{
+      position:relative;z-index:1;background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--radius);width:100%;max-width:500px;padding:40px 36px;
+      box-shadow:0 0 60px #00ffb30a,0 24px 80px #00000080;
+      animation:cardIn .6s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes cardIn{from{opacity:0;transform:translateY(32px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+    .card::before{
+      content:'';position:absolute;top:0;left:20px;right:20px;height:2px;
+      background:linear-gradient(90deg,transparent,var(--accent),transparent);border-radius:0 0 2px 2px;
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-display);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      overflow-x: hidden;
+    /* HEADER */
+    .vault-icon{
+      display:flex;align-items:center;justify-content:center;width:56px;height:56px;
+      border:1px solid var(--border);border-radius:14px;background:var(--accent-dim);
+      margin-bottom:20px;font-size:24px;
     }
+    h1{font-size:1.75rem;font-weight:800;letter-spacing:-.03em;color:#fff;margin-bottom:6px}
+    .subtitle{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:32px}
 
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(var(--border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 48px 48px;
-      opacity: 0.35;
-      z-index: 0;
-      animation: gridShift 20s linear infinite;
+    /* STEP DOTS */
+    .steps{display:flex;gap:6px;margin-bottom:32px}
+    .step-dot{flex:1;height:3px;border-radius:2px;background:var(--border);transition:background .3s var(--ease)}
+    .step-dot.active{background:var(--accent)}
+    .step-dot.done{background:var(--accent);opacity:.4}
+
+    /* INPUTS */
+    .field-label{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;display:block}
+    .input{
+      width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;
+      color:var(--text);font-family:var(--font-mono);font-size:.95rem;padding:12px 16px;
+      outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;
     }
+    .input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+    .input.error{border-color:var(--error);box-shadow:0 0 0 3px #ff446620}
+    .input.ok{border-color:var(--success);box-shadow:0 0 0 3px var(--accent-dim)}
 
-    @keyframes gridShift {
-      from { background-position: 0 0; }
-      to   { background-position: 48px 48px; }
+    /* MESSAGES */
+    .msg{font-family:var(--font-mono);font-size:.78rem;margin-top:10px;padding:8px 12px;border-radius:6px;display:none;line-height:1.4}
+    .msg.error{display:block;color:var(--error);background:#ff446618;border:1px solid #ff446630}
+    .msg.success{display:block;color:var(--success);background:#00ffb318;border:1px solid #00ffb330}
+
+    /* BUTTONS */
+    .btn{
+      display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+      margin-top:20px;padding:13px 24px;border-radius:8px;border:none;
+      font-family:var(--font-display);font-weight:600;font-size:.95rem;cursor:pointer;
+      transition:transform .15s,box-shadow .15s;
     }
+    .btn:active{transform:scale(.98)}
+    .btn-primary{background:var(--accent);color:#000;box-shadow:0 4px 24px #00ffb330}
+    .btn-primary:hover{box-shadow:0 4px 32px #00ffb360;transform:translateY(-1px)}
+    .btn-download{background:linear-gradient(135deg,var(--accent),#00d4ff);color:#000;font-size:1rem;padding:16px 24px;animation:glowPulse 2s ease-in-out infinite}
+    @keyframes glowPulse{0%,100%{box-shadow:0 4px 32px #00ffb340}50%{box-shadow:0 4px 48px #00ffb370}}
+    .btn-download:hover{transform:translateY(-2px)}
 
-    body::after {
-      content: '';
-      position: fixed;
-      width: 600px; height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #00ffb315 0%, transparent 70%);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      z-index: 0;
-      animation: blobPulse 6s ease-in-out infinite;
+    /* PUZZLE BOX */
+    .puzzle-progress{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .puzzle-counter{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+    .puzzle-pips{display:flex;gap:6px}
+    .pip{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .3s var(--ease),transform .3s var(--ease)}
+    .pip.active{background:var(--accent);transform:scale(1.2)}
+    .pip.done{background:var(--accent);opacity:.4;transform:scale(1)}
+    .puzzle-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-bottom:20px}
+    .puzzle-type{font-family:var(--font-mono);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+    .puzzle-question{font-size:1rem;font-weight:600;color:#fff;line-height:1.5;user-select:none;-webkit-user-select:none}
+
+    /* SECTIONS */
+    .section{display:none}
+    .section.active{display:block;animation:fadeUp .4s var(--ease) both}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+    /* SUCCESS */
+    .success-icon{font-size:3rem;margin-bottom:16px;display:block;animation:bounceIn .5s cubic-bezier(.22,1,.36,1) both}
+    @keyframes bounceIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+    .success-title{font-size:1.4rem;font-weight:800;color:var(--accent);margin-bottom:8px}
+    .success-sub{font-family:var(--font-mono);font-size:.78rem;color:var(--muted);margin-bottom:28px;line-height:1.6}
+    .security-note{margin-top:24px;padding:12px 16px;border-radius:8px;border:1px dashed var(--border);font-family:var(--font-mono);font-size:.68rem;color:var(--muted);line-height:1.6}
+    .security-note strong{color:#ff3cac}
+
+    /* ═══════════════════════════════════════════════════════
+       INTERACTIVE WIDGETS
+    ═══════════════════════════════════════════════════════ */
+
+    /* Multiple choice */
+    .choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px}
+    .choice-btn{
+      background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+      color:var(--text);font-family:var(--font-display);font-size:.88rem;font-weight:600;
+      padding:12px 8px;cursor:pointer;transition:border-color .2s,background .2s,transform .15s;
+      text-align:center;user-select:none;
     }
+    .choice-btn:hover{border-color:var(--accent);background:var(--accent-dim);transform:translateY(-1px)}
+    .choice-btn.wrong{border-color:var(--error)!important;background:#ff446618!important;animation:choiceShake .35s ease}
+    .choice-btn.correct{border-color:var(--success)!important;background:#00ffb318!important}
+    @keyframes choiceShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
-    @keyframes blobPulse {
-      0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
-      50%       { opacity: 1;   transform: translate(-50%, -50%) scale(1.1); }
+    /* Drag order */
+    .drag-list{display:flex;flex-direction:column;gap:8px;margin-bottom:4px}
+    .drag-item{
+      background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+      padding:10px 14px;font-family:var(--font-mono);font-size:.86rem;color:var(--text);
+      cursor:grab;user-select:none;display:flex;align-items:center;gap:10px;
+      transition:border-color .2s,box-shadow .2s;
     }
+    .drag-item:active{cursor:grabbing}
+    .drag-item.dragging{opacity:.4;border-color:var(--accent)}
+    .drag-item.over{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-dim)}
+    .drag-handle{color:var(--muted);font-size:.8rem}
 
-    .card {
-      position: relative;
-      z-index: 1;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      width: 100%;
-      max-width: 480px;
-      padding: 40px 36px;
-      box-shadow: 0 0 60px #00ffb30a, 0 24px 80px #00000080;
-      animation: cardIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    /* Slider */
+    .slider-wrap{margin-bottom:4px}
+    .slider-label{font-family:var(--font-mono);font-size:.78rem;color:var(--muted);margin-bottom:10px;display:block}
+    .slider-row{display:flex;align-items:center;gap:12px}
+    input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:4px;background:var(--border);border-radius:2px;outline:none}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 8px var(--accent)}
+    input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;border:none}
+    .slider-val{font-family:var(--font-mono);font-size:1.1rem;color:var(--accent);font-weight:700;min-width:48px;text-align:right}
+
+    /* Memory sequence */
+    .seq-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:4px}
+    .seq-cell{
+      aspect-ratio:1;background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.5rem;
+      transition:background .15s,border-color .15s,transform .15s;user-select:none;
     }
+    .seq-cell:hover{border-color:var(--accent);transform:scale(1.04)}
+    .seq-cell.flash{background:var(--accent)!important;border-color:var(--accent)!important}
+    .seq-cell.wrong{background:#ff446630!important;border-color:var(--error)!important}
+    .seq-hint{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);text-align:center;margin-bottom:10px;min-height:1.2em}
 
-    @keyframes cardIn {
-      from { opacity: 0; transform: translateY(32px) scale(0.97); }
-      to   { opacity: 1; transform: translateY(0)   scale(1); }
+    /* Match/wire */
+    .wire-wrap{position:relative;margin-bottom:4px}
+    .wire-cols{display:flex;justify-content:space-between;gap:16px}
+    .wire-col{display:flex;flex-direction:column;gap:8px;flex:1}
+    .wire-item{
+      background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+      padding:9px 10px;font-family:var(--font-mono);font-size:.8rem;color:var(--text);
+      cursor:pointer;user-select:none;transition:border-color .2s,background .2s;text-align:center;
     }
+    .wire-item.selected{border-color:var(--accent);background:var(--accent-dim)}
+    .wire-item.matched{border-color:var(--success);background:#00ffb318;color:var(--success);cursor:default}
+    .wire-item.wrong-flash{animation:choiceShake .35s ease;border-color:var(--error)!important}
 
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 20px; right: 20px;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      border-radius: 0 0 2px 2px;
+    /* Tile flip (new) */
+    .flip-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:4px}
+    .flip-card{
+      aspect-ratio:1;perspective:600px;cursor:pointer;user-select:none;
     }
-
-    .vault-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 56px; height: 56px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: var(--accent-dim);
-      margin-bottom: 20px;
-      font-size: 24px;
+    .flip-inner{
+      position:relative;width:100%;height:100%;
+      transform-style:preserve-3d;transition:transform .45s var(--ease);
     }
-
-    h1 {
-      font-size: 1.75rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      color: #fff;
-      margin-bottom: 6px;
+    .flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+    .flip-front,.flip-back{
+      position:absolute;inset:0;border-radius:8px;
+      display:flex;align-items:center;justify-content:center;
+      backface-visibility:hidden;-webkit-backface-visibility:hidden;
+      font-size:1.3rem;border:1px solid var(--border);
     }
+    .flip-front{background:var(--surface2)}
+    .flip-back{background:var(--accent-dim);border-color:var(--accent);transform:rotateY(180deg)}
+    .flip-card.matched .flip-front,.flip-card.matched .flip-back{border-color:var(--success);background:#00ffb318}
+    .flip-card.wrong-pair .flip-inner{animation:wrongFlip .5s ease}
+    @keyframes wrongFlip{0%,100%{transform:rotateY(180deg)}50%{transform:rotateY(180deg) translateX(-6px)}}
+    .flip-hint{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);text-align:center;margin-bottom:10px;min-height:1.2em}
 
-    .subtitle {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 32px;
+    /* Type-the-word (new) */
+    .typeword-wrap{margin-bottom:4px}
+    .typeword-display{
+      display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;
     }
-
-    .steps {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 32px;
+    .typeword-letter{
+      width:36px;height:44px;background:var(--surface2);border:1px solid var(--border);
+      border-radius:6px;display:flex;align-items:center;justify-content:center;
+      font-family:var(--font-mono);font-size:1.1rem;font-weight:700;color:var(--text);
+      transition:background .2s,border-color .2s,color .2s;
     }
-
-    .step-dot {
-      flex: 1;
-      height: 3px;
-      border-radius: 2px;
-      background: var(--border);
-      transition: background 0.3s var(--ease);
+    .typeword-letter.filled{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+    .typeword-letter.correct-letter{border-color:var(--success);color:var(--success);background:#00ffb318}
+    .typeword-letter.wrong-letter{border-color:var(--error);color:var(--error);background:#ff446618}
+    .typeword-keyboard{display:flex;flex-direction:column;gap:6px}
+    .kb-row{display:flex;gap:5px;justify-content:center}
+    .kb-key{
+      min-width:30px;height:36px;padding:0 4px;background:var(--surface2);
+      border:1px solid var(--border);border-radius:5px;color:var(--text);
+      font-family:var(--font-mono);font-size:.78rem;cursor:pointer;
+      transition:background .15s,border-color .15s,transform .1s;user-select:none;
     }
+    .kb-key:hover{background:var(--accent-dim);border-color:var(--accent)}
+    .kb-key:active{transform:scale(.93)}
+    .kb-key.used{opacity:.3;pointer-events:none}
+    .kb-del{min-width:44px;color:var(--error)}
 
-    .step-dot.active { background: var(--accent); }
-    .step-dot.done   { background: var(--accent); opacity: 0.4; }
-
-    .field-label {
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 8px;
-      display: block;
-    }
-
-    .input {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      font-family: var(--font-mono);
-      font-size: 0.95rem;
-      padding: 12px 16px;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      -webkit-appearance: none;
-    }
-
-    .input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-dim);
-    }
-
-    .input.error { border-color: var(--error);   box-shadow: 0 0 0 3px #ff446620; }
-    .input.ok    { border-color: var(--success);  box-shadow: 0 0 0 3px var(--accent-dim); }
-
-    .msg {
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      margin-top: 10px;
-      padding: 8px 12px;
-      border-radius: 6px;
-      display: none;
-      line-height: 1.4;
-    }
-
-    .msg.error   { display: block; color: var(--error);   background: #ff446618; border: 1px solid #ff446630; }
-    .msg.success { display: block; color: var(--success); background: #00ffb318; border: 1px solid #00ffb330; }
-
-    .btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      margin-top: 20px;
-      padding: 13px 24px;
-      border-radius: 8px;
-      border: none;
-      font-family: var(--font-display);
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s;
-    }
-
-    .btn:active { transform: scale(0.98); }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #000;
-      box-shadow: 0 4px 24px #00ffb330;
-    }
-
-    .btn-primary:hover { box-shadow: 0 4px 32px #00ffb360; transform: translateY(-1px); }
-
-    .btn-download {
-      background: linear-gradient(135deg, var(--accent), #00d4ff);
-      color: #000;
-      font-size: 1rem;
-      padding: 16px 24px;
-      animation: glowPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes glowPulse {
-      0%, 100% { box-shadow: 0 4px 32px #00ffb340; }
-      50%       { box-shadow: 0 4px 48px #00ffb370; }
-    }
-
-    .btn-download:hover { transform: translateY(-2px); }
-
-    .puzzle-progress {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-
-    .puzzle-counter {
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-
-    .puzzle-pips {
-      display: flex;
-      gap: 6px;
-    }
-
-    .pip {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: var(--border);
-      transition: background 0.3s var(--ease), transform 0.3s var(--ease);
-    }
-
-    .pip.active { background: var(--accent); transform: scale(1.2); }
-    .pip.done   { background: var(--accent); opacity: 0.4; transform: scale(1); }
-
-    .puzzle-box {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px 20px;
-      margin-bottom: 20px;
-    }
-
-    .puzzle-type {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-
-    .puzzle-question {
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: #fff;
-      line-height: 1.5;
-      user-select: none;
-      -webkit-user-select: none;
-      -ms-user-select: none;
-    }
-
-    .section { display: none; }
-    .section.active { display: block; animation: fadeUp 0.4s var(--ease) both; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .success-icon {
-      font-size: 3rem;
-      margin-bottom: 16px;
-      display: block;
-      animation: bounceIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-
-    @keyframes bounceIn {
-      from { opacity: 0; transform: scale(0.5); }
-      to   { opacity: 1; transform: scale(1); }
-    }
-
-    .success-title {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-
-    .success-sub {
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-bottom: 28px;
-      line-height: 1.6;
-    }
-
-    .security-note {
-      margin-top: 24px;
-      padding: 12px 16px;
-      border-radius: 8px;
-      border: 1px dashed var(--border);
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .security-note strong { color: #ff3cac; }
-
-    @media (max-width: 520px) {
-      .card { padding: 28px 20px; }
-      h1 { font-size: 1.4rem; }
+    @media(max-width:520px){
+      .card{padding:28px 20px}
+      h1{font-size:1.4rem}
+      .choices{grid-template-columns:1fr}
+      .flip-grid{grid-template-columns:repeat(4,1fr);gap:6px}
+      .typeword-letter{width:30px;height:38px;font-size:.95rem}
+      .kb-key{min-width:26px;height:32px;font-size:.72rem}
     }
   </style>
 </head>
 <body>
-
 <div class="card">
   <div class="vault-icon">🔒</div>
   <h1>Secure Vault</h1>
   <p class="subtitle">Protected File Access System</p>
 
+  <!-- 7 dots: password + 5 puzzles + download -->
   <div class="steps">
     <div class="step-dot active" id="dot1"></div>
     <div class="step-dot"        id="dot2"></div>
     <div class="step-dot"        id="dot3"></div>
     <div class="step-dot"        id="dot4"></div>
     <div class="step-dot"        id="dot5"></div>
+    <div class="step-dot"        id="dot6"></div>
+    <div class="step-dot"        id="dot7"></div>
   </div>
 
   <!-- STEP 1 — PASSWORD -->
   <div class="section active" id="step-password">
     <label class="field-label" for="passwordInput">Enter Access Password</label>
-    <input
-      class="input"
-      id="passwordInput"
-      type="password"
-      placeholder="••••••••••"
-      autocomplete="off"
-      spellcheck="false"
-    />
+    <input class="input" id="passwordInput" type="password" placeholder="••••••••••" autocomplete="off" spellcheck="false"/>
     <div class="msg" id="passMsg"></div>
-    <!--
-      BACKEND HOOK: Replace checkPassword() with a fetch() POST to your
-      serverless function. Read the password from an env variable server-side.
-      Never put the real password in client JS for production.
-    -->
-    <button class="btn btn-primary" onclick="checkPassword()">
-      Verify Password →
-    </button>
+    <!-- BACKEND HOOK: Replace checkPassword() with fetch('/api/verify-password') -->
+    <button class="btn btn-primary" onclick="checkPassword()">Verify Password →</button>
   </div>
 
-  <!-- STEP 2 — PUZZLE -->
+  <!-- STEP 2 — PUZZLES -->
   <div class="section" id="step-puzzle">
     <div class="puzzle-progress">
-      <span class="puzzle-counter" id="puzzleCounter">Challenge 1 of 3</span>
+      <span class="puzzle-counter" id="puzzleCounter">Challenge 1 of 5</span>
       <div class="puzzle-pips">
         <div class="pip active" id="pip1"></div>
         <div class="pip"        id="pip2"></div>
         <div class="pip"        id="pip3"></div>
+        <div class="pip"        id="pip4"></div>
+        <div class="pip"        id="pip5"></div>
       </div>
     </div>
     <div class="puzzle-box">
       <div class="puzzle-type" id="puzzleType"></div>
       <div class="puzzle-question" id="puzzleQuestion"></div>
     </div>
-    <label class="field-label" for="puzzleInput">Your Answer</label>
-    <input
-      class="input"
-      id="puzzleInput"
-      type="text"
-      placeholder="Type your answer…"
-      autocomplete="off"
-      spellcheck="false"
-    />
+    <div id="puzzleWidget"></div>
+    <div id="puzzleTextArea">
+      <label class="field-label" for="puzzleInput">Your Answer</label>
+      <input class="input" id="puzzleInput" type="text" placeholder="Type your answer…" autocomplete="off" spellcheck="false"/>
+    </div>
     <div class="msg" id="puzzleMsg"></div>
-    <button class="btn btn-primary" onclick="checkPuzzle()">
-      Check Answer →
-    </button>
+    <!-- BACKEND HOOK: Replace checkPuzzle() with fetch('/api/verify-puzzle') -->
+    <button class="btn btn-primary" id="puzzleSubmitBtn" onclick="checkPuzzle()">Check Answer →</button>
   </div>
 
   <!-- STEP 3 — DOWNLOAD -->
   <div class="section" id="step-download">
     <span class="success-icon">✅</span>
     <div class="success-title">Access Granted</div>
-    <p class="success-sub">
-      Both checks passed. Your secure file is ready.<br />
-      Click below to download.
-    </p>
-    <!--
-      BACKEND HOOK: Replace this static href with a call to a serverless
-      function returning a time-limited signed URL (e.g. S3 presigned URL).
-    -->
+    <p class="success-sub">All 5 challenges passed. Your secure file is ready.<br/>Click below to download.</p>
+    <!-- BACKEND HOOK: Replace with signed URL from serverless function -->
     <button class="btn btn-download" id="dlBtn" onclick="downloadZip()">⬇ Download Files</button>
     <div class="msg" id="dlMsg"></div>
   </div>
 
   <div class="security-note">
-    <strong>⚠ Dev mode:</strong> password &amp; puzzle answers checked client-side.
-    Search <strong>BACKEND HOOK</strong> comments to add server-side verification.
+    <strong>⚠ Dev mode:</strong> checks run client-side.
+    Search <strong>BACKEND HOOK</strong> to add server-side verification.
   </div>
 </div>
 
 <script>
-  // ── CONFIG ─────────────────────────────────────────────────────
-  // BACKEND HOOK: Move this to an environment variable / server-side check.
-  const CORRECT_PASSWORD = 'FXWc8bG0&xmsNm(n=cAG1F#%&=r$WVP9*CS2%zB^r?E(#XD^yFR&9';
+// ════════════════════════════════════════════════════════════════
+//  CONFIG
+// ════════════════════════════════════════════════════════════════
+// BACKEND HOOK: Move to env variable / server-side check.
+const CORRECT_PASSWORD = 'FXWc8bG0&xmsNm(n=cAG1F#%&=r$WVP9*CS2%zB^r?E(#XD^yFR&9';
+const TOTAL_PUZZLES    = 5;
 
-  // ── PUZZLE BANK — 60 hard puzzles across 8 types ───────────────
-  const PUZZLE_BANK = [
-    // Hard Math
-    { type: 'Math Problem',    question: 'What is 17 × 13?',                                    answer: '221'         },
-    { type: 'Math Problem',    question: 'What is √(144) + 5²?',                                answer: '37'          },
-    { type: 'Math Problem',    question: 'What is 2⁸?',                                         answer: '256'         },
-    { type: 'Math Problem',    question: 'What is 1000 ÷ 8?',                                   answer: '125'         },
-    { type: 'Math Problem',    question: 'What is 99 × 99?',                                    answer: '9801'        },
-    { type: 'Math Problem',    question: 'What is 3³ + 4³?',                                    answer: '91'          },
-    { type: 'Math Problem',    question: 'What is 15% of 240?',                                 answer: '36'          },
-    { type: 'Math Problem',    question: 'If x² = 169, what is x? (positive)',                  answer: '13'          },
+// ════════════════════════════════════════════════════════════════
+//  PUZZLE BANK
+//  uiTypes: choice | order | slider | seq | wire | flip | typeword | text
+// ════════════════════════════════════════════════════════════════
+const PUZZLE_BANK = [
 
-    // Hard Word Scramble (longer words)
-    { type: 'Word Scramble',   question: 'Unscramble: "nrcsaale"',                              answer: 'lancers'     },
-    { type: 'Word Scramble',   question: 'Unscramble: "ptiahol"',                               answer: 'hospital'    },
-    { type: 'Word Scramble',   question: 'Unscramble: "tlbfuieua"',                             answer: 'beautiful'   },
-    { type: 'Word Scramble',   question: 'Unscramble: "tcarntoc"',                              answer: 'contract'    },
-    { type: 'Word Scramble',   question: 'Unscramble: "iemntuo"',                               answer: 'mountain'    },
-    { type: 'Word Scramble',   question: 'Unscramble: "aaebclns"',                              answer: 'balances'    },
-    { type: 'Word Scramble',   question: 'Unscramble: "rcahtecir"',                             answer: 'architect'   },
-    { type: 'Word Scramble',   question: 'Unscramble: "lphieodp"',                              answer: 'dolphins'    },
+  // ── MULTIPLE CHOICE (15) ──────────────────────────────────────
+  { uiType:'choice', label:'Riddle',
+    question:'I have cities but no houses, forests but no trees, water but no fish. What am I?',
+    options:['A dream','A map','A painting','The sky'], answer:'A map' },
+  { uiType:'choice', label:'Riddle',
+    question:'The more you take, the more you leave behind. What am I?',
+    options:['Memories','Time','Footsteps','Shadows'], answer:'Footsteps' },
+  { uiType:'choice', label:'Riddle',
+    question:'I speak without a mouth and hear without ears. I have no body but come alive with the wind.',
+    options:['A ghost','An echo','A flag','Music'], answer:'An echo' },
+  { uiType:'choice', label:'Logic Trap',
+    question:'How many months have 28 days?',
+    options:['1','2','4','12'], answer:'12' },
+  { uiType:'choice', label:'Logic Trap',
+    question:'A rooster lays an egg on a roof peak. Which way does it roll?',
+    options:['Left','Right','Straight down',"Roosters don't lay eggs"], answer:"Roosters don't lay eggs" },
+  { uiType:'choice', label:'Science',
+    question:'What is the only planet in our solar system that rotates on its side?',
+    options:['Saturn','Neptune','Uranus','Venus'], answer:'Uranus' },
+  { uiType:'choice', label:'Math Trick',
+    question:'You have 3 apples and take away 2. How many do YOU have?',
+    options:['1','2','3','5'], answer:'2' },
+  { uiType:'choice', label:'Word Play',
+    question:'What word is spelled incorrectly in every dictionary?',
+    options:['Incorrectly','Dictionary','Misspelled','Wrong'], answer:'Incorrectly' },
+  { uiType:'choice', label:'Riddle',
+    question:'What can run but never walks, has a mouth but never talks, has a head but never weeps?',
+    options:['A clock','A river','A road','A train'], answer:'A river' },
+  { uiType:'choice', label:'Science',
+    question:'What is the hardest natural substance on Earth?',
+    options:['Gold','Diamond','Titanium','Quartz'], answer:'Diamond' },
+  { uiType:'choice', label:'Logic Trap',
+    question:'Before Mt. Everest was discovered, what was the tallest mountain on Earth?',
+    options:['K2','Kangchenjunga','Mt. Everest','Denali'], answer:'Mt. Everest' },
+  { uiType:'choice', label:'History',
+    question:'Which ancient wonder of the world still exists today?',
+    options:['Hanging Gardens','Colossus of Rhodes','Great Pyramid of Giza','Lighthouse of Alexandria'], answer:'Great Pyramid of Giza' },
+  { uiType:'choice', label:'Science',
+    question:'How many bones does an adult human body have?',
+    options:['206','186','256','300'], answer:'206' },
+  { uiType:'choice', label:'Riddle',
+    question:'I am not alive, but I can grow. I have no lungs, but I need air. I have no mouth, but water kills me. What am I?',
+    options:['A plant','Fire','A shadow','Ice'], answer:'Fire' },
+  { uiType:'choice', label:'Math',
+    question:'What is the next prime number after 13?',
+    options:['14','15','17','19'], answer:'17' },
 
-    // Hard Number Sequences
-    { type: 'Number Sequence', question: 'What comes next? 1, 4, 9, 16, 25, ?',                answer: '36'          },
-    { type: 'Number Sequence', question: 'What comes next? 3, 7, 13, 21, 31, ?',               answer: '43'          },
-    { type: 'Number Sequence', question: 'What comes next? 2, 3, 5, 7, 11, 13, ?',             answer: '17'          },
-    { type: 'Number Sequence', question: 'What comes next? 1, 8, 27, 64, ?',                   answer: '125'         },
-    { type: 'Number Sequence', question: 'What comes next? 192, 96, 48, 24, ?',                answer: '12'          },
-    { type: 'Number Sequence', question: 'What comes next? 0, 1, 3, 6, 10, 15, ?',             answer: '21'          },
-    { type: 'Number Sequence', question: 'What comes next? 2, 6, 12, 20, 30, ?',               answer: '42'          },
-    { type: 'Number Sequence', question: 'What comes next? 1, 2, 6, 24, 120, ?',               answer: '720'         },
+  // ── DRAG TO ORDER (8) ─────────────────────────────────────────
+  { uiType:'order', label:'Put In Order',
+    question:'Drag to order these planets from closest to farthest from the Sun:',
+    items:['Earth','Mercury','Mars','Venus'], answer:['Mercury','Venus','Earth','Mars'] },
+  { uiType:'order', label:'Put In Order',
+    question:'Order these from smallest to largest unit:',
+    items:['Kilometer','Millimeter','Meter','Centimeter'], answer:['Millimeter','Centimeter','Meter','Kilometer'] },
+  { uiType:'order', label:'Put In Order',
+    question:'Order these historical events from earliest to most recent:',
+    items:['Moon landing','WW2 ends','First iPhone','Berlin Wall falls'], answer:['WW2 ends','Moon landing','Berlin Wall falls','First iPhone'] },
+  { uiType:'order', label:'Put In Order',
+    question:'Order these Roman numerals from smallest to largest:',
+    items:['XL','IX','MCMXCIX','CD'], answer:['IX','XL','CD','MCMXCIX'] },
+  { uiType:'order', label:'Put In Order',
+    question:'Order the layers of Earth from outermost to innermost:',
+    items:['Outer core','Mantle','Crust','Inner core'], answer:['Crust','Mantle','Outer core','Inner core'] },
+  { uiType:'order', label:'Put In Order',
+    question:'Order these from slowest to fastest average speed:',
+    items:['Cheetah','Snail','Horse','Peregrine falcon'], answer:['Snail','Horse','Cheetah','Peregrine falcon'] },
+  { uiType:'order', label:'Put In Order',
+    question:'Order these colours by wavelength — shortest to longest:',
+    items:['Red','Blue','Green','Violet'], answer:['Violet','Blue','Green','Red'] },
+  { uiType:'order', label:'Put In Order',
+    question:'Order these programming languages by year of creation (oldest first):',
+    items:['Python','JavaScript','C','Java'], answer:['C','Python','Java','JavaScript'] },
 
-    // Hard Riddles
-    { type: 'Riddle',          question: 'I have cities but no houses, forests but no trees, and water but no fish. What am I?', answer: 'map' },
-    { type: 'Riddle',          question: 'The more you take, the more you leave behind. What am I?',  answer: 'footsteps'   },
-    { type: 'Riddle',          question: 'I am not alive, but I can grow. I have no lungs, but I need air. What am I?', answer: 'fire' },
-    { type: 'Riddle',          question: 'I can travel around the world without moving. What am I?',  answer: 'stamp'       },
-    { type: 'Riddle',          question: 'I have a head and a tail but no body. What am I?',          answer: 'coin'        },
-    { type: 'Riddle',          question: 'What can run but never walks, has a mouth but never talks?', answer: 'river'      },
-    { type: 'Riddle',          question: 'I am always hungry and must always be fed. What am I?',     answer: 'fire'        },
-    { type: 'Riddle',          question: 'What has an eye but cannot see?',                           answer: 'needle'      },
+  // ── SLIDER (8) ────────────────────────────────────────────────
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the number of degrees in a right angle:',
+    min:0,max:360,step:1,answer:90,hint:'Range: 0 – 360' },
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the number of sides on a hexagon:',
+    min:3,max:12,step:1,answer:6,hint:'Range: 3 – 12' },
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to 2⁷ (2 to the power of 7):',
+    min:64,max:256,step:2,answer:128,hint:'Range: 64 – 256' },
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the number of cards in a standard deck:',
+    min:10,max:80,step:1,answer:52,hint:'Range: 10 – 80' },
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the number of degrees in a triangle:',
+    min:0,max:360,step:1,answer:180,hint:'Range: 0 – 360' },
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the number of keys on a standard piano:',
+    min:50,max:100,step:1,answer:88,hint:'Range: 50 – 100' },
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the boiling point of water in °C:',
+    min:0,max:200,step:1,answer:100,hint:'Range: 0 – 200' },
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the number of players on a football (soccer) team:',
+    min:5,max:20,step:1,answer:11,hint:'Range: 5 – 20' },
 
-    // Reverse Word (harder)
-    { type: 'Reverse Word',    question: 'Spell "stressed" backwards.',                         answer: 'desserts'    },
-    { type: 'Reverse Word',    question: 'Spell "repaid" backwards.',                           answer: 'diaper'      },
-    { type: 'Reverse Word',    question: 'Spell "deliver" backwards.',                          answer: 'reviled'     },
-    { type: 'Reverse Word',    question: 'Spell "gateman" backwards.',                          answer: 'nametag'     },
-    { type: 'Reverse Word',    question: 'Spell "drawer" backwards.',                           answer: 'reward'      },
-    { type: 'Reverse Word',    question: 'Spell "diaper" backwards.',                           answer: 'repaid'      },
-    { type: 'Reverse Word',    question: 'Spell "live" backwards.',                             answer: 'evil'        },
-    { type: 'Reverse Word',    question: 'Spell "wolf" backwards.',                             answer: 'flow'        },
+  // ── MEMORY SEQUENCE (6) ───────────────────────────────────────
+  { uiType:'seq', label:'Memory Sequence',
+    question:'Watch the pattern flash — then tap the tiles in the same order:',
+    emojis:['🔥','💧','⚡','🌿','❄️','🌙','🌟','☀️','🎯'],
+    sequence:[0,4,2,7] },
+  { uiType:'seq', label:'Memory Sequence',
+    question:'Memorise the sequence, then tap the tiles in the same order:',
+    emojis:['🦁','🐬','🦅','🐺','🦊','🐸','🦋','🐙','🦄'],
+    sequence:[2,6,1,5,3] },
+  { uiType:'seq', label:'Memory Sequence',
+    question:'Longer sequence this time — watch carefully then repeat it:',
+    emojis:['🍎','🍋','🍇','🍓','🍑','🥝','🍍','🫐','🍒'],
+    sequence:[3,0,7,2,5] },
+  { uiType:'seq', label:'Memory Sequence',
+    question:'Watch the gem sequence and repeat it — it moves fast:',
+    emojis:['💎','🔮','🪩','🧲','🔑','🪤','🎲','🃏','🎴'],
+    sequence:[1,4,0,6,3,7] },
+  { uiType:'seq', label:'Memory Sequence',
+    question:'5-tile sequence — concentrate:',
+    emojis:['🚀','🛸','🌍','🌕','☄️','🔭','🪐','🌌','⭐'],
+    sequence:[0,6,2,8,4] },
+  { uiType:'seq', label:'Memory Sequence',
+    question:'Animal sequence — watch then tap:',
+    emojis:['🐘','🦒','🐆','🦓','🦏','🐊','🦜','🦩','🐢'],
+    sequence:[5,1,3,0,7,2] },
 
-    // Missing Letter (harder, multi-blank)
-    { type: 'Missing Letter',  question: 'EL _ PH _ NT  (two blanks — just type both letters in order)', answer: 'ea' },
-    { type: 'Missing Letter',  question: 'SCH _ _ ULE  (two blanks)',                           answer: 'ed'          },
-    { type: 'Missing Letter',  question: 'KN _ _ LEDGE  (two blanks)',                          answer: 'ow'          },
-    { type: 'Missing Letter',  question: 'FR _ _ UENCY  (two blanks)',                          answer: 'eq'          },
-    { type: 'Missing Letter',  question: 'B _ _ UTIFUL  (two blanks)',                          answer: 'ea'          },
-    { type: 'Missing Letter',  question: 'EM _ _ RASS  (two blanks)',                           answer: 'ba'          },
-    { type: 'Missing Letter',  question: 'N _ CESSARY  (one blank)',                            answer: 'e'           },
-    { type: 'Missing Letter',  question: 'S _ PARATE  (one blank)',                             answer: 'e'           },
+  // ── MATCH / WIRE (8) ──────────────────────────────────────────
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Click a left item then its matching right item:',
+    pairs:[{left:'Paris',right:'France'},{left:'Tokyo',right:'Japan'},{left:'Cairo',right:'Egypt'},{left:'Ottawa',right:'Canada'}] },
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each element to its chemical symbol:',
+    pairs:[{left:'Gold',right:'Au'},{left:'Iron',right:'Fe'},{left:'Lead',right:'Pb'},{left:'Silver',right:'Ag'}] },
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each inventor to their invention:',
+    pairs:[{left:'Bell',right:'Telephone'},{left:'Edison',right:'Light bulb'},{left:'Marconi',right:'Radio'},{left:'Berners-Lee',right:'The Web'}] },
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each Roman numeral to its value:',
+    pairs:[{left:'XIV',right:'14'},{left:'XL',right:'40'},{left:'XC',right:'90'},{left:'CDXL',right:'440'}] },
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each animal to its group name:',
+    pairs:[{left:'Crows',right:'Murder'},{left:'Lions',right:'Pride'},{left:'Fish',right:'School'},{left:'Wolves',right:'Pack'}] },
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each country to its currency:',
+    pairs:[{left:'Japan',right:'Yen'},{left:'Brazil',right:'Real'},{left:'India',right:'Rupee'},{left:'Russia',right:'Ruble'}] },
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each planet to its number of moons (approx):',
+    pairs:[{left:'Earth',right:'1'},{left:'Mars',right:'2'},{left:'Venus',right:'0'},{left:'Neptune',right:'16'}] },
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each programming concept to its definition:',
+    pairs:[{left:'Array',right:'Ordered list'},{left:'Loop',right:'Repeat code'},{left:'Function',right:'Reusable block'},{left:'Boolean',right:'True/False'}] },
 
-    // Roman Numerals (harder)
-    { type: 'Roman Numerals',  question: 'What number is XCIX?',                                answer: '99'          },
-    { type: 'Roman Numerals',  question: 'What number is CDXLIV?',                             answer: '444'         },
-    { type: 'Roman Numerals',  question: 'What number is MCMXCIX?',                            answer: '1999'        },
-    { type: 'Roman Numerals',  question: 'What number is DCCCXL?',                             answer: '840'         },
-    { type: 'Roman Numerals',  question: 'Convert 2024 to Roman numerals.',                    answer: 'mmxxiv'      },
-    { type: 'Roman Numerals',  question: 'What number is MMCDXXI?',                            answer: '2421'        },
-    { type: 'Roman Numerals',  question: 'What number is DLXXVII?',                            answer: '577'         },
-    { type: 'Roman Numerals',  question: 'Convert 1776 to Roman numerals.',                    answer: 'mdcclxxvi'   },
+  // ── FLIP / MEMORY MATCH (6) ───────────────────────────────────
+  { uiType:'flip', label:'Memory Match',
+    question:'Flip tiles to find all 4 matching emoji pairs:',
+    pairs:['🔥','💧','⚡','🌙'] },
+  { uiType:'flip', label:'Memory Match',
+    question:'Find all matching pairs — remember where the tiles are:',
+    pairs:['🦁','🐬','🦅','🐺'] },
+  { uiType:'flip', label:'Memory Match',
+    question:'Flip and match — tiles hide after a moment:',
+    pairs:['🍎','🍋','🍇','🍓'] },
+  { uiType:'flip', label:'Memory Match',
+    question:'Match the planet pairs:',
+    pairs:['🌍','🌕','☀️','🪐'] },
+  { uiType:'flip', label:'Memory Match',
+    question:'Match the shape pairs hidden in the tiles:',
+    pairs:['🔺','🔷','⭐','🟣'] },
+  { uiType:'flip', label:'Memory Match',
+    question:'Find all the matching food pairs:',
+    pairs:['🍕','🍣','🍜','🌮'] },
 
-    // Logic / Pattern
-    { type: 'Logic',           question: 'A rooster lays an egg on a roof. Which way does it roll?',  answer: 'roosters don\'t lay eggs' },
-    { type: 'Logic',           question: 'How many months have 28 days?',                       answer: '12'          },
-    { type: 'Logic',           question: 'If you have 3 apples and take away 2, how many do YOU have?', answer: '2'   },
-    { type: 'Logic',           question: 'A plane crashes on the border of US and Canada. Where do they bury survivors?', answer: 'you don\'t bury survivors' },
-    { type: 'Logic',           question: 'What word is spelled incorrectly in every dictionary?', answer: 'incorrectly' },
-    { type: 'Logic',           question: 'I have 6 eggs. I broke 2, cooked 2, and ate 2. How many do I have left?', answer: '4' },
-    { type: 'Logic',           question: 'What occurs once in a minute, twice in a moment, never in a thousand years?', answer: 'm' },
-    { type: 'Logic',           question: 'Before Mt. Everest was discovered, what was the tallest mountain?', answer: 'everest' },
-  ];
+  // ── TYPE THE WORD (8) ─────────────────────────────────────────
+  { uiType:'typeword', label:'Spell It Out',
+    question:'The capital of Australia (not Sydney!):',
+    answer:'CANBERRA' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'The chemical formula for water, spelled out:',
+    answer:'H2O' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'A word meaning "the study of maps":',
+    answer:'CARTOGRAPHY' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'The only even prime number:',
+    answer:'TWO' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'The fear of long words (ironically):',
+    answer:'HIPPOPOTOMONSTROSESQUIPPEDALIOPHOBIA' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'The science of classifying living things:',
+    answer:'TAXONOMY' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'A palindrome that means a brief intense period of activity:',
+    answer:'RACECAR' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'Unscramble "RCAHTECIR" — a designer of buildings:',
+    answer:'ARCHITECT' },
 
-  // ── STATE ───────────────────────────────────────────────────────
-  let puzzleQueue    = [];   // 3 randomly selected puzzles
-  let puzzleIndex    = 0;    // which puzzle we're on (0-2)
+  // ── TEXT / TYPED (10) ─────────────────────────────────────────
+  { uiType:'text', label:'Hard Math',
+    question:'What is 17 × 13?', answer:'221' },
+  { uiType:'text', label:'Hard Math',
+    question:'What is 2⁸?', answer:'256' },
+  { uiType:'text', label:'Hard Math',
+    question:'What is 99 × 99?', answer:'9801' },
+  { uiType:'text', label:'Number Sequence',
+    question:'What comes next? 1, 4, 9, 16, 25, ?', answer:'36' },
+  { uiType:'text', label:'Number Sequence',
+    question:'What comes next? 1, 1, 2, 3, 5, 8, 13, ?', answer:'21' },
+  { uiType:'text', label:'Number Sequence',
+    question:'What comes next? 2, 6, 12, 20, 30, ?', answer:'42' },
+  { uiType:'text', label:'Roman Numerals',
+    question:'What number is MCMXCIX?', answer:'1999' },
+  { uiType:'text', label:'Roman Numerals',
+    question:'What number is CDXLIV?', answer:'444' },
+  { uiType:'text', label:'Word Scramble',
+    question:'Unscramble: "tlbfuieua"', answer:'beautiful' },
+  { uiType:'text', label:'Missing Letters',
+    question:'EL _ PH _ NT — type both missing letters in order', answer:'ea' },
+];
 
-  // Pick 3 unique puzzles from the bank, ensuring all different types
-  function pickPuzzles() {
-    const shuffled = [...PUZZLE_BANK].sort(() => Math.random() - 0.5);
-    // Try to get 3 different types
-    const chosen = [];
-    const usedTypes = new Set();
-    for (const p of shuffled) {
-      if (!usedTypes.has(p.type)) { chosen.push(p); usedTypes.add(p.type); }
-      if (chosen.length === 3) break;
+// ════════════════════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════════════════════
+let puzzleQueue = [];
+let puzzleIndex = 0;
+
+// ════════════════════════════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════════════════════════════
+function showMsg(el,type,text){el.className='msg '+type;el.textContent=text}
+function clearMsg(el){el.className='msg';el.textContent=''}
+function setInput(el,state){el.classList.remove('ok','error');if(state)el.classList.add(state)}
+function shuffle(arr){return[...arr].sort(()=>Math.random()-.5)}
+function shake(el){el.animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(0)'}],{duration:380,easing:'ease-out'})}
+
+// ════════════════════════════════════════════════════════════════
+//  PICK 5 PUZZLES — all different uiTypes
+// ════════════════════════════════════════════════════════════════
+function pickPuzzles(){
+  const shuffled  = shuffle(PUZZLE_BANK);
+  const chosen    = [];
+  const usedTypes = new Set();
+  // First pass: one of each type
+  for(const p of shuffled){
+    if(!usedTypes.has(p.uiType)){chosen.push(p);usedTypes.add(p.uiType)}
+    if(chosen.length===TOTAL_PUZZLES)break;
+  }
+  // Fill any remaining slots with unused puzzles (different questions)
+  if(chosen.length<TOTAL_PUZZLES){
+    for(const p of shuffled){
+      if(!chosen.includes(p)){chosen.push(p)}
+      if(chosen.length===TOTAL_PUZZLES)break;
     }
-    // Fallback if not enough types
-    while (chosen.length < 3) chosen.push(shuffled[chosen.length]);
-    return chosen;
+  }
+  return chosen;
+}
+
+// ════════════════════════════════════════════════════════════════
+//  STEP DOTS (7 total: 1 password + 5 puzzles + 1 download)
+// ════════════════════════════════════════════════════════════════
+function updateDots(active){
+  for(let i=1;i<=7;i++){
+    const el=document.getElementById('dot'+i);
+    el.className='step-dot';
+    if(i===active)el.classList.add('active');
+    if(i<active) el.classList.add('done');
+  }
+}
+function showStep(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='step-password')updateDots(1);
+  if(id==='step-puzzle')  updateDots(2+puzzleIndex);
+  if(id==='step-download')updateDots(7);
+}
+
+// ════════════════════════════════════════════════════════════════
+//  PASSWORD
+//  BACKEND HOOK: replace with fetch('/api/verify-password',...)
+// ════════════════════════════════════════════════════════════════
+function checkPassword(){
+  const val=document.getElementById('passwordInput').value;
+  const input=document.getElementById('passwordInput');
+  const msg=document.getElementById('passMsg');
+  if(!val.trim()){showMsg(msg,'error','Please enter the access password.');return}
+  if(val===CORRECT_PASSWORD){
+    setInput(input,'ok');
+    showMsg(msg,'success','Password accepted — loading your challenges…');
+    setTimeout(()=>{puzzleQueue=pickPuzzles();puzzleIndex=0;loadPuzzle();showStep('step-puzzle')},650);
+  }else{
+    setInput(input,'error');
+    showMsg(msg,'error','Incorrect password. Try again.');
+    shake(input);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+//  ADVANCE TO NEXT PUZZLE OR DOWNLOAD
+// ════════════════════════════════════════════════════════════════
+function advancePuzzle(){
+  puzzleIndex++;
+  const remaining=TOTAL_PUZZLES-puzzleIndex;
+  if(puzzleIndex<TOTAL_PUZZLES){
+    showMsg(document.getElementById('puzzleMsg'),'success',`✓ Correct! ${remaining} challenge${remaining>1?'s':''} remaining…`);
+    setTimeout(()=>{showStep('step-puzzle');loadPuzzle()},900);
+  }else{
+    showMsg(document.getElementById('puzzleMsg'),'success','All 5 challenges solved! Unlocking…');
+    setTimeout(()=>showStep('step-download'),900);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+//  LOAD PUZZLE
+// ════════════════════════════════════════════════════════════════
+function loadPuzzle(){
+  const p=puzzleQueue[puzzleIndex];
+
+  document.getElementById('puzzleCounter').textContent =`Challenge ${puzzleIndex+1} of ${TOTAL_PUZZLES}`;
+  document.getElementById('puzzleType').textContent    ='// '+p.label;
+  document.getElementById('puzzleQuestion').textContent=p.question;
+
+  for(let i=1;i<=TOTAL_PUZZLES;i++){
+    const pip=document.getElementById('pip'+i);
+    pip.className='pip';
+    if(i===puzzleIndex+1)pip.classList.add('active');
+    if(i<puzzleIndex+1)  pip.classList.add('done');
   }
 
-  // ── STEP NAVIGATION ─────────────────────────────────────────────
-  // Dots: 1=password, 2=puzzle1, 3=puzzle2, 4=puzzle3, 5=download
-  function updateDots(activeDot) {
-    for (let i = 1; i <= 5; i++) {
-      const el = document.getElementById('dot' + i);
-      el.className = 'step-dot';
-      if (i === activeDot) el.classList.add('active');
-      if (i < activeDot)   el.classList.add('done');
-    }
+  clearMsg(document.getElementById('puzzleMsg'));
+
+  const widget    =document.getElementById('puzzleWidget');
+  const textArea  =document.getElementById('puzzleTextArea');
+  const submitBtn =document.getElementById('puzzleSubmitBtn');
+  widget.innerHTML='';
+  textArea.style.display='none';
+  submitBtn.style.display='';
+  submitBtn.textContent='Check Answer →';
+
+  if(p.uiType==='text'){
+    textArea.style.display='';
+    const inp=document.getElementById('puzzleInput');
+    inp.value='';setInput(inp,'');inp.focus();
+
+  }else if(p.uiType==='choice'){
+    submitBtn.style.display='none';
+    buildChoiceWidget(p,widget);
+
+  }else if(p.uiType==='order'){
+    submitBtn.textContent='Confirm Order →';
+    buildOrderWidget(p,widget);
+
+  }else if(p.uiType==='slider'){
+    submitBtn.textContent='Lock In Answer →';
+    buildSliderWidget(p,widget);
+
+  }else if(p.uiType==='seq'){
+    submitBtn.style.display='none';
+    buildSeqWidget(p,widget);
+
+  }else if(p.uiType==='wire'){
+    submitBtn.style.display='none';
+    buildWireWidget(p,widget);
+
+  }else if(p.uiType==='flip'){
+    submitBtn.style.display='none';
+    buildFlipWidget(p,widget);
+
+  }else if(p.uiType==='typeword'){
+    submitBtn.style.display='none';
+    buildTypeWordWidget(p,widget);
   }
+}
 
-  function showStep(id) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    if (id === 'step-password') updateDots(1);
-    if (id === 'step-puzzle')   updateDots(2 + puzzleIndex);
-    if (id === 'step-download') updateDots(5);
+// ════════════════════════════════════════════════════════════════
+//  CHECK PUZZLE (text / order / slider)
+//  BACKEND HOOK: replace with fetch('/api/verify-puzzle',...)
+// ════════════════════════════════════════════════════════════════
+function checkPuzzle(){
+  const p  =puzzleQueue[puzzleIndex];
+  const msg=document.getElementById('puzzleMsg');
+
+  if(p.uiType==='text'){
+    const raw=document.getElementById('puzzleInput').value.trim();
+    const inp=document.getElementById('puzzleInput');
+    if(!raw){showMsg(msg,'error','Please enter an answer.');return}
+    if(raw.toLowerCase()===p.answer.toLowerCase()){setInput(inp,'ok');advancePuzzle();}
+    else{setInput(inp,'error');showMsg(msg,'error','Not quite — try again!');shake(inp);}
+
+  }else if(p.uiType==='order'){
+    const current=[...document.querySelectorAll('.drag-item')].map(el=>el.dataset.val);
+    if(JSON.stringify(current)===JSON.stringify(p.answer)){advancePuzzle();}
+    else{showMsg(msg,'error','Wrong order — keep rearranging!');shake(document.getElementById('puzzleWidget'));}
+
+  }else if(p.uiType==='slider'){
+    const val=parseInt(document.getElementById('puzzleSlider').value);
+    if(val===p.answer){advancePuzzle();}
+    else{showMsg(msg,'error',`You set ${val} — that's not right!`);shake(document.getElementById('puzzleWidget'));}
   }
+}
 
-  // ── PASSWORD ─────────────────────────────────────────────────────
-  // BACKEND HOOK: swap body with fetch('/api/verify-password', { method:'POST', body: JSON.stringify({password:val}) })
-  function checkPassword() {
-    const val   = document.getElementById('passwordInput').value;
-    const input = document.getElementById('passwordInput');
-    const msg   = document.getElementById('passMsg');
-    if (!val.trim()) { showMsg(msg, 'error', 'Please enter the access password.'); return; }
-
-    if (val === CORRECT_PASSWORD) {
-      setInput(input, 'ok');
-      showMsg(msg, 'success', 'Password accepted — loading your challenges…');
-      setTimeout(() => {
-        puzzleQueue = pickPuzzles();
-        puzzleIndex = 0;
-        loadPuzzle();
-        showStep('step-puzzle');
-      }, 650);
-    } else {
-      setInput(input, 'error');
-      showMsg(msg, 'error', 'Incorrect password. Try again.');
-      shake(input);
-    }
-  }
-
-  // ── PUZZLE ───────────────────────────────────────────────────────
-  // BACKEND HOOK: swap checkPuzzle body with fetch('/api/verify-puzzle', ...)
-  function loadPuzzle() {
-    const p = puzzleQueue[puzzleIndex];
-    document.getElementById('puzzleCounter').textContent = `Challenge ${puzzleIndex + 1} of 3`;
-    document.getElementById('puzzleType').textContent    = '// ' + p.type;
-    document.getElementById('puzzleQuestion').textContent = p.question;
-
-    // Update pips
-    for (let i = 1; i <= 3; i++) {
-      const pip = document.getElementById('pip' + i);
-      pip.className = 'pip';
-      if (i === puzzleIndex + 1) pip.classList.add('active');
-      if (i < puzzleIndex + 1)   pip.classList.add('done');
-    }
-
-    const input = document.getElementById('puzzleInput');
-    input.value = '';
-    setInput(input, '');
-    clearMsg(document.getElementById('puzzleMsg'));
-    input.focus();
-  }
-
-  function checkPuzzle() {
-    const raw   = document.getElementById('puzzleInput').value.trim();
-    const val   = raw.toLowerCase();
-    const input = document.getElementById('puzzleInput');
-    const msg   = document.getElementById('puzzleMsg');
-    if (!raw) { showMsg(msg, 'error', 'Please enter an answer.'); return; }
-
-    const expected = puzzleQueue[puzzleIndex].answer.toLowerCase();
-    if (val === expected) {
-      setInput(input, 'ok');
-      puzzleIndex++;
-      if (puzzleIndex < 3) {
-        showMsg(msg, 'success', `Correct! ${3 - puzzleIndex} challenge${3 - puzzleIndex > 1 ? 's' : ''} remaining…`);
-        setTimeout(() => {
-          showStep('step-puzzle');
-          loadPuzzle();
-        }, 800);
-      } else {
-        showMsg(msg, 'success', 'All 3 challenges solved! Unlocking your file…');
-        setTimeout(() => showStep('step-download'), 800);
+// ════════════════════════════════════════════════════════════════
+//  WIDGET: MULTIPLE CHOICE
+// ════════════════════════════════════════════════════════════════
+function buildChoiceWidget(p,container){
+  const grid=document.createElement('div');
+  grid.className='choices';
+  shuffle(p.options).forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.className='choice-btn';btn.textContent=opt;
+    btn.addEventListener('click',()=>{
+      if(btn.classList.contains('correct'))return;
+      if(opt===p.answer){btn.classList.add('correct');advancePuzzle();}
+      else{
+        btn.classList.add('wrong');
+        setTimeout(()=>btn.classList.remove('wrong'),500);
+        showMsg(document.getElementById('puzzleMsg'),'error','Wrong — try another!');
       }
-    } else {
-      setInput(input, 'error');
-      showMsg(msg, 'error', 'Not quite — try again!');
-      shake(input);
+    });
+    grid.appendChild(btn);
+  });
+  container.appendChild(grid);
+}
+
+// ════════════════════════════════════════════════════════════════
+//  WIDGET: DRAG-AND-DROP ORDER
+// ════════════════════════════════════════════════════════════════
+function buildOrderWidget(p,container){
+  const list=document.createElement('div');
+  list.className='drag-list';
+  let items=shuffle(p.items);
+  let attempts=0;
+  while(JSON.stringify(items)===JSON.stringify(p.answer)&&attempts<10){items=shuffle(p.items);attempts++;}
+  items.forEach(val=>{
+    const item=document.createElement('div');
+    item.className='drag-item';item.draggable=true;item.dataset.val=val;
+    item.innerHTML=`<span class="drag-handle">⠿</span>${val}`;
+    addDragEvents(item,list);
+    list.appendChild(item);
+  });
+  container.appendChild(list);
+}
+function addDragEvents(item,list){
+  item.addEventListener('dragstart',()=>item.classList.add('dragging'));
+  item.addEventListener('dragend',()=>{item.classList.remove('dragging');list.querySelectorAll('.drag-item').forEach(i=>i.classList.remove('over'))});
+  item.addEventListener('dragover',e=>{
+    e.preventDefault();
+    const dragging=list.querySelector('.dragging');
+    if(!dragging||dragging===item)return;
+    list.querySelectorAll('.drag-item').forEach(i=>i.classList.remove('over'));
+    item.classList.add('over');
+    const mid=item.getBoundingClientRect().top+item.getBoundingClientRect().height/2;
+    if(e.clientY<mid)list.insertBefore(dragging,item);else list.insertBefore(dragging,item.nextSibling);
+  });
+  let tClone=null,tOX=0,tOY=0;
+  item.addEventListener('touchstart',e=>{
+    const t=e.touches[0],r=item.getBoundingClientRect();
+    tOX=t.clientX-r.left;tOY=t.clientY-r.top;
+    tClone=item.cloneNode(true);
+    tClone.style.cssText=`position:fixed;opacity:.7;pointer-events:none;width:${r.width}px;z-index:9999`;
+    document.body.appendChild(tClone);item.classList.add('dragging');
+  },{passive:true});
+  item.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    const t=e.touches[0];
+    if(tClone){tClone.style.left=(t.clientX-tOX)+'px';tClone.style.top=(t.clientY-tOY)+'px';}
+    const over=document.elementsFromPoint(t.clientX,t.clientY).find(el=>el.classList.contains('drag-item')&&el!==item);
+    if(over){
+      list.querySelectorAll('.drag-item').forEach(i=>i.classList.remove('over'));
+      over.classList.add('over');
+      const r=over.getBoundingClientRect();
+      if(t.clientY<r.top+r.height/2)list.insertBefore(item,over);else list.insertBefore(item,over.nextSibling);
     }
+  },{passive:false});
+  item.addEventListener('touchend',()=>{
+    item.classList.remove('dragging');
+    list.querySelectorAll('.drag-item').forEach(i=>i.classList.remove('over'));
+    if(tClone){tClone.remove();tClone=null;}
+  });
+}
+
+// ════════════════════════════════════════════════════════════════
+//  WIDGET: SLIDER
+// ════════════════════════════════════════════════════════════════
+function buildSliderWidget(p,container){
+  const wrap=document.createElement('div');wrap.className='slider-wrap';
+  const hint=document.createElement('span');hint.className='slider-label';hint.textContent=p.hint;
+  const row=document.createElement('div');row.className='slider-row';
+  const slider=document.createElement('input');
+  slider.type='range';slider.id='puzzleSlider';slider.min=p.min;slider.max=p.max;slider.step=p.step;
+  slider.value=Math.floor((p.min+p.max)/2);
+  const val=document.createElement('span');val.className='slider-val';val.textContent=slider.value;
+  slider.addEventListener('input',()=>val.textContent=slider.value);
+  row.appendChild(slider);row.appendChild(val);
+  wrap.appendChild(hint);wrap.appendChild(row);
+  container.appendChild(wrap);
+}
+
+// ════════════════════════════════════════════════════════════════
+//  WIDGET: MEMORY SEQUENCE
+// ════════════════════════════════════════════════════════════════
+function buildSeqWidget(p,container){
+  const hint=document.createElement('div');hint.className='seq-hint';hint.id='seqHint';hint.textContent='Watch the sequence…';
+  const grid=document.createElement('div');grid.className='seq-grid';
+  p.emojis.forEach((emoji,idx)=>{
+    const cell=document.createElement('div');
+    cell.className='seq-cell';cell.textContent=emoji;cell.dataset.idx=idx;
+    grid.appendChild(cell);
+  });
+  container.appendChild(hint);container.appendChild(grid);
+  const cells=[...grid.querySelectorAll('.seq-cell')];
+  let userInput=[],accepting=false;
+  function flash(idx,delay){
+    return new Promise(res=>setTimeout(()=>{
+      cells[idx].classList.add('flash');
+      setTimeout(()=>{cells[idx].classList.remove('flash');res()},500);
+    },delay));
   }
-
-  // ── HELPERS ──────────────────────────────────────────────────────
-  function showMsg(el, type, text) { el.className = 'msg ' + type; el.textContent = text; }
-  function clearMsg(el)            { el.className = 'msg'; el.textContent = ''; }
-  function setInput(el, state)     { el.classList.remove('ok','error'); if (state) el.classList.add(state); }
-  function shake(el) {
-    el.animate([
-      {transform:'translateX(0)'},{transform:'translateX(-8px)'},
-      {transform:'translateX(8px)'},{transform:'translateX(-5px)'},
-      {transform:'translateX(5px)'},{transform:'translateX(0)'},
-    ], {duration:380, easing:'ease-out'});
+  async function playSequence(){
+    hint.textContent='Watch the sequence…';
+    cells.forEach(c=>c.style.pointerEvents='none');
+    await new Promise(r=>setTimeout(r,600));
+    for(let i=0;i<p.sequence.length;i++)await flash(p.sequence[i],i*700);
+    await new Promise(r=>setTimeout(r,400));
+    hint.textContent=`Now tap the ${p.sequence.length} tiles in order!`;
+    userInput=[];accepting=true;
+    cells.forEach(c=>c.style.pointerEvents='');
   }
+  cells.forEach(cell=>{
+    cell.addEventListener('click',()=>{
+      if(!accepting)return;
+      const idx=parseInt(cell.dataset.idx);
+      userInput.push(idx);
+      cell.classList.add('flash');setTimeout(()=>cell.classList.remove('flash'),300);
+      const step=userInput.length-1;
+      if(userInput[step]!==p.sequence[step]){
+        accepting=false;cell.classList.add('wrong');
+        hint.textContent='Wrong! Replaying…';
+        showMsg(document.getElementById('puzzleMsg'),'error','Wrong tile — watch again!');
+        setTimeout(()=>{cell.classList.remove('wrong');clearMsg(document.getElementById('puzzleMsg'));playSequence()},1000);
+        return;
+      }
+      if(userInput.length===p.sequence.length){accepting=false;hint.textContent='✓ Correct!';advancePuzzle();}
+      else hint.textContent=`${userInput.length} / ${p.sequence.length} correct…`;
+    });
+  });
+  playSequence();
+}
 
-  // ── DOWNLOAD ZIP ─────────────────────────────────────────────────
-  // Uses the GitHub Git Trees API (recursive=1) to get every file inside
-  // downloads/ in one request, then fetches each file by its raw URL and
-  // bundles them all into a zip — preserving any subfolder structure.
-  // BACKEND HOOK: For private repos, add an Authorization header with a
-  // personal access token, or generate the zip server-side instead.
-
-  async function downloadZip() {
-    const btn = document.getElementById('dlBtn');
-    const msg = document.getElementById('dlMsg');
-    btn.disabled = true;
-    btn.textContent = '⏳ Building zip…';
-    showMsg(msg, 'success', 'Fetching file list from GitHub…');
-
-    try {
-      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
-
-      // Step 1: get the SHA of the downloads folder via contents API
-      const contentsRes = await fetch('https://api.github.com/repos/pjmills100/files/contents/downloads');
-      if (!contentsRes.ok) throw new Error('Could not read folder — is the repo public?');
-
-      // Step 2: use the recursive Git Trees API to get every file at any depth
-      const treeRes = await fetch('https://api.github.com/repos/pjmills100/files/git/trees/main?recursive=1');
-      if (!treeRes.ok) throw new Error('Could not read repo tree.');
-      const treeData = await treeRes.json();
-
-      // Filter to only files (blobs) that are inside the downloads/ folder
-      const filesToDownload = treeData.tree.filter(
-        item => item.type === 'blob' && item.path.startsWith('downloads/')
-      );
-
-      if (filesToDownload.length === 0) throw new Error('No files found in downloads folder.');
-
-      showMsg(msg, 'success', `Found ${filesToDownload.length} file(s) — building zip…`);
-
-      const zip = new JSZip();
-
-      // Step 3: fetch each file by raw URL and add it to the zip,
-      // keeping the path relative to downloads/ (strips the "downloads/" prefix)
-      await Promise.all(filesToDownload.map(async item => {
-        const rawUrl = `https://raw.githubusercontent.com/pjmills100/files/main/${item.path}`;
-        const r = await fetch(rawUrl);
-        if (!r.ok) throw new Error('Failed to fetch ' + item.path);
-        const blob = await r.blob();
-        // Path inside zip: strip leading "downloads/" so zip root = downloads folder contents
-        const zipPath = item.path.replace(/^downloads\//, '');
-        zip.file(zipPath, blob);
-      }));
-
-      // Step 4: generate blob and trigger browser download
-      const zipBlob = await zip.generateAsync({ type: 'blob' });
-      const url = URL.createObjectURL(zipBlob);
-      const a   = document.createElement('a');
-      a.href     = url;
-      a.download = 'downloads.zip';
-      a.click();
-      URL.revokeObjectURL(url);
-
-      showMsg(msg, 'success', 'downloads.zip downloaded successfully!');
-      btn.textContent = '✅ Downloaded!';
-    } catch (err) {
-      showMsg(msg, 'error', 'Error: ' + err.message);
-      btn.disabled    = false;
-      btn.textContent = '⬇ Download Files';
-    }
+// ════════════════════════════════════════════════════════════════
+//  WIDGET: MATCH / WIRE
+// ════════════════════════════════════════════════════════════════
+function buildWireWidget(p,container){
+  const leftItems =shuffle(p.pairs.map(pr=>pr.left));
+  const rightItems=shuffle(p.pairs.map(pr=>pr.right));
+  const pairMap={};p.pairs.forEach(pr=>{pairMap[pr.left]=pr.right});
+  const wrap=document.createElement('div');wrap.className='wire-wrap';
+  const cols=document.createElement('div');cols.className='wire-cols';
+  const leftCol=document.createElement('div');leftCol.className='wire-col';
+  const rightCol=document.createElement('div');rightCol.className='wire-col';
+  let selectedLeft=null;const matched=new Set();
+  function makeItem(text,side,col){
+    const el=document.createElement('div');
+    el.className='wire-item';el.textContent=text;el.dataset.val=text;
+    el.addEventListener('click',()=>{
+      if(el.classList.contains('matched'))return;
+      if(side==='left'){
+        leftCol.querySelectorAll('.wire-item').forEach(i=>i.classList.remove('selected'));
+        el.classList.add('selected');selectedLeft=text;
+      }else if(side==='right'&&selectedLeft){
+        if(pairMap[selectedLeft]===text){
+          const lEl=[...leftCol.querySelectorAll('.wire-item')].find(i=>i.dataset.val===selectedLeft);
+          lEl.classList.remove('selected');lEl.classList.add('matched');el.classList.add('matched');
+          matched.add(selectedLeft);selectedLeft=null;
+          if(matched.size===p.pairs.length)setTimeout(()=>advancePuzzle(),400);
+        }else{
+          const lEl=[...leftCol.querySelectorAll('.wire-item')].find(i=>i.dataset.val===selectedLeft);
+          [lEl,el].forEach(e=>{e.classList.add('wrong-flash');setTimeout(()=>e.classList.remove('wrong-flash'),400)});
+          lEl.classList.remove('selected');selectedLeft=null;
+          showMsg(document.getElementById('puzzleMsg'),'error','Not a match — try again!');
+          setTimeout(()=>clearMsg(document.getElementById('puzzleMsg')),1200);
+        }
+      }
+    });
+    col.appendChild(el);
   }
+  leftItems.forEach(t=>makeItem(t,'left',leftCol));
+  rightItems.forEach(t=>makeItem(t,'right',rightCol));
+  cols.appendChild(leftCol);cols.appendChild(rightCol);
+  wrap.appendChild(cols);container.appendChild(wrap);
+}
 
-  function loadScript(src) {
-    return new Promise((resolve, reject) => {
-      if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
-      const s = document.createElement('script');
-      s.src = src; s.onload = resolve; s.onerror = reject;
-      document.head.appendChild(s);
+// ════════════════════════════════════════════════════════════════
+//  WIDGET: FLIP / MEMORY MATCH
+// ════════════════════════════════════════════════════════════════
+function buildFlipWidget(p,container){
+  const hint=document.createElement('div');hint.className='flip-hint';hint.id='flipHint';hint.textContent='Find all 4 matching pairs!';
+  const grid=document.createElement('div');grid.className='flip-grid';
+  // Duplicate pairs and shuffle
+  const tiles=shuffle([...p.pairs,...p.pairs]);
+  let flipped=[],matched=0,locked=false;
+  tiles.forEach((emoji,i)=>{
+    const card=document.createElement('div');card.className='flip-card';card.dataset.emoji=emoji;card.dataset.idx=i;
+    card.innerHTML=`<div class="flip-inner"><div class="flip-front">?</div><div class="flip-back">${emoji}</div></div>`;
+    card.addEventListener('click',()=>{
+      if(locked||card.classList.contains('flipped')||card.classList.contains('matched'))return;
+      card.classList.add('flipped');flipped.push(card);
+      if(flipped.length===2){
+        locked=true;
+        const[a,b]=flipped;
+        if(a.dataset.emoji===b.dataset.emoji){
+          a.classList.add('matched');b.classList.add('matched');
+          matched++;flipped=[];locked=false;
+          hint.textContent=matched===p.pairs.length?'✓ All matched!':` ${p.pairs.length-matched} pair${p.pairs.length-matched>1?'s':''} left…`;
+          if(matched===p.pairs.length)setTimeout(()=>advancePuzzle(),500);
+        }else{
+          hint.textContent='No match — try to remember where they are!';
+          setTimeout(()=>{a.classList.remove('flipped');b.classList.remove('flipped');flipped=[];locked=false;hint.textContent=`${p.pairs.length-matched} pair${p.pairs.length-matched>1?'s':''} left…`},1100);
+        }
+      }
+    });
+    grid.appendChild(card);
+  });
+  container.appendChild(hint);container.appendChild(grid);
+}
+
+// ════════════════════════════════════════════════════════════════
+//  WIDGET: TYPE THE WORD (on-screen keyboard)
+// ════════════════════════════════════════════════════════════════
+function buildTypeWordWidget(p,container){
+  const answer=p.answer.toUpperCase();
+  let typed='';
+
+  const wrap=document.createElement('div');wrap.className='typeword-wrap';
+
+  // Letter display boxes
+  const display=document.createElement('div');display.className='typeword-display';
+  answer.split('').forEach(()=>{
+    const box=document.createElement('div');box.className='typeword-letter';box.textContent='_';
+    display.appendChild(box);
+  });
+  wrap.appendChild(display);
+
+  // On-screen keyboard
+  const rows=[['Q','W','E','R','T','Y','U','I','O','P'],['A','S','D','F','G','H','J','K','L'],['Z','X','C','V','B','N','M','1','2','3','4','5','6','7','8','9','0','⌫']];
+  const kbWrap=document.createElement('div');kbWrap.className='typeword-keyboard';
+
+  function updateDisplay(){
+    const boxes=[...display.querySelectorAll('.typeword-letter')];
+    boxes.forEach((box,i)=>{
+      box.className='typeword-letter';
+      if(i<typed.length){box.textContent=typed[i];box.classList.add('filled');}
+      else box.textContent='_';
     });
   }
 
-  document.addEventListener('keydown', e => {
-    if (e.key !== 'Enter') return;
-    const active = document.querySelector('.section.active');
-    if (!active) return;
-    if (active.id === 'step-password') checkPassword();
-    if (active.id === 'step-puzzle')   checkPuzzle();
-  });
-
-  // ── BLOCK COPY / PASTE ON PUZZLE ────────────────────────────────
-  // Prevent copying the question text or pasting answers into the input
-  const puzzleQuestion = document.getElementById('puzzleQuestion');
-  const puzzleInput    = document.getElementById('puzzleInput');
-
-  // Block right-click context menu on the question and input
-  [puzzleQuestion, puzzleInput].forEach(el => {
-    el.addEventListener('contextmenu', e => e.preventDefault());
-  });
-
-  // Block keyboard copy/cut/paste shortcuts on the puzzle section
-  document.getElementById('step-puzzle').addEventListener('keydown', e => {
-    const blocked = ['c', 'x', 'v', 'a'];
-    if ((e.ctrlKey || e.metaKey) && blocked.includes(e.key.toLowerCase())) {
-      e.preventDefault();
+  function handleKey(k){
+    if(k==='⌫'){
+      typed=typed.slice(0,-1);updateDisplay();
+    }else if(typed.length<answer.length){
+      typed+=k;updateDisplay();
+      if(typed.length===answer.length){
+        const boxes=[...display.querySelectorAll('.typeword-letter')];
+        if(typed===answer){
+          boxes.forEach(b=>{b.classList.remove('filled');b.classList.add('correct-letter')});
+          setTimeout(()=>advancePuzzle(),600);
+        }else{
+          boxes.forEach(b=>{b.classList.remove('filled');b.classList.add('wrong-letter')});
+          setTimeout(()=>{typed='';boxes.forEach(b=>{b.className='typeword-letter';b.textContent='_'});
+            showMsg(document.getElementById('puzzleMsg'),'error','Not right — try again!');},700);
+        }
+      }
     }
+  }
+
+  rows.forEach(row=>{
+    const rowEl=document.createElement('div');rowEl.className='kb-row';
+    row.forEach(k=>{
+      const key=document.createElement('button');
+      key.className='kb-key'+(k==='⌫'?' kb-del':'');
+      key.textContent=k;
+      key.addEventListener('click',()=>handleKey(k));
+      rowEl.appendChild(key);
+    });
+    kbWrap.appendChild(rowEl);
   });
 
-  // Block paste event directly on the input (covers mobile & browser paste buttons)
-  puzzleInput.addEventListener('paste', e => e.preventDefault());
+  wrap.appendChild(kbWrap);
+  container.appendChild(wrap);
+}
 
-  // Block text selection on the question box via CSS (applied dynamically)
-  puzzleQuestion.style.userSelect        = 'none';
-  puzzleQuestion.style.webkitUserSelect  = 'none';
-  puzzleQuestion.style.msUserSelect      = 'none';
+// ════════════════════════════════════════════════════════════════
+//  BLOCK COPY/PASTE
+// ════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  const step=document.getElementById('step-puzzle');
+  const qi  =document.getElementById('puzzleInput');
+  const qq  =document.getElementById('puzzleQuestion');
+  [qq,qi].forEach(el=>el.addEventListener('contextmenu',e=>e.preventDefault()));
+  step.addEventListener('keydown',e=>{
+    if((e.ctrlKey||e.metaKey)&&['c','x','v','a'].includes(e.key.toLowerCase()))e.preventDefault();
+  });
+  qi.addEventListener('paste',e=>e.preventDefault());
+});
+
+// ════════════════════════════════════════════════════════════════
+//  ENTER KEY
+// ════════════════════════════════════════════════════════════════
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  const active=document.querySelector('.section.active');
+  if(!active)return;
+  if(active.id==='step-password')checkPassword();
+  if(active.id==='step-puzzle'){
+    const p=puzzleQueue[puzzleIndex];
+    if(p&&(p.uiType==='text'||p.uiType==='order'||p.uiType==='slider'))checkPuzzle();
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
+//  DOWNLOAD ZIP
+//  BACKEND HOOK: For private repos add Authorization header,
+//  or generate signed zip from a serverless function instead.
+// ════════════════════════════════════════════════════════════════
+async function downloadZip(){
+  const btn=document.getElementById('dlBtn');
+  const msg=document.getElementById('dlMsg');
+  btn.disabled=true;btn.textContent='⏳ Building zip…';
+  showMsg(msg,'success','Fetching file list from GitHub…');
+  try{
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+    const contentsRes=await fetch('https://api.github.com/repos/pjmills100/files/contents/downloads');
+    if(!contentsRes.ok)throw new Error('Could not read folder — is the repo public?');
+    const treeRes=await fetch('https://api.github.com/repos/pjmills100/files/git/trees/main?recursive=1');
+    if(!treeRes.ok)throw new Error('Could not read repo tree.');
+    const files=(await treeRes.json()).tree.filter(i=>i.type==='blob'&&i.path.startsWith('downloads/'));
+    if(!files.length)throw new Error('No files found in downloads folder.');
+    showMsg(msg,'success',`Found ${files.length} file(s) — building zip…`);
+    const zip=new JSZip();
+    await Promise.all(files.map(async item=>{
+      const r=await fetch(`https://raw.githubusercontent.com/pjmills100/files/main/${item.path}`);
+      if(!r.ok)throw new Error('Failed to fetch '+item.path);
+      zip.file(item.path.replace(/^downloads\//,''),await r.blob());
+    }));
+    const url=URL.createObjectURL(await zip.generateAsync({type:'blob'}));
+    Object.assign(document.createElement('a'),{href:url,download:'downloads.zip'}).click();
+    URL.revokeObjectURL(url);
+    showMsg(msg,'success','downloads.zip downloaded!');
+    btn.textContent='✅ Downloaded!';
+  }catch(err){
+    showMsg(msg,'error','Error: '+err.message);
+    btn.disabled=false;btn.textContent='⬇ Download Files';
+  }
+}
+function loadScript(src){
+  return new Promise((resolve,reject)=>{
+    if(document.querySelector(`script[src="${src}"]`)){resolve();return}
+    const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;
+    document.head.appendChild(s);
+  });
+}
 </script>
 </body>
 </html>
