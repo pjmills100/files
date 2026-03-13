@@ -234,6 +234,36 @@
 
     .btn-download:hover { transform: translateY(-2px); }
 
+    .puzzle-progress {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .puzzle-counter {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .puzzle-pips {
+      display: flex;
+      gap: 6px;
+    }
+
+    .pip {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: background 0.3s var(--ease), transform 0.3s var(--ease);
+    }
+
+    .pip.active { background: var(--accent); transform: scale(1.2); }
+    .pip.done   { background: var(--accent); opacity: 0.4; transform: scale(1); }
+
     .puzzle-box {
       background: var(--bg);
       border: 1px solid var(--border);
@@ -256,6 +286,9 @@
       font-weight: 600;
       color: #fff;
       line-height: 1.5;
+      user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
     }
 
     .section { display: none; }
@@ -323,6 +356,8 @@
     <div class="step-dot active" id="dot1"></div>
     <div class="step-dot"        id="dot2"></div>
     <div class="step-dot"        id="dot3"></div>
+    <div class="step-dot"        id="dot4"></div>
+    <div class="step-dot"        id="dot5"></div>
   </div>
 
   <!-- STEP 1 — PASSWORD -->
@@ -349,6 +384,14 @@
 
   <!-- STEP 2 — PUZZLE -->
   <div class="section" id="step-puzzle">
+    <div class="puzzle-progress">
+      <span class="puzzle-counter" id="puzzleCounter">Challenge 1 of 3</span>
+      <div class="puzzle-pips">
+        <div class="pip active" id="pip1"></div>
+        <div class="pip"        id="pip2"></div>
+        <div class="pip"        id="pip3"></div>
+      </div>
+    </div>
     <div class="puzzle-box">
       <div class="puzzle-type" id="puzzleType"></div>
       <div class="puzzle-question" id="puzzleQuestion"></div>
@@ -363,10 +406,6 @@
       spellcheck="false"
     />
     <div class="msg" id="puzzleMsg"></div>
-    <!--
-      BACKEND HOOK: Replace checkPuzzle() with a POST to your serverless
-      function. Store puzzle answers in a server session or signed JWT.
-    -->
     <button class="btn btn-primary" onclick="checkPuzzle()">
       Check Answer →
     </button>
@@ -399,59 +438,125 @@
   // BACKEND HOOK: Move this to an environment variable / server-side check.
   const CORRECT_PASSWORD = 'FXWc8bG0&xmsNm(n=cAG1F#%&=r$WVP9*CS2%zB^r?E(#XD^yFR&9';
 
-  // ── PUZZLE BANK (Color Code removed) ───────────────────────────
+  // ── PUZZLE BANK — 60 hard puzzles across 8 types ───────────────
   const PUZZLE_BANK = [
-    // Math
-    { type: 'Math Problem',    question: 'What is 15 × 3?',                           answer: '45'       },
-    { type: 'Math Problem',    question: 'What is 256 ÷ 16?',                         answer: '16'       },
-    { type: 'Math Problem',    question: 'What is 7² + 1?',                           answer: '50'       },
-    { type: 'Math Problem',    question: 'What is 8 × 8 − 4?',                        answer: '60'       },
-    // Word Scramble
-    { type: 'Word Scramble',   question: 'Unscramble: "act" (3-letter animal)',       answer: 'cat'      },
-    { type: 'Word Scramble',   question: 'Unscramble: "elapp"',                       answer: 'apple'    },
-    { type: 'Word Scramble',   question: 'Unscramble: "rcilce"',                      answer: 'circle'   },
-    { type: 'Word Scramble',   question: 'Unscramble: "tgnhi"',                       answer: 'night'    },
-    // Number Sequence
-    { type: 'Number Sequence', question: 'What comes next? 1, 3, 5, 7, ?',           answer: '9'        },
-    { type: 'Number Sequence', question: 'What comes next? 2, 4, 8, 16, ?',          answer: '32'       },
-    { type: 'Number Sequence', question: 'What comes next? 0, 1, 1, 2, 3, 5, ?',     answer: '8'        },
-    { type: 'Number Sequence', question: 'What comes next? 3, 6, 9, 12, ?',          answer: '15'       },
-    // Riddle
-    { type: 'Riddle',          question: 'What has keys but no locks?',               answer: 'piano'    },
-    { type: 'Riddle',          question: 'I have hands but cannot clap. What am I?',  answer: 'clock'    },
-    { type: 'Riddle',          question: 'What gets wetter the more it dries?',       answer: 'towel'    },
-    { type: 'Riddle',          question: 'I speak without a mouth. What am I?',       answer: 'echo'     },
-    // Reverse Word
-    { type: 'Reverse Word',    question: 'Spell "pots" backwards.',                   answer: 'stop'     },
-    { type: 'Reverse Word',    question: 'Spell "evil" backwards.',                   answer: 'live'     },
-    { type: 'Reverse Word',    question: 'Spell "desserts" backwards.',               answer: 'stressed' },
-    { type: 'Reverse Word',    question: 'Spell "noon" backwards.',                   answer: 'noon'     },
-    // Missing Letter
-    { type: 'Missing Letter',  question: 'W _ T E R  (fill the blank)',               answer: 'a'        },
-    { type: 'Missing Letter',  question: 'P _ Z Z L E  (fill the blank)',             answer: 'u'        },
-    { type: 'Missing Letter',  question: 'S _ C R E T  (fill the blank)',             answer: 'e'        },
-    { type: 'Missing Letter',  question: 'B _ T T L E  (fill the blank)',             answer: 'a'        },
-    // Roman Numerals
-    { type: 'Roman Numerals',  question: 'What number is X?',                         answer: '10'       },
-    { type: 'Roman Numerals',  question: 'What number is XIV?',                       answer: '14'       },
-    { type: 'Roman Numerals',  question: 'What number is XL?',                        answer: '40'       },
-    { type: 'Roman Numerals',  question: 'What number is LXIX?',                      answer: '69'       },
+    // Hard Math
+    { type: 'Math Problem',    question: 'What is 17 × 13?',                                    answer: '221'         },
+    { type: 'Math Problem',    question: 'What is √(144) + 5²?',                                answer: '37'          },
+    { type: 'Math Problem',    question: 'What is 2⁸?',                                         answer: '256'         },
+    { type: 'Math Problem',    question: 'What is 1000 ÷ 8?',                                   answer: '125'         },
+    { type: 'Math Problem',    question: 'What is 99 × 99?',                                    answer: '9801'        },
+    { type: 'Math Problem',    question: 'What is 3³ + 4³?',                                    answer: '91'          },
+    { type: 'Math Problem',    question: 'What is 15% of 240?',                                 answer: '36'          },
+    { type: 'Math Problem',    question: 'If x² = 169, what is x? (positive)',                  answer: '13'          },
+
+    // Hard Word Scramble (longer words)
+    { type: 'Word Scramble',   question: 'Unscramble: "nrcsaale"',                              answer: 'lancers'     },
+    { type: 'Word Scramble',   question: 'Unscramble: "ptiahol"',                               answer: 'hospital'    },
+    { type: 'Word Scramble',   question: 'Unscramble: "tlbfuieua"',                             answer: 'beautiful'   },
+    { type: 'Word Scramble',   question: 'Unscramble: "tcarntoc"',                              answer: 'contract'    },
+    { type: 'Word Scramble',   question: 'Unscramble: "iemntuo"',                               answer: 'mountain'    },
+    { type: 'Word Scramble',   question: 'Unscramble: "aaebclns"',                              answer: 'balances'    },
+    { type: 'Word Scramble',   question: 'Unscramble: "rcahtecir"',                             answer: 'architect'   },
+    { type: 'Word Scramble',   question: 'Unscramble: "lphieodp"',                              answer: 'dolphins'    },
+
+    // Hard Number Sequences
+    { type: 'Number Sequence', question: 'What comes next? 1, 4, 9, 16, 25, ?',                answer: '36'          },
+    { type: 'Number Sequence', question: 'What comes next? 3, 7, 13, 21, 31, ?',               answer: '43'          },
+    { type: 'Number Sequence', question: 'What comes next? 2, 3, 5, 7, 11, 13, ?',             answer: '17'          },
+    { type: 'Number Sequence', question: 'What comes next? 1, 8, 27, 64, ?',                   answer: '125'         },
+    { type: 'Number Sequence', question: 'What comes next? 192, 96, 48, 24, ?',                answer: '12'          },
+    { type: 'Number Sequence', question: 'What comes next? 0, 1, 3, 6, 10, 15, ?',             answer: '21'          },
+    { type: 'Number Sequence', question: 'What comes next? 2, 6, 12, 20, 30, ?',               answer: '42'          },
+    { type: 'Number Sequence', question: 'What comes next? 1, 2, 6, 24, 120, ?',               answer: '720'         },
+
+    // Hard Riddles
+    { type: 'Riddle',          question: 'I have cities but no houses, forests but no trees, and water but no fish. What am I?', answer: 'map' },
+    { type: 'Riddle',          question: 'The more you take, the more you leave behind. What am I?',  answer: 'footsteps'   },
+    { type: 'Riddle',          question: 'I am not alive, but I can grow. I have no lungs, but I need air. What am I?', answer: 'fire' },
+    { type: 'Riddle',          question: 'I can travel around the world without moving. What am I?',  answer: 'stamp'       },
+    { type: 'Riddle',          question: 'I have a head and a tail but no body. What am I?',          answer: 'coin'        },
+    { type: 'Riddle',          question: 'What can run but never walks, has a mouth but never talks?', answer: 'river'      },
+    { type: 'Riddle',          question: 'I am always hungry and must always be fed. What am I?',     answer: 'fire'        },
+    { type: 'Riddle',          question: 'What has an eye but cannot see?',                           answer: 'needle'      },
+
+    // Reverse Word (harder)
+    { type: 'Reverse Word',    question: 'Spell "stressed" backwards.',                         answer: 'desserts'    },
+    { type: 'Reverse Word',    question: 'Spell "repaid" backwards.',                           answer: 'diaper'      },
+    { type: 'Reverse Word',    question: 'Spell "deliver" backwards.',                          answer: 'reviled'     },
+    { type: 'Reverse Word',    question: 'Spell "gateman" backwards.',                          answer: 'nametag'     },
+    { type: 'Reverse Word',    question: 'Spell "drawer" backwards.',                           answer: 'reward'      },
+    { type: 'Reverse Word',    question: 'Spell "diaper" backwards.',                           answer: 'repaid'      },
+    { type: 'Reverse Word',    question: 'Spell "live" backwards.',                             answer: 'evil'        },
+    { type: 'Reverse Word',    question: 'Spell "wolf" backwards.',                             answer: 'flow'        },
+
+    // Missing Letter (harder, multi-blank)
+    { type: 'Missing Letter',  question: 'EL _ PH _ NT  (two blanks — just type both letters in order)', answer: 'ea' },
+    { type: 'Missing Letter',  question: 'SCH _ _ ULE  (two blanks)',                           answer: 'ed'          },
+    { type: 'Missing Letter',  question: 'KN _ _ LEDGE  (two blanks)',                          answer: 'ow'          },
+    { type: 'Missing Letter',  question: 'FR _ _ UENCY  (two blanks)',                          answer: 'eq'          },
+    { type: 'Missing Letter',  question: 'B _ _ UTIFUL  (two blanks)',                          answer: 'ea'          },
+    { type: 'Missing Letter',  question: 'EM _ _ RASS  (two blanks)',                           answer: 'ba'          },
+    { type: 'Missing Letter',  question: 'N _ CESSARY  (one blank)',                            answer: 'e'           },
+    { type: 'Missing Letter',  question: 'S _ PARATE  (one blank)',                             answer: 'e'           },
+
+    // Roman Numerals (harder)
+    { type: 'Roman Numerals',  question: 'What number is XCIX?',                                answer: '99'          },
+    { type: 'Roman Numerals',  question: 'What number is CDXLIV?',                             answer: '444'         },
+    { type: 'Roman Numerals',  question: 'What number is MCMXCIX?',                            answer: '1999'        },
+    { type: 'Roman Numerals',  question: 'What number is DCCCXL?',                             answer: '840'         },
+    { type: 'Roman Numerals',  question: 'Convert 2024 to Roman numerals.',                    answer: 'mmxxiv'      },
+    { type: 'Roman Numerals',  question: 'What number is MMCDXXI?',                            answer: '2421'        },
+    { type: 'Roman Numerals',  question: 'What number is DLXXVII?',                            answer: '577'         },
+    { type: 'Roman Numerals',  question: 'Convert 1776 to Roman numerals.',                    answer: 'mdcclxxvi'   },
+
+    // Logic / Pattern
+    { type: 'Logic',           question: 'A rooster lays an egg on a roof. Which way does it roll?',  answer: 'roosters don\'t lay eggs' },
+    { type: 'Logic',           question: 'How many months have 28 days?',                       answer: '12'          },
+    { type: 'Logic',           question: 'If you have 3 apples and take away 2, how many do YOU have?', answer: '2'   },
+    { type: 'Logic',           question: 'A plane crashes on the border of US and Canada. Where do they bury survivors?', answer: 'you don\'t bury survivors' },
+    { type: 'Logic',           question: 'What word is spelled incorrectly in every dictionary?', answer: 'incorrectly' },
+    { type: 'Logic',           question: 'I have 6 eggs. I broke 2, cooked 2, and ate 2. How many do I have left?', answer: '4' },
+    { type: 'Logic',           question: 'What occurs once in a minute, twice in a moment, never in a thousand years?', answer: 'm' },
+    { type: 'Logic',           question: 'Before Mt. Everest was discovered, what was the tallest mountain?', answer: 'everest' },
   ];
 
   // ── STATE ───────────────────────────────────────────────────────
-  let currentPuzzle = null;
+  let puzzleQueue    = [];   // 3 randomly selected puzzles
+  let puzzleIndex    = 0;    // which puzzle we're on (0-2)
+
+  // Pick 3 unique puzzles from the bank, ensuring all different types
+  function pickPuzzles() {
+    const shuffled = [...PUZZLE_BANK].sort(() => Math.random() - 0.5);
+    // Try to get 3 different types
+    const chosen = [];
+    const usedTypes = new Set();
+    for (const p of shuffled) {
+      if (!usedTypes.has(p.type)) { chosen.push(p); usedTypes.add(p.type); }
+      if (chosen.length === 3) break;
+    }
+    // Fallback if not enough types
+    while (chosen.length < 3) chosen.push(shuffled[chosen.length]);
+    return chosen;
+  }
 
   // ── STEP NAVIGATION ─────────────────────────────────────────────
+  // Dots: 1=password, 2=puzzle1, 3=puzzle2, 4=puzzle3, 5=download
+  function updateDots(activeDot) {
+    for (let i = 1; i <= 5; i++) {
+      const el = document.getElementById('dot' + i);
+      el.className = 'step-dot';
+      if (i === activeDot) el.classList.add('active');
+      if (i < activeDot)   el.classList.add('done');
+    }
+  }
+
   function showStep(id) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    const num = { 'step-password': 1, 'step-puzzle': 2, 'step-download': 3 }[id];
-    ['dot1','dot2','dot3'].forEach((d, i) => {
-      const el = document.getElementById(d);
-      el.className = 'step-dot';
-      if (i + 1 === num) el.classList.add('active');
-      if (i + 1 <  num)  el.classList.add('done');
-    });
+    if (id === 'step-password') updateDots(1);
+    if (id === 'step-puzzle')   updateDots(2 + puzzleIndex);
+    if (id === 'step-download') updateDots(5);
   }
 
   // ── PASSWORD ─────────────────────────────────────────────────────
@@ -464,8 +569,13 @@
 
     if (val === CORRECT_PASSWORD) {
       setInput(input, 'ok');
-      showMsg(msg, 'success', 'Password accepted — loading your challenge…');
-      setTimeout(() => { loadPuzzle(); showStep('step-puzzle'); }, 650);
+      showMsg(msg, 'success', 'Password accepted — loading your challenges…');
+      setTimeout(() => {
+        puzzleQueue = pickPuzzles();
+        puzzleIndex = 0;
+        loadPuzzle();
+        showStep('step-puzzle');
+      }, 650);
     } else {
       setInput(input, 'error');
       showMsg(msg, 'error', 'Incorrect password. Try again.');
@@ -476,25 +586,47 @@
   // ── PUZZLE ───────────────────────────────────────────────────────
   // BACKEND HOOK: swap checkPuzzle body with fetch('/api/verify-puzzle', ...)
   function loadPuzzle() {
-    currentPuzzle = PUZZLE_BANK[Math.floor(Math.random() * PUZZLE_BANK.length)];
-    document.getElementById('puzzleType').textContent     = '// ' + currentPuzzle.type;
-    document.getElementById('puzzleQuestion').textContent = currentPuzzle.question;
+    const p = puzzleQueue[puzzleIndex];
+    document.getElementById('puzzleCounter').textContent = `Challenge ${puzzleIndex + 1} of 3`;
+    document.getElementById('puzzleType').textContent    = '// ' + p.type;
+    document.getElementById('puzzleQuestion').textContent = p.question;
+
+    // Update pips
+    for (let i = 1; i <= 3; i++) {
+      const pip = document.getElementById('pip' + i);
+      pip.className = 'pip';
+      if (i === puzzleIndex + 1) pip.classList.add('active');
+      if (i < puzzleIndex + 1)   pip.classList.add('done');
+    }
+
     const input = document.getElementById('puzzleInput');
     input.value = '';
     setInput(input, '');
     clearMsg(document.getElementById('puzzleMsg'));
+    input.focus();
   }
 
   function checkPuzzle() {
-    const val   = document.getElementById('puzzleInput').value.trim().toLowerCase();
+    const raw   = document.getElementById('puzzleInput').value.trim();
+    const val   = raw.toLowerCase();
     const input = document.getElementById('puzzleInput');
     const msg   = document.getElementById('puzzleMsg');
-    if (!val) { showMsg(msg, 'error', 'Please enter an answer.'); return; }
+    if (!raw) { showMsg(msg, 'error', 'Please enter an answer.'); return; }
 
-    if (val === currentPuzzle.answer.toLowerCase()) {
+    const expected = puzzleQueue[puzzleIndex].answer.toLowerCase();
+    if (val === expected) {
       setInput(input, 'ok');
-      showMsg(msg, 'success', 'Correct! Unlocking your file…');
-      setTimeout(() => showStep('step-download'), 700);
+      puzzleIndex++;
+      if (puzzleIndex < 3) {
+        showMsg(msg, 'success', `Correct! ${3 - puzzleIndex} challenge${3 - puzzleIndex > 1 ? 's' : ''} remaining…`);
+        setTimeout(() => {
+          showStep('step-puzzle');
+          loadPuzzle();
+        }, 800);
+      } else {
+        showMsg(msg, 'success', 'All 3 challenges solved! Unlocking your file…');
+        setTimeout(() => showStep('step-download'), 800);
+      }
     } else {
       setInput(input, 'error');
       showMsg(msg, 'error', 'Not quite — try again!');
@@ -597,6 +729,32 @@
     if (active.id === 'step-password') checkPassword();
     if (active.id === 'step-puzzle')   checkPuzzle();
   });
+
+  // ── BLOCK COPY / PASTE ON PUZZLE ────────────────────────────────
+  // Prevent copying the question text or pasting answers into the input
+  const puzzleQuestion = document.getElementById('puzzleQuestion');
+  const puzzleInput    = document.getElementById('puzzleInput');
+
+  // Block right-click context menu on the question and input
+  [puzzleQuestion, puzzleInput].forEach(el => {
+    el.addEventListener('contextmenu', e => e.preventDefault());
+  });
+
+  // Block keyboard copy/cut/paste shortcuts on the puzzle section
+  document.getElementById('step-puzzle').addEventListener('keydown', e => {
+    const blocked = ['c', 'x', 'v', 'a'];
+    if ((e.ctrlKey || e.metaKey) && blocked.includes(e.key.toLowerCase())) {
+      e.preventDefault();
+    }
+  });
+
+  // Block paste event directly on the input (covers mobile & browser paste buttons)
+  puzzleInput.addEventListener('paste', e => e.preventDefault());
+
+  // Block text selection on the question box via CSS (applied dynamically)
+  puzzleQuestion.style.userSelect        = 'none';
+  puzzleQuestion.style.webkitUserSelect  = 'none';
+  puzzleQuestion.style.msUserSelect      = 'none';
 </script>
 </body>
 </html>
