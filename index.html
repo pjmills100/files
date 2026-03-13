@@ -241,6 +241,77 @@
     .kb-key.used{opacity:.3;pointer-events:none}
     .kb-del{min-width:44px;color:var(--error)}
 
+
+    /* ── WORDLE ──────────────────────────────────────────────── */
+    .wordle-grid{display:flex;flex-direction:column;gap:5px;align-items:center;margin-bottom:12px}
+    .wordle-row{display:flex;gap:5px}
+    .wordle-cell{
+      width:46px;height:46px;border:2px solid var(--border);border-radius:4px;
+      display:flex;align-items:center;justify-content:center;
+      font-family:var(--font-mono);font-size:1.2rem;font-weight:700;color:#fff;
+      text-transform:uppercase;transition:background .3s,border-color .3s;
+      user-select:none;
+    }
+    .wordle-cell.filled{border-color:var(--muted)}
+    .wordle-cell.correct{background:#538d4e;border-color:#538d4e}
+    .wordle-cell.present{background:#b59f3b;border-color:#b59f3b}
+    .wordle-cell.absent {background:#3a3a3c;border-color:#3a3a3c}
+    .wordle-cell.active-row{border-color:var(--accent)}
+    .wordle-keyboard{display:flex;flex-direction:column;gap:5px;align-items:center;margin-top:8px}
+    .wordle-kb-row{display:flex;gap:4px}
+    .wordle-key{
+      min-width:32px;height:40px;padding:0 6px;background:var(--surface2);
+      border:1px solid var(--border);border-radius:4px;color:var(--text);
+      font-family:var(--font-mono);font-size:.78rem;font-weight:700;cursor:pointer;
+      transition:background .2s,border-color .2s,transform .1s;user-select:none;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .wordle-key:hover{background:var(--accent-dim);border-color:var(--accent)}
+    .wordle-key:active{transform:scale(.92)}
+    .wordle-key.correct{background:#538d4e!important;border-color:#538d4e!important;color:#fff}
+    .wordle-key.present{background:#b59f3b!important;border-color:#b59f3b!important;color:#fff}
+    .wordle-key.absent {background:#3a3a3c!important;border-color:#3a3a3c!important;color:#6b6b80}
+    .wordle-tries{font-family:var(--font-mono);font-size:.7rem;color:var(--muted);text-align:center;margin-bottom:8px}
+    @keyframes wPop{0%{transform:scale(1)}50%{transform:scale(1.12)}100%{transform:scale(1)}}
+    @keyframes wShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+    @keyframes wFlip{0%{transform:rotateX(0)}50%{transform:rotateX(-90deg)}100%{transform:rotateX(0)}}
+
+    /* ── SNAKE ───────────────────────────────────────────────── */
+    .snake-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:4px}
+    .snake-hud{display:flex;justify-content:space-between;width:100%;font-family:var(--font-mono);font-size:.75rem;color:var(--muted);padding:0 2px}
+    .snake-hud span{color:var(--accent);font-weight:700}
+    canvas#snakeCanvas{
+      background:var(--bg);border:1px solid var(--border);border-radius:8px;
+      display:block;touch-action:none;
+    }
+    .snake-overlay{
+      position:relative;width:280px;
+    }
+    .snake-msg{
+      position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+      justify-content:center;background:#0a0a0fcc;border-radius:8px;
+      font-family:var(--font-mono);font-size:.85rem;color:#fff;gap:10px;
+      pointer-events:none;
+    }
+    .snake-msg.hidden{display:none}
+    .snake-start-btn{
+      pointer-events:all;background:var(--accent);color:#000;border:none;
+      border-radius:6px;padding:8px 20px;font-family:var(--font-display);
+      font-weight:700;font-size:.9rem;cursor:pointer;
+    }
+    .snake-dpad{display:grid;grid-template-columns:repeat(3,40px);grid-template-rows:repeat(2,40px);gap:4px;margin-top:4px}
+    .dpad-btn{
+      background:var(--surface2);border:1px solid var(--border);border-radius:6px;
+      color:var(--text);font-size:1rem;cursor:pointer;display:flex;
+      align-items:center;justify-content:center;user-select:none;
+      transition:background .1s;
+    }
+    .dpad-btn:active{background:var(--accent-dim)}
+    .dpad-up{grid-column:2;grid-row:1}
+    .dpad-left{grid-column:1;grid-row:2}
+    .dpad-down{grid-column:2;grid-row:2}
+    .dpad-right{grid-column:3;grid-row:2}
+
     @media(max-width:520px){
       .card{padding:28px 20px}
       h1{font-size:1.4rem}
@@ -551,6 +622,51 @@ const PUZZLE_BANK = [
     question:'Unscramble: "tlbfuieua"', answer:'beautiful' },
   { uiType:'text', label:'Missing Letters',
     question:'EL _ PH _ NT — type both missing letters in order', answer:'ea' },
+  // ── WORDLE (8) ────────────────────────────────────────────────
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — you have 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'CRANE' },
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'PLANT' },
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'BRICK' },
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'FLAME' },
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'STORM' },
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'GHOST' },
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'CLIMB' },
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'SWIFT' },
+
+  // ── SNAKE (6) ─────────────────────────────────────────────────
+  { uiType:'snake', label:'Snake',
+    question:'Use WASD or arrow keys to eat apples. Collect 10 apples without hitting yourself or the wall.',
+    target:10 },
+  { uiType:'snake', label:'Snake',
+    question:'Use WASD or arrow keys to eat apples. Collect 12 apples without hitting yourself or the wall.',
+    target:12 },
+  { uiType:'snake', label:'Snake',
+    question:'Use WASD or arrow keys to eat apples. Collect 15 apples without hitting yourself or the wall.',
+    target:15 },
+  { uiType:'snake', label:'Snake',
+    question:'Use WASD or arrow keys to eat apples. Collect 10 apples without hitting yourself or the wall.',
+    target:10 },
+  { uiType:'snake', label:'Snake',
+    question:'Use WASD or arrow keys to eat apples. Collect 12 apples without hitting yourself or the wall.',
+    target:12 },
+  { uiType:'snake', label:'Snake',
+    question:'Use WASD or arrow keys to eat apples. Collect 18 apples without hitting yourself or the wall.',
+    target:18 },
 ];
 
 // ════════════════════════════════════════════════════════════════
@@ -572,22 +688,44 @@ function shake(el){el.animate([{transform:'translateX(0)'},{transform:'translate
 //  PICK 5 PUZZLES — all different uiTypes
 // ════════════════════════════════════════════════════════════════
 function pickPuzzles(){
-  const shuffled  = shuffle(PUZZLE_BANK);
-  const chosen    = [];
+  // Pick one puzzle per uiType, then ensure no two consecutive types
+  const shuffled = shuffle(PUZZLE_BANK);
+  const chosen   = [];
   const usedTypes = new Set();
-  // First pass: one of each type
   for(const p of shuffled){
     if(!usedTypes.has(p.uiType)){chosen.push(p);usedTypes.add(p.uiType)}
     if(chosen.length===TOTAL_PUZZLES)break;
   }
-  // Fill any remaining slots with unused puzzles (different questions)
-  if(chosen.length<TOTAL_PUZZLES){
-    for(const p of shuffled){
-      if(!chosen.includes(p)){chosen.push(p)}
-      if(chosen.length===TOTAL_PUZZLES)break;
-    }
+  // Fill remaining slots with unique questions, different type from neighbour
+  while(chosen.length<TOTAL_PUZZLES){
+    const lastType=chosen[chosen.length-1].uiType;
+    const usedQs=new Set(chosen.map(p=>p.question));
+    const candidates=shuffle(PUZZLE_BANK).filter(p=>p.uiType!==lastType&&!usedQs.has(p.question));
+    chosen.push(candidates[0]||shuffle(PUZZLE_BANK).find(p=>!usedQs.has(p.question))||PUZZLE_BANK[0]);
   }
-  return chosen;
+  // Shuffle the array but fix no-consecutive-same-type constraint
+  return ensureNoConsecutiveSameType(chosen);
+}
+
+function ensureNoConsecutiveSameType(arr){
+  // Fisher-Yates shuffle with constraint: swap if neighbour types match
+  const a=[...arr];
+  for(let attempts=0;attempts<200;attempts++){
+    let ok=true;
+    for(let i=1;i<a.length;i++){
+      if(a[i].uiType===a[i-1].uiType){
+        ok=false;
+        // find a swap target that fixes both spots
+        for(let j=i+1;j<a.length;j++){
+          if(a[j].uiType!==a[i-1].uiType&&(j+1>=a.length||a[j+1].uiType!==a[i].uiType)){
+            [a[i],a[j]]=[a[j],a[i]];break;
+          }
+        }
+      }
+    }
+    if(ok)break;
+  }
+  return a;
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -617,17 +755,62 @@ function checkPassword(){
   const val=document.getElementById('passwordInput').value;
   const input=document.getElementById('passwordInput');
   const msg=document.getElementById('passMsg');
+
+  // Check if timed out
+  const lockUntil=parseInt(localStorage.getItem('vaultLockUntil')||'0');
+  if(Date.now()<lockUntil){
+    const secsLeft=Math.ceil((lockUntil-Date.now())/1000);
+    const mins=Math.floor(secsLeft/60), secs=secsLeft%60;
+    showMsg(msg,'error',`Too many failed attempts. Try again in ${mins}m ${secs}s.`);
+    input.disabled=true;
+    startLockCountdown(lockUntil,msg,input);
+    return;
+  }
+
   if(!val.trim()){showMsg(msg,'error','Please enter the access password.');return}
+
   if(val===CORRECT_PASSWORD){
+    localStorage.removeItem('vaultPassFails');
+    localStorage.removeItem('vaultLockUntil');
     setInput(input,'ok');
-    showMsg(msg,'success','Password accepted — loading your challenges…');
+    showMsg(msg,'success','Password accepted — loading your challenges...');
     setTimeout(()=>{puzzleQueue=pickPuzzles();puzzleIndex=0;loadPuzzle();showStep('step-puzzle')},650);
   }else{
+    const fails=(parseInt(localStorage.getItem('vaultPassFails')||'0'))+1;
+    localStorage.setItem('vaultPassFails',fails);
     setInput(input,'error');
-    showMsg(msg,'error','Incorrect password. Try again.');
     shake(input);
+    if(fails>=2){
+      const lockUntil=Date.now()+10*60*1000; // 10 minutes
+      localStorage.setItem('vaultLockUntil',lockUntil);
+      localStorage.removeItem('vaultPassFails');
+      input.disabled=true;
+      showMsg(msg,'error','Too many failed attempts — locked for 10 minutes.');
+      startLockCountdown(lockUntil,msg,input);
+    }else{
+      showMsg(msg,'error',`Incorrect password. ${2-fails} attempt${2-fails!==1?'s':''} remaining before lockout.`);
+    }
   }
 }
+
+function startLockCountdown(lockUntil,msg,input){
+  const tick=()=>{
+    const secsLeft=Math.ceil((lockUntil-Date.now())/1000);
+    if(secsLeft<=0){
+      localStorage.removeItem('vaultLockUntil');
+      localStorage.removeItem('vaultPassFails');
+      input.disabled=false;
+      showMsg(msg,'success','Lockout lifted — you can try again.');
+      setInput(input,'');
+      return;
+    }
+    const mins=Math.floor(secsLeft/60),secs=secsLeft%60;
+    showMsg(msg,'error',`Locked out. Try again in ${mins}m ${String(secs).padStart(2,'0')}s.`);
+    setTimeout(tick,1000);
+  };
+  tick();
+}
+
 
 // ════════════════════════════════════════════════════════════════
 //  ADVANCE TO NEXT PUZZLE OR DOWNLOAD
@@ -649,12 +832,16 @@ function failPuzzle(){
   const failedType=puzzleQueue[puzzleIndex].uiType;
   // Step back (never below 0)
   puzzleIndex=Math.max(0,puzzleIndex-1);
-  // Pick a fresh puzzle of the same type that isn't already in the queue
-  const pool=PUZZLE_BANK.filter(p=>p.uiType===failedType);
+  // Determine forbidden types for the slot we're replacing:
+  // must differ from the puzzle BEFORE it (index-1) and AFTER it (index+1)
+  const forbidden=new Set([failedType]); // always different from what just failed
+  if(puzzleIndex>0) forbidden.add(puzzleQueue[puzzleIndex-1].uiType);
+  if(puzzleIndex<puzzleQueue.length-1) forbidden.add(puzzleQueue[puzzleIndex+1].uiType);
   const usedQs=new Set(puzzleQueue.map(p=>p.question));
-  const fresh=shuffle(pool).find(p=>!usedQs.has(p.question));
-  puzzleQueue[puzzleIndex]=fresh||pool[Math.floor(Math.random()*pool.length)];
-  // Show fail message then reload
+  const candidates=shuffle(PUZZLE_BANK).filter(p=>!forbidden.has(p.uiType)&&!usedQs.has(p.question));
+  // Fallback: relax the "not in queue" constraint if needed
+  const fallback=shuffle(PUZZLE_BANK).filter(p=>!forbidden.has(p.uiType));
+  puzzleQueue[puzzleIndex]=candidates[0]||fallback[0]||shuffle(PUZZLE_BANK)[0];
   const goingTo=puzzleIndex+1;
   showMsg(document.getElementById('puzzleMsg'),'error',
     `Wrong! Sent back to Challenge ${goingTo} with a new puzzle...`);
@@ -720,6 +907,14 @@ function loadPuzzle(){
   }else if(p.uiType==='typeword'){
     submitBtn.style.display='none';
     buildTypeWordWidget(p,widget);
+
+  }else if(p.uiType==='wordle'){
+    submitBtn.style.display='none';
+    buildWordleWidget(p,widget);
+
+  }else if(p.uiType==='snake'){
+    submitBtn.style.display='none';
+    buildSnakeWidget(p,widget);
   }
 }
 
@@ -900,7 +1095,7 @@ function buildSeqWidget(p,container){
 //  WIDGET: MATCH / WIRE
 // ════════════════════════════════════════════════════════════════
 function buildWireWidget(p,container){
-  const MAX_ATTEMPTS = 10;
+  const MAX_ATTEMPTS = 2;
   const leftItems =shuffle(p.pairs.map(pr=>pr.left));
   const rightItems=shuffle(p.pairs.map(pr=>pr.right));
   const pairMap={};p.pairs.forEach(pr=>{pairMap[pr.left]=pr.right});
@@ -989,8 +1184,27 @@ function buildWireWidget(p,container){
 //  WIDGET: FLIP / MEMORY MATCH
 // ════════════════════════════════════════════════════════════════
 function buildFlipWidget(p,container){
+  const MAX_FLIP_ATTEMPTS = 10;
+  let flipAttempts = 0;
+
   const hint=document.createElement('div');hint.className='flip-hint';hint.id='flipHint';
-  hint.textContent='Find all 4 matching pairs! (Click tiles or press 1–8)';
+  hint.textContent='Find all 4 matching pairs! (Click tiles or press 1-8)';
+
+  // Attempts bar
+  const attemptsBar=document.createElement('div');
+  attemptsBar.style.cssText='display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;';
+  const attemptsLabel=document.createElement('span');
+  attemptsLabel.style.cssText='font-family:var(--font-mono);font-size:.7rem;color:var(--muted);';
+  attemptsLabel.textContent='Mismatches: 0 / '+MAX_FLIP_ATTEMPTS;
+  const pipRow=document.createElement('div');pipRow.style.cssText='display:flex;gap:4px;';
+  const attemptPips=[];
+  for(let i=0;i<MAX_FLIP_ATTEMPTS;i++){
+    const pip=document.createElement('div');
+    pip.style.cssText='width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .2s;';
+    pipRow.appendChild(pip);attemptPips.push(pip);
+  }
+  attemptsBar.appendChild(attemptsLabel);attemptsBar.appendChild(pipRow);
+
   const grid=document.createElement('div');grid.className='flip-grid';
 
   const tiles=shuffle([...p.pairs,...p.pairs]);
@@ -1016,11 +1230,23 @@ function buildFlipWidget(p,container){
         a.classList.add('matched');b.classList.add('matched');
         matched++;flipped=[];locked=false;
         const left=p.pairs.length-matched;
-        hint.textContent=matched===p.pairs.length?'✓ All matched!':`${left} pair${left>1?'s':''} left…`;
+        hint.textContent=matched===p.pairs.length?'All matched!':''+left+' pair'+(left>1?'s':'')+' left...';
         if(matched===p.pairs.length)setTimeout(()=>advancePuzzle(),500);
       }else{
-        hint.textContent='No match!';
-        setTimeout(()=>{a.classList.remove('flipped');b.classList.remove('flipped');flipped=[];locked=false;failPuzzle();},900);
+        // Wrong pair — use an attempt
+        if(attemptPips[flipAttempts])attemptPips[flipAttempts].style.background='var(--error)';
+        flipAttempts++;
+        const remaining=MAX_FLIP_ATTEMPTS-flipAttempts;
+        attemptsLabel.textContent='Mismatches: '+flipAttempts+' / '+MAX_FLIP_ATTEMPTS;
+        attemptsLabel.style.color=remaining<=2?'var(--error)':'var(--muted)';
+        hint.textContent='No match! '+remaining+' mistake'+(remaining!==1?'s':'')+' left.';
+        if(flipAttempts>=MAX_FLIP_ATTEMPTS){
+          // Out of attempts — fail immediately, no flip-back
+          locked=true;
+          setTimeout(()=>failPuzzle(),700);
+        }else{
+          setTimeout(()=>{a.classList.remove('flipped');b.classList.remove('flipped');flipped=[];locked=false;},900);
+        }
       }
     }
   }
@@ -1037,17 +1263,17 @@ function buildFlipWidget(p,container){
   };
   document.addEventListener('keydown',kbListener);
 
-  // Clean up listener when widget is swapped out
-  const observer=new MutationObserver(()=>{
+  new MutationObserver(()=>{
     if(!document.body.contains(grid)){
       document.removeEventListener('keydown',kbListener);
-      observer.disconnect();
     }
-  });
-  observer.observe(document.getElementById('puzzleWidget'),{childList:true});
+  }).observe(document.getElementById('puzzleWidget'),{childList:true});
 
-  container.appendChild(hint);container.appendChild(grid);
+  container.appendChild(attemptsBar);
+  container.appendChild(hint);
+  container.appendChild(grid);
 }
+
 
 
 // ════════════════════════════════════════════════════════════════
@@ -1154,9 +1380,458 @@ function buildTypeWordWidget(p,container){
 
 
 // ════════════════════════════════════════════════════════════════
+//  WIDGET: WORDLE (8 attempts, physical + on-screen keyboard)
+// ════════════════════════════════════════════════════════════════
+// Valid 5-letter word list (subset) used to validate guesses
+const VALID_WORDS = new Set([
+  'ABOUT','ABOVE','ABUSE','ACTOR','ACUTE','ADMIT','ADOPT','ADULT','AFTER','AGAIN',
+  'AGENT','AGREE','AHEAD','ALARM','ALBUM','ALERT','ALIEN','ALIGN','ALIKE','ALIVE',
+  'ALLEY','ALLOW','ALONE','ALONG','ALTER','ANGEL','ANGER','ANGLE','ANGRY','ANIME',
+  'ANNEX','ANTIC','ANVIL','APART','APPLE','APPLY','APRON','ARENA','ARGUE','ARISE',
+  'ARMOR','AROMA','AROSE','ARROW','ASSET','ATTIC','AUDIO','AUDIT','AVOID','AWAKE',
+  'AWARD','AWARE','AWFUL','BAKER','BASIC','BATCH','BEACH','BEARD','BEAST','BEGIN',
+  'BELLE','BELLY','BELOW','BENCH','BERRY','BIRTH','BISON','BITCH','BLACK','BLADE',
+  'BLAME','BLAND','BLANK','BLAST','BLAZE','BLEED','BLEND','BLESS','BLIND','BLOCK',
+  'BLOOD','BLOOM','BLOWN','BLUES','BLUNT','BOARD','BONUS','BOOST','BOOTH','BOUND',
+  'BOXER','BRAIN','BRAND','BRAVE','BREAD','BREAK','BREED','BRICK','BRIDE','BRIEF',
+  'BRINE','BRING','BRINK','BROAD','BROKE','BROWN','BRUSH','BUILD','BUILT','BUNCH',
+  'BURST','BUYER','CABIN','CACHE','CAMEL','CANOE','CARRY','CARVE','CATCH','CAUSE',
+  'CEASE','CHAIN','CHAIR','CHALK','CHAOS','CHASE','CHEAP','CHECK','CHEEK','CHESS',
+  'CHEST','CHIEF','CHILD','CHINA','CIVIC','CIVIL','CLAMP','CLANK','CLASH','CLASP',
+  'CLASS','CLAW','CLEAN','CLEAR','CLIMB','CLING','CLOCK','CLONE','CLOSE','CLOTH',
+  'CLOUD','COAST','COMET','COMIC','CORAL','COUNT','COURT','COVER','CRAFT','CRANE',
+  'CRASH','CRAZY','CREEK','CRISP','CROSS','CROWD','CROWN','CRUSH','CURVE','CYCLE',
+  'DAILY','DAIRY','DANCE','DATUM','DEALS','DEALT','DEBUT','DECOY','DEFER','DELAY',
+  'DELTA','DEMON','DENSE','DEPOT','DERBY','DEPTH','DERBY','DEVIL','DIRTY','DISCO',
+  'DITCH','DODGE','DOING','DOLLY','DRAFT','DRAIN','DRAMA','DRANK','DRAWL','DRAWN',
+  'DREAD','DREAM','DRESS','DRIFT','DRINK','DRIVE','DROVE','DRYER','DUNES','DWARF',
+  'EAGLE','EARLY','EARTH','EIGHT','ELITE','EMBER','EMPTY','ENDED','ENEMY','ENJOY',
+  'ENTER','ENTRY','EQUAL','ERROR','ESSAY','EVADE','EVENT','EVERY','EXACT','EXIST',
+  'EXTRA','FABLE','FAINT','FAIRY','FAITH','FALSE','FANCY','FATAL','FAVOR','FEAST',
+  'FENCE','FEVER','FIBRE','FIELD','FIFTH','FIFTY','FIGHT','FINAL','FIRST','FIXED',
+  'FJORD','FLAKE','FLAME','FLANK','FLARE','FLASH','FLASK','FLESH','FLOOD','FLOOR',
+  'FLORA','FLOUR','FLUTE','FOCAL','FOCUS','FORCE','FORGE','FORTH','FOUND','FRAME',
+  'FRANK','FRAUD','FRESH','FRONT','FROST','FROZE','FRUIT','FULLY','FUNGI','FUNNY',
+  'GHOST','GIVEN','GLAND','GLASS','GLEAM','GLIDE','GLOOM','GLOSS','GLOVE','GOING',
+  'GRACE','GRADE','GRAIN','GRAND','GRANT','GRAPH','GRASP','GRASS','GRAVE','GREAT',
+  'GREED','GREET','GRIEF','GRIND','GROAN','GROOM','GROSS','GROUP','GROWL','GROWN',
+  'GUARD','GUIDE','GUILD','GUILE','GUILT','GUISE','GULCH','GUSTS','HABIT','HARDY',
+  'HARSH','HASTE','HAVEN','HEART','HEAVY','HEDGE','HEIST','HELLO','HENCE','HERBS',
+  'HINGE','HIPPO','HOBBY','HOLLY','HONEY','HONOR','HORSE','HOTEL','HOUSE','HUMAN',
+  'HUMOR','HUNCH','HURRY','HYPER','IDEAL','IMAGE','IMPLY','INANE','INDEX','INDIE',
+  'INFER','INNER','INPUT','INTER','INTRO','INURE','IVORY','JAZZY','JEWEL','JOKER',
+  'JOUST','JUDGE','JUICE','JUICY','JUMBO','KAYAK','KEBAB','KNACK','KNEEL','KNIFE',
+  'KNOCK','KNOWN','LABEL','LARGE','LASER','LATER','LAUGH','LAYER','LEARN','LEASE',
+  'LEAST','LEAVE','LEGAL','LEMON','LEVEL','LIGHT','LIMIT','LINGO','LITER','LIVER',
+  'LOCAL','LODGE','LOGIC','LOGIN','LOOSE','LOVER','LOWER','LOYAL','LUCKY','LUNAR',
+  'LUSTY','MAGIC','MAJOR','MAKER','MANOR','MAPLE','MARCH','MASON','MATCH','MAYOR',
+  'MEDIA','METAL','MINOR','MINUS','MODEL','MONEY','MONTH','MORAL','MOTOR','MOURN',
+  'MOUSE','MOUTH','MOVIE','MULTI','MUSTY','NAIVE','NAVAL','NIGHT','NOBLE','NORTH',
+  'NOTED','NOVEL','NURSE','NYMPH','OCEAN','OFFER','OFTEN','OLIVE','ONSET','OPERA',
+  'ORDER','OUTER','OUNCE','OXIDE','OZONE','PAINT','PANIC','PAPER','PARTY','PAUSE',
+  'PEACE','PEARL','PEDAL','PENNY','PHASE','PHONE','PHOTO','PIANO','PIECE','PILOT',
+  'PINCH','PIXEL','PIZZA','PLACE','PLAIN','PLANE','PLANT','PLATE','PLAZA','PLEAD',
+  'PLUCK','PLUMB','PLUME','PLUTO','POINT','POLAR','POPPY','PORCH','POWER','PRIDE',
+  'PRIME','PRINT','PRIOR','PRIZE','PROBE','PRONE','PROOF','PROSE','PROUD','PROVE',
+  'PROXY','PULSE','PUPPY','PURSE','QUEST','QUEUE','QUICK','QUIET','QUOTA','QUOTE',
+  'RABBI','RADAR','RADIO','RAISE','RANGE','RANCH','RAPID','RATIO','REACH','REACT',
+  'REALM','REBEL','REIGN','RELAX','REMIX','REPAY','RESIN','RETRO','RIDER','RIDGE',
+  'RIFLE','RIGHT','RISKY','RIVAL','RIVER','ROBOT','ROCKY','ROMAN','ROUGE','ROUGH',
+  'ROUND','ROUTE','ROYAL','RUGBY','RULER','RURAL','RUSTY','SAFER','SAINT','SALAD',
+  'SAUCE','SCALE','SCENE','SCOPE','SCORE','SCOUT','SEIZE','SENSE','SEVEN','SHADE',
+  'SHAFT','SHAKE','SHALL','SHAME','SHAPE','SHARE','SHARK','SHARP','SHAWL','SHEEN',
+  'SHELF','SHELL','SHIFT','SHINE','SHIRE','SHIRT','SHOCK','SHORE','SHORT','SHOUT',
+  'SHOVE','SIGHT','SINCE','SIXTH','SIXTY','SKILL','SKULL','SLATE','SLAVE','SLEEP',
+  'SLEET','SLICK','SLIDE','SLING','SLOTH','SMALL','SMART','SMELL','SMILE','SNAIL',
+  'SNAKE','SNARE','SOLAR','SOLID','SOLVE','SORRY','SOUTH','SPACE','SPARK','SPAWN',
+  'SPEAR','SPEED','SPEND','SPICE','SPINE','SPITE','SPLIT','SPOKE','SPOOK','SPRAY',
+  'SQUAD','STACK','STAFF','STAIN','STAIR','STAKE','STALE','STALL','STAMP','STAND',
+  'STARK','START','STASH','STATE','STEAM','STEEL','STEEP','STEER','STERN','STICK',
+  'STIFF','STILL','STOCK','STOMP','STORE','STORM','STORY','STRAP','STRAW','STRAY',
+  'STRIP','STUCK','STUDY','STUFF','STUNT','STYLE','SUGAR','SUITE','SUNNY','SUPER',
+  'SURGE','SWAMP','SWEAR','SWEAT','SWEEP','SWEET','SWEPT','SWIFT','SWIPE','SWIRL',
+  'SWORD','SYRUP','TABBY','TABLE','TAINT','TAKEN','TASTE','TAUNT','TENSE','TENTH',
+  'THORN','THOSE','THINK','THIRD','TIDAL','TIGHT','TIMER','TIRED','TITLE','TOAST',
+  'TOUCH','TOUGH','TOWEL','TOWER','TOXIC','TRACE','TRACK','TRADE','TRAIL','TRAIN',
+  'TRAMP','TRASH','TRAWL','TREAD','TREAT','TRICK','TRIED','TROOP','TROUT','TRUCE',
+  'TRUCK','TRULY','TRUMP','TRUNK','TRUST','TRUTH','TULIP','TUMOR','TUNER','TUNIC',
+  'TWICE','TWIST','ULTRA','UNCLE','UNDER','UNITE','UNITY','UNTIL','UPPER','UPSET',
+  'USAGE','USHER','USUAL','UTTER','VALID','VALUE','VALVE','VAPOR','VAULT','VERSE',
+  'VIDEO','VIGOR','VICAR','VINYL','VIOLA','VIPER','VIRAL','VISIT','VISOR','VISTA',
+  'VITAL','VIVID','VOCAL','VOICE','VOMIT','VOTER','WAFER','WAGER','WASTE','WATCH',
+  'WATER','WEARY','WEDGE','WEIGH','WEIRD','WHALE','WHEAT','WHEEL','WHERE','WHICH',
+  'WHILE','WNITE','WHOLE','WHOSE','WIDER','WITTY','WOMAN','WORLD','WRATH','WRIST',
+  'WRONG','XENON','YACHT','YIELD','YOUNG','YOUTH','ZESTY','ZONAL',
+  // ensure puzzle answers are always valid
+  'CRANE','PLANT','BRICK','FLAME','STORM','GHOST','CLIMB','SWIFT'
+]);
+
+function buildWordleWidget(p, container) {
+  const MAX_TRIES = 8;
+  const WORD_LEN  = 5;
+  const answer    = p.answer.toUpperCase();
+  let currentRow  = 0;
+  let currentTile = 0;
+  let board       = Array.from({length: MAX_TRIES}, () => Array(WORD_LEN).fill(''));
+  let gameOver    = false;
+
+  // ── Grid ────────────────────────────────────────────────────
+  const triesEl = document.createElement('div');
+  triesEl.className = 'wordle-tries';
+  triesEl.textContent = `Attempt 1 of ${MAX_TRIES}`;
+
+  const grid = document.createElement('div');
+  grid.className = 'wordle-grid';
+  const cellEls = [];
+  for (let r = 0; r < MAX_TRIES; r++) {
+    const row = document.createElement('div');
+    row.className = 'wordle-row';
+    const rowCells = [];
+    for (let c = 0; c < WORD_LEN; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'wordle-cell' + (r === 0 ? ' active-row' : '');
+      row.appendChild(cell);
+      rowCells.push(cell);
+    }
+    grid.appendChild(row);
+    cellEls.push(rowCells);
+  }
+
+  // ── On-screen keyboard ───────────────────────────────────────
+  const kbRows = [['Q','W','E','R','T','Y','U','I','O','P'],
+                  ['A','S','D','F','G','H','J','K','L'],
+                  ['ENTER','Z','X','C','V','B','N','M','⌫']];
+  const kb = document.createElement('div');
+  kb.className = 'wordle-keyboard';
+  const keyMap = {};
+  kbRows.forEach(row => {
+    const rowEl = document.createElement('div');
+    rowEl.className = 'wordle-kb-row';
+    row.forEach(k => {
+      const btn = document.createElement('div');
+      btn.className = 'wordle-key';
+      btn.textContent = k;
+      btn.style.minWidth = (k === 'ENTER' || k === '⌫') ? '52px' : '32px';
+      btn.addEventListener('click', () => handleKey(k));
+      rowEl.appendChild(btn);
+      keyMap[k] = btn;
+    });
+    kb.appendChild(rowEl);
+  });
+
+  // ── Key logic ────────────────────────────────────────────────
+  function handleKey(k) {
+    if (gameOver) return;
+    if (k === '⌫' || k === 'BACKSPACE') {
+      if (currentTile > 0) {
+        currentTile--;
+        board[currentRow][currentTile] = '';
+        cellEls[currentRow][currentTile].textContent = '';
+        cellEls[currentRow][currentTile].classList.remove('filled');
+      }
+    } else if (k === 'ENTER') {
+      submitGuess();
+    } else if (/^[A-Z]$/.test(k) && currentTile < WORD_LEN) {
+      board[currentRow][currentTile] = k;
+      const cell = cellEls[currentRow][currentTile];
+      cell.textContent = k;
+      cell.classList.add('filled');
+      cell.style.animation = 'wPop .15s ease';
+      setTimeout(() => cell.style.animation = '', 200);
+      currentTile++;
+    }
+  }
+
+  function submitGuess() {
+    if (currentTile < WORD_LEN) {
+      // Shake row
+      cellEls[currentRow].forEach(c => { c.style.animation = 'wShake .4s ease'; setTimeout(() => c.style.animation = '', 500); });
+      showMsg(document.getElementById('puzzleMsg'), 'error', 'Not enough letters!');
+      setTimeout(() => clearMsg(document.getElementById('puzzleMsg')), 1000);
+      return;
+    }
+    const guess = board[currentRow].join('');
+    if (!VALID_WORDS.has(guess)) {
+      cellEls[currentRow].forEach(c => { c.style.animation = 'wShake .4s ease'; setTimeout(() => c.style.animation = '', 500); });
+      showMsg(document.getElementById('puzzleMsg'), 'error', 'Not a valid word!');
+      setTimeout(() => clearMsg(document.getElementById('puzzleMsg')), 1000);
+      return;
+    }
+
+    // Score the guess
+    const result = Array(WORD_LEN).fill('absent');
+    const ansArr = answer.split('');
+    const gArr   = guess.split('');
+    // First pass: correct
+    gArr.forEach((ch, i) => { if (ch === ansArr[i]) { result[i] = 'correct'; ansArr[i] = null; gArr[i] = null; } });
+    // Second pass: present
+    gArr.forEach((ch, i) => {
+      if (!ch) return;
+      const j = ansArr.indexOf(ch);
+      if (j !== -1) { result[i] = 'present'; ansArr[j] = null; }
+    });
+
+    // Animate cells flipping in sequence
+    result.forEach((state, i) => {
+      setTimeout(() => {
+        const cell = cellEls[currentRow][i];
+        cell.style.animation = 'wFlip .5s ease';
+        setTimeout(() => { cell.classList.add(state); cell.style.animation = ''; }, 250);
+        // Update keyboard key colour (only upgrade: correct > present > absent)
+        const btn = keyMap[board[currentRow][i]];
+        if (btn) {
+          const cur = btn.classList;
+          if (state === 'correct') { cur.remove('present','absent'); cur.add('correct'); }
+          else if (state === 'present' && !cur.contains('correct')) { cur.remove('absent'); cur.add('present'); }
+          else if (state === 'absent' && !cur.contains('correct') && !cur.contains('present')) cur.add('absent');
+        }
+      }, i * 120);
+    });
+
+    const won = result.every(r => r === 'correct');
+    currentRow++;
+    currentTile = 0;
+
+    setTimeout(() => {
+      if (won) {
+        gameOver = true;
+        showMsg(document.getElementById('puzzleMsg'), 'success', 'Brilliant! You got it!');
+        setTimeout(() => advancePuzzle(), 900);
+      } else if (currentRow >= MAX_TRIES) {
+        gameOver = true;
+        showMsg(document.getElementById('puzzleMsg'), 'error', `Out of tries! The word was ${answer}.`);
+        setTimeout(() => failPuzzle(), 1400);
+      } else {
+        triesEl.textContent = `Attempt ${currentRow + 1} of ${MAX_TRIES}`;
+        cellEls[currentRow].forEach(c => c.classList.add('active-row'));
+      }
+    }, WORD_LEN * 120 + 200);
+  }
+
+  // ── Physical keyboard ────────────────────────────────────────
+  let kbListener = e => {
+    if (!document.getElementById('step-puzzle').classList.contains('active')) return;
+    if (e.ctrlKey || e.metaKey) return;
+    const k = e.key.toUpperCase();
+    if (k === 'BACKSPACE' || k === 'ENTER' || /^[A-Z]$/.test(k)) {
+      e.preventDefault();
+      handleKey(k === 'BACKSPACE' ? '⌫' : k);
+      // Flash on-screen key
+      const btn = keyMap[k === 'BACKSPACE' ? '⌫' : k === 'ENTER' ? 'ENTER' : k];
+      if (btn) { btn.style.opacity = '.5'; setTimeout(() => btn.style.opacity = '', 120); }
+    }
+  };
+  document.addEventListener('keydown', kbListener);
+  new MutationObserver(() => {
+    if (!document.body.contains(grid)) { document.removeEventListener('keydown', kbListener); }
+  }).observe(document.getElementById('puzzleWidget'), {childList: true});
+
+  container.appendChild(triesEl);
+  container.appendChild(grid);
+  container.appendChild(kb);
+}
+
+// ════════════════════════════════════════════════════════════════
+//  WIDGET: SNAKE  (WASD / arrow keys + d-pad, fail = go back)
+// ════════════════════════════════════════════════════════════════
+function buildSnakeWidget(p, container) {
+  const COLS = 14, ROWS = 14, CELL = 20;
+  const TARGET = p.target;
+  let score = 0, running = false, dead = false;
+  let dir = {x:1,y:0}, nextDir = {x:1,y:0};
+  let snake = [{x:7,y:7},{x:6,y:7},{x:5,y:7}];
+  let apple = null;
+  let intervalId = null;
+  let kbListener = null;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'snake-wrap';
+
+  const hud = document.createElement('div');
+  hud.className = 'snake-hud';
+  hud.innerHTML = `<span id="snakeScore">🍎 <span>0</span> / ${TARGET}</span><span id="snakeStatus">Press Start</span>`;
+
+  const overlay_wrap = document.createElement('div');
+  overlay_wrap.className = 'snake-overlay';
+
+  const canvas = document.createElement('canvas');
+  canvas.id = 'snakeCanvas';
+  canvas.width  = COLS * CELL;
+  canvas.height = ROWS * CELL;
+  const ctx = canvas.getContext('2d');
+
+  const overlayEl = document.createElement('div');
+  overlayEl.className = 'snake-msg';
+  overlayEl.id = 'snakeOverlay';
+
+  const startBtn = document.createElement('button');
+  startBtn.className = 'snake-start-btn';
+  startBtn.textContent = 'Start Game';
+  startBtn.addEventListener('click', startGame);
+
+  overlayEl.appendChild(document.createTextNode('Eat ' + TARGET + ' apples to pass!'));
+  overlayEl.appendChild(startBtn);
+  overlay_wrap.appendChild(canvas);
+  overlay_wrap.appendChild(overlayEl);
+
+  // D-pad for touch/mobile
+  const dpad = document.createElement('div');
+  dpad.className = 'snake-dpad';
+  const dpadBtns = [
+    {cls:'dpad-btn dpad-up',   icon:'▲', d:{x:0,y:-1}},
+    {cls:'dpad-btn dpad-left', icon:'◀', d:{x:-1,y:0}},
+    {cls:'dpad-btn dpad-down', icon:'▼', d:{x:0,y:1}},
+    {cls:'dpad-btn dpad-right',icon:'▶', d:{x:1,y:0}},
+  ];
+  dpadBtns.forEach(({cls,icon,d}) => {
+    const btn = document.createElement('button');
+    btn.className = cls; btn.textContent = icon;
+    btn.addEventListener('click', () => { if(running) setDir(d); });
+    dpad.appendChild(btn);
+  });
+
+  function setDir(d) {
+    // Prevent reversing
+    if (d.x !== 0 && d.x === -dir.x) return;
+    if (d.y !== 0 && d.y === -dir.y) return;
+    nextDir = d;
+  }
+
+  function placeApple() {
+    const empties = [];
+    for (let y = 0; y < ROWS; y++)
+      for (let x = 0; x < COLS; x++)
+        if (!snake.some(s => s.x===x && s.y===y)) empties.push({x,y});
+    apple = empties[Math.floor(Math.random()*empties.length)];
+  }
+
+  function draw() {
+    // Background
+    ctx.fillStyle = '#0a0a0f';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    // Grid dots
+    ctx.fillStyle = '#1a1a2a';
+    for (let y = 0; y < ROWS; y++)
+      for (let x = 0; x < COLS; x++) {
+        ctx.beginPath();
+        ctx.arc(x*CELL+CELL/2, y*CELL+CELL/2, 1, 0, Math.PI*2);
+        ctx.fill();
+      }
+
+    // Apple
+    if (apple) {
+      ctx.font = `${CELL-2}px serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🍎', apple.x*CELL+CELL/2, apple.y*CELL+CELL/2+1);
+    }
+
+    // Snake
+    snake.forEach((seg, i) => {
+      const isHead = i === 0;
+      ctx.fillStyle = isHead ? '#00ffb3' : `hsl(${160 - i*2}, 80%, ${isHead?55:40}%)`;
+      const pad = isHead ? 1 : 2;
+      ctx.beginPath();
+      ctx.roundRect(seg.x*CELL+pad, seg.y*CELL+pad, CELL-pad*2, CELL-pad*2, isHead?4:3);
+      ctx.fill();
+    });
+  }
+
+  function tick() {
+    dir = nextDir;
+    const head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
+
+    // Wall collision
+    if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) { die(); return; }
+    // Self collision
+    if (snake.some(s => s.x===head.x && s.y===head.y)) { die(); return; }
+
+    snake.unshift(head);
+
+    if (apple && head.x===apple.x && head.y===apple.y) {
+      score++;
+      document.querySelector('#snakeScore span').textContent = score;
+      if (score >= TARGET) { win(); return; }
+      placeApple();
+    } else {
+      snake.pop();
+    }
+    draw();
+  }
+
+  function startGame() {
+    score = 0; dead = false; running = true;
+    snake = [{x:7,y:7},{x:6,y:7},{x:5,y:7}];
+    dir = {x:1,y:0}; nextDir = {x:1,y:0};
+    document.querySelector('#snakeScore span').textContent = '0';
+    document.getElementById('snakeStatus').textContent = 'Playing…';
+    overlayEl.classList.add('hidden');
+    placeApple();
+    draw();
+    intervalId = setInterval(tick, 140);
+  }
+
+  function win() {
+    clearInterval(intervalId); running = false;
+    draw();
+    overlayEl.classList.remove('hidden');
+    overlayEl.innerHTML = '<span style="color:var(--success);font-size:1.1rem">You win! 🎉</span>';
+    showMsg(document.getElementById('puzzleMsg'), 'success', `Got ${score} apples — unlocking!`);
+    setTimeout(() => advancePuzzle(), 1000);
+  }
+
+  function die() {
+    clearInterval(intervalId); running = false; dead = true;
+    // Flash snake red
+    ctx.fillStyle = '#ff446680';
+    snake.forEach(seg => { ctx.beginPath(); ctx.roundRect(seg.x*CELL+1,seg.y*CELL+1,CELL-2,CELL-2,3); ctx.fill(); });
+    setTimeout(() => {
+      overlayEl.classList.remove('hidden');
+      overlayEl.innerHTML = '<span style="color:var(--error)">Crashed! Sent back…</span>';
+      setTimeout(() => failPuzzle(), 900);
+    }, 400);
+  }
+
+  // Keyboard controls
+  kbListener = e => {
+    if (!document.getElementById('step-puzzle').classList.contains('active')) return;
+    if (!running) return;
+    const map = {
+      'ARROWUP':{x:0,y:-1},'ARROWDOWN':{x:0,y:1},'ARROWLEFT':{x:-1,y:0},'ARROWRIGHT':{x:1,y:0},
+      'W':{x:0,y:-1},'S':{x:0,y:1},'A':{x:-1,y:0},'D':{x:1,y:0}
+    };
+    const d = map[e.key.toUpperCase()];
+    if (d) { e.preventDefault(); setDir(d); }
+  };
+  document.addEventListener('keydown', kbListener);
+  new MutationObserver(() => {
+    if (!document.body.contains(canvas)) {
+      document.removeEventListener('keydown', kbListener);
+      if (intervalId) clearInterval(intervalId);
+    }
+  }).observe(document.getElementById('puzzleWidget'), {childList: true});
+
+  draw();
+  wrap.appendChild(hud);
+  wrap.appendChild(overlay_wrap);
+  wrap.appendChild(dpad);
+  container.appendChild(wrap);
+}
+
+// ════════════════════════════════════════════════════════════════
 //  BLOCK COPY/PASTE
 // ════════════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
+  // Restore lockout state on page load
+  const lockUntil=parseInt(localStorage.getItem('vaultLockUntil')||'0');
+  if(Date.now()<lockUntil){
+    const input=document.getElementById('passwordInput');
+    const msg=document.getElementById('passMsg');
+    input.disabled=true;
+    startLockCountdown(lockUntil,msg,input);
+  }
+
   const step=document.getElementById('step-puzzle');
   const qi  =document.getElementById('puzzleInput');
   const qq  =document.getElementById('puzzleQuestion');
