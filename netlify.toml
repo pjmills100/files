@@ -1,0 +1,20 @@
+# Netlify deployment configuration
+# Docs: https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  publish = "."   # serve files from repo root
+
+# Prevent direct URL access to secret.txt without going through the app.
+# NOTE: This is a lightweight deterrent only — the file is still technically
+# accessible if someone knows the URL. For real security, move the file
+# to a private backend and serve it via a signed URL from a Netlify Function.
+[[headers]]
+  for = "/secret.txt"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+# SPA-style redirects — keep index.html as the entry point
+[[redirects]]
+  from = "/*"
+  to   = "/index.html"
+  status = 200
