@@ -515,43 +515,55 @@
   }
 
   // ── DOWNLOAD ZIP ─────────────────────────────────────────────────
-  // Fetches every file listed in files/downloads via the GitHub API,
-  // bundles them into a zip using JSZip, and triggers a browser download.
-  // BACKEND HOOK: For private repos, pass a token in the Authorization
-  // header, or generate a signed zip server-side instead.
-
-  const GITHUB_API = 'https://api.github.com/repos/pjmills100/files/contents/downloads';
-  const RAW_BASE   = 'https://raw.githubusercontent.com/pjmills100/files/main/downloads/';
+  // Uses the GitHub Git Trees API (recursive=1) to get every file inside
+  // downloads/ in one request, then fetches each file by its raw URL and
+  // bundles them all into a zip — preserving any subfolder structure.
+  // BACKEND HOOK: For private repos, add an Authorization header with a
+  // personal access token, or generate the zip server-side instead.
 
   async function downloadZip() {
     const btn = document.getElementById('dlBtn');
     const msg = document.getElementById('dlMsg');
     btn.disabled = true;
     btn.textContent = '⏳ Building zip…';
-    showMsg(msg, 'success', 'Fetching files from GitHub…');
+    showMsg(msg, 'success', 'Fetching file list from GitHub…');
 
     try {
-      // Load JSZip dynamically
       await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
 
-      // Get file list from GitHub API
-      const res = await fetch(GITHUB_API);
-      if (!res.ok) throw new Error('Could not read folder — is the repo public?');
-      const files = await res.json();
+      // Step 1: get the SHA of the downloads folder via contents API
+      const contentsRes = await fetch('https://api.github.com/repos/pjmills100/files/contents/downloads');
+      if (!contentsRes.ok) throw new Error('Could not read folder — is the repo public?');
+
+      // Step 2: use the recursive Git Trees API to get every file at any depth
+      const treeRes = await fetch('https://api.github.com/repos/pjmills100/files/git/trees/main?recursive=1');
+      if (!treeRes.ok) throw new Error('Could not read repo tree.');
+      const treeData = await treeRes.json();
+
+      // Filter to only files (blobs) that are inside the downloads/ folder
+      const filesToDownload = treeData.tree.filter(
+        item => item.type === 'blob' && item.path.startsWith('downloads/')
+      );
+
+      if (filesToDownload.length === 0) throw new Error('No files found in downloads folder.');
+
+      showMsg(msg, 'success', `Found ${filesToDownload.length} file(s) — building zip…`);
 
       const zip = new JSZip();
-      const folder = zip.folder('downloads');
 
-      // Fetch each file and add to zip
-      await Promise.all(files.map(async f => {
-        if (f.type !== 'file') return;
-        const r = await fetch(RAW_BASE + encodeURIComponent(f.name));
-        if (!r.ok) throw new Error('Failed to fetch ' + f.name);
+      // Step 3: fetch each file by raw URL and add it to the zip,
+      // keeping the path relative to downloads/ (strips the "downloads/" prefix)
+      await Promise.all(filesToDownload.map(async item => {
+        const rawUrl = `https://raw.githubusercontent.com/pjmills100/files/main/${item.path}`;
+        const r = await fetch(rawUrl);
+        if (!r.ok) throw new Error('Failed to fetch ' + item.path);
         const blob = await r.blob();
-        folder.file(f.name, blob);
+        // Path inside zip: strip leading "downloads/" so zip root = downloads folder contents
+        const zipPath = item.path.replace(/^downloads\//, '');
+        zip.file(zipPath, blob);
       }));
 
-      // Generate and trigger download
+      // Step 4: generate blob and trigger browser download
       const zipBlob = await zip.generateAsync({ type: 'blob' });
       const url = URL.createObjectURL(zipBlob);
       const a   = document.createElement('a');
@@ -560,7 +572,7 @@
       a.click();
       URL.revokeObjectURL(url);
 
-      showMsg(msg, 'success', 'downloads.zip is on its way!');
+      showMsg(msg, 'success', 'downloads.zip downloaded successfully!');
       btn.textContent = '✅ Downloaded!';
     } catch (err) {
       showMsg(msg, 'error', 'Error: ' + err.message);
