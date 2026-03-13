@@ -1,73 +1,81 @@
-# 🔒 Secure File Vault
+# 🔒 The Vault — Secure File Gate
 
-A single-page web app that gates a file download behind a **password** + **random puzzle**.  
-Zero dependencies. Deploys to Netlify in seconds.
+A zero-dependency, multi-file static web app that gates a file download behind a **password** + **random puzzle**. Deploys to Netlify in seconds.
 
-## Live Flow
+## Flow
 
 ```
-[Password] → [Random Puzzle] → [Download Button]
+[Password] → [Random Puzzle (1 of 8 types)] → [Download Button]
 ```
 
-## Files
+## File Structure
 
-| File | Purpose |
-|------|---------|
-| `index.html` | The entire app (HTML + CSS + JS) |
-| `secret.txt` | The file users download after passing both checks |
-| `netlify.toml` | Netlify build & redirect config |
+```
+index.html          ← HTML markup & step UI
+css/
+  style.css         ← All styles (Playfair Display + Courier Prime)
+js/
+  app.js            ← All logic: config, puzzle bank, step flow
+files/
+  secret.txt        ← The gated file (replace with your own)
+netlify.toml        ← Netlify build & header config
+README.md
+```
 
-## Quick Start
+## Deploy to Netlify
 
 ```bash
-# Clone & deploy
-git init
-git add .
-git commit -m "init"
-# Push to GitHub, then connect repo in Netlify dashboard
+git init && git add . && git commit -m "init"
+# Push to GitHub, then connect the repo in app.netlify.com
 ```
 
-Or drag-and-drop the folder into [netlify.com/drop](https://app.netlify.com/drop).
+Or drag-and-drop the folder at [app.netlify.com/drop](https://app.netlify.com/drop).
 
 ## Configuration
 
 ### Change the password
-In `index.html`, find:
+In `js/app.js`:
 ```js
-const CORRECT_PASSWORD = 'secret123';
+const CORRECT_PASSWORD = 'ilikecatsbutdogsarebetter...';
 ```
+
+### Change the download file
+1. Replace `files/secret.txt` with your file
+2. Update `FILE_PATH` and `FILE_NAME` in `js/app.js`
 
 ### Add / edit puzzles
-Find `PUZZLE_BANK` in `index.html`. Each entry looks like:
+In `js/app.js`, edit `PUZZLE_BANK`. Each entry:
 ```js
-{ type: 'Math Problem', question: 'What is 7 + 3?', answer: '10' },
-```
-Four types are supported: `Math Problem`, `Word Scramble`, `Number Sequence`, `Riddle`.
-
-### Replace the secret file
-Swap `secret.txt` with any file. Update the `<a href="...">` in `index.html` to match.
-
-## Moving to Production (Backend Security)
-
-The app includes **3 clearly marked `BACKEND HOOK` comments** in `index.html` where you should add server-side verification:
-
-1. **Password check** → POST to a Netlify Function / serverless endpoint
-2. **Puzzle answer check** → validate server-side to prevent client inspection
-3. **File delivery** → return a time-limited signed URL (e.g. AWS S3 presigned URL)
-
-Example Netlify Function structure:
-```
-netlify/
-  functions/
-    verify-password.js
-    verify-puzzle.js
-    get-download-url.js
+{ type: 'Math Problem', question: 'What is 15 × 3?', answer: '45' },
 ```
 
-## Security Notes (Current State)
+**Supported types** (purely cosmetic labels — add any you like):
+`Math Problem` · `Word Scramble` · `Number Sequence` · `Riddle` · `Reverse Word` · `Missing Letter` · `Roman Numerals` · `Color Code`
 
-- ⚠️ Password is in client-side JS — visible to anyone who opens DevTools
-- ⚠️ Puzzle answers are in client-side JS — same caveat
-- ⚠️ `secret.txt` URL is guessable if the user inspects the source
-- ✅ Fine for low-stakes use cases (gated blog content, fun challenges)
+## Production Hardening
+
+The app has **3 `BACKEND HOOK` comments** — one in `index.html` and two in `js/app.js` — marking where to swap client-side checks for server calls:
+
+| Hook | What to build |
+|------|--------------|
+| Password | `POST /.netlify/functions/verify-password` — reads password from `process.env` |
+| Puzzle answer | `POST /.netlify/functions/verify-puzzle` — stores answers in a signed session |
+| File delivery | `GET /.netlify/functions/get-download-url` — returns a time-limited presigned URL |
+
+### Example Netlify Function (password)
+```js
+// netlify/functions/verify-password.js
+exports.handler = async ({ body }) => {
+  const { password } = JSON.parse(body);
+  const ok = password === process.env.VAULT_PASSWORD;
+  return { statusCode: 200, body: JSON.stringify({ ok }) };
+};
+```
+Set `VAULT_PASSWORD` in **Site settings → Environment variables**.
+
+## Security Caveats (current state)
+- ⚠️ Password lives in client JS — visible in DevTools
+- ⚠️ Puzzle answers live in client JS — same caveat  
+- ⚠️ `files/secret.txt` URL is guessable from source
+- ✅ Fine for low-stakes gating (fun challenges, unlockable content)
 - ✅ All `BACKEND HOOK` comments show exactly where to harden this

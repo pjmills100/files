@@ -4,17 +4,17 @@
 [build]
   publish = "."   # serve files from repo root
 
-# Prevent direct URL access to secret.txt without going through the app.
-# NOTE: This is a lightweight deterrent only — the file is still technically
-# accessible if someone knows the URL. For real security, move the file
-# to a private backend and serve it via a signed URL from a Netlify Function.
+# Prevent search engines from indexing the secret file.
+# NOTE: This does NOT prevent direct URL access. For real protection,
+# move the file to a private store and serve it via a signed URL from
+# a Netlify Function (see BACKEND HOOK comments in index.html).
 [[headers]]
-  for = "/secret.txt"
+  for = "/files/*"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
 
-# SPA-style redirects — keep index.html as the entry point
+# Serve index.html for any unmatched route (SPA fallback)
 [[redirects]]
-  from = "/*"
-  to   = "/index.html"
+  from   = "/*"
+  to     = "/index.html"
   status = 200

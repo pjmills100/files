@@ -6,398 +6,70 @@
   <title>Secure File Vault</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
-  <style>
-    /* ============================================================
-       CSS VARIABLES — easy theming
-    ============================================================ */
-    :root {
-      --bg:          #0a0a0f;
-      --surface:     #111118;
-      --border:      #2a2a3a;
-      --accent:      #00ffb3;
-      --accent-dim:  #00ffb322;
-      --accent2:     #ff3cac;
-      --text:        #e8e8f0;
-      --muted:       #6b6b80;
-      --success:     #00ffb3;
-      --error:       #ff4466;
-      --font-display: 'Syne', sans-serif;
-      --font-mono:    'Space Mono', monospace;
-      --radius:       12px;
-      --transition:   0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-display);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      overflow-x: hidden;
-    }
-
-    /* Animated grid background */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(var(--border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 48px 48px;
-      opacity: 0.35;
-      z-index: 0;
-      animation: gridShift 20s linear infinite;
-    }
-
-    @keyframes gridShift {
-      0%   { background-position: 0 0; }
-      100% { background-position: 48px 48px; }
-    }
-
-    /* Glow blob */
-    body::after {
-      content: '';
-      position: fixed;
-      width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #00ffb315 0%, transparent 70%);
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      z-index: 0;
-      animation: blobPulse 6s ease-in-out infinite;
-    }
-
-    @keyframes blobPulse {
-      0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
-      50%       { opacity: 1;   transform: translate(-50%, -50%) scale(1.1); }
-    }
-
-    /* ============================================================
-       CARD
-    ============================================================ */
-    .card {
-      position: relative;
-      z-index: 1;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      width: 100%;
-      max-width: 480px;
-      padding: 40px 36px;
-      box-shadow: 0 0 60px #00ffb30a, 0 24px 80px #00000080;
-      animation: cardIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-
-    @keyframes cardIn {
-      from { opacity: 0; transform: translateY(32px) scale(0.97); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    /* Top accent bar */
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 20px; right: 20px;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      border-radius: 0 0 2px 2px;
-    }
-
-    /* ============================================================
-       HEADER
-    ============================================================ */
-    .vault-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 56px;
-      height: 56px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: var(--accent-dim);
-      margin-bottom: 20px;
-      font-size: 24px;
-    }
-
-    h1 {
-      font-size: 1.75rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      color: #fff;
-      margin-bottom: 6px;
-    }
-
-    .subtitle {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 32px;
-    }
-
-    /* ============================================================
-       STEP INDICATOR
-    ============================================================ */
-    .steps {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 32px;
-    }
-
-    .step-dot {
-      flex: 1;
-      height: 3px;
-      border-radius: 2px;
-      background: var(--border);
-      transition: background var(--transition);
-    }
-
-    .step-dot.active  { background: var(--accent); }
-    .step-dot.done    { background: var(--accent); opacity: 0.4; }
-
-    /* ============================================================
-       LABELS & INPUTS
-    ============================================================ */
-    .field-label {
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 8px;
-      display: block;
-    }
-
-    .input {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      font-family: var(--font-mono);
-      font-size: 0.95rem;
-      padding: 12px 16px;
-      outline: none;
-      transition: border-color var(--transition), box-shadow var(--transition);
-      -webkit-appearance: none;
-    }
-
-    .input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-dim);
-    }
-
-    .input.error { border-color: var(--error); }
-    .input.ok    { border-color: var(--success); }
-
-    /* ============================================================
-       BUTTONS
-    ============================================================ */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      margin-top: 20px;
-      padding: 13px 24px;
-      border-radius: 8px;
-      border: none;
-      font-family: var(--font-display);
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
-    }
-
-    .btn:active { transform: scale(0.98); }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #000;
-      box-shadow: 0 4px 24px #00ffb330;
-    }
-
-    .btn-primary:hover { box-shadow: 0 4px 32px #00ffb360; transform: translateY(-1px); }
-
-    .btn-download {
-      background: linear-gradient(135deg, var(--accent), #00d4ff);
-      color: #000;
-      font-size: 1rem;
-      padding: 16px 24px;
-      box-shadow: 0 4px 32px #00ffb340;
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 4px 32px #00ffb340; }
-      50%       { box-shadow: 0 4px 48px #00ffb370; }
-    }
-
-    .btn-download:hover { transform: translateY(-2px); }
-
-    /* ============================================================
-       MESSAGES
-    ============================================================ */
-    .msg {
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      margin-top: 10px;
-      padding: 8px 12px;
-      border-radius: 6px;
-      display: none;
-    }
-
-    .msg.error   { color: var(--error);   background: #ff446618; border: 1px solid #ff446630; display: block; }
-    .msg.success { color: var(--success); background: #00ffb318; border: 1px solid #00ffb330; display: block; }
-
-    /* ============================================================
-       PUZZLE CARD INNER
-    ============================================================ */
-    .puzzle-box {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px 20px;
-      margin-bottom: 20px;
-    }
-
-    .puzzle-type {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-
-    .puzzle-question {
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: #fff;
-      line-height: 1.5;
-    }
-
-    /* ============================================================
-       SECTIONS — show/hide
-    ============================================================ */
-    .section { display: none; }
-    .section.active { display: block; animation: fadeUp 0.4s ease both; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ============================================================
-       SUCCESS STATE
-    ============================================================ */
-    .success-icon {
-      font-size: 3rem;
-      margin-bottom: 16px;
-      animation: bounceIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-
-    @keyframes bounceIn {
-      from { opacity: 0; transform: scale(0.5); }
-      to   { opacity: 1; transform: scale(1); }
-    }
-
-    .success-title {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-
-    .success-sub {
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-bottom: 28px;
-      line-height: 1.6;
-    }
-
-    /* ============================================================
-       SECURITY NOTE
-    ============================================================ */
-    .security-note {
-      margin-top: 24px;
-      padding: 12px 16px;
-      border-radius: 8px;
-      border: 1px dashed var(--border);
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .security-note strong { color: var(--accent2); }
-
-    /* ============================================================
-       RESPONSIVE
-    ============================================================ */
-    @media (max-width: 520px) {
-      .card { padding: 28px 20px; }
-      h1 { font-size: 1.4rem; }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
 <div class="card">
-  <div class="vault-icon">🔒</div>
-  <h1>Secure Vault</h1>
-  <p class="subtitle">Protected File Access System</p>
 
-  <!-- Step progress dots -->
-  <div class="steps" id="stepDots">
-    <div class="step-dot active" id="dot1"></div>
-    <div class="step-dot"        id="dot2"></div>
-    <div class="step-dot"        id="dot3"></div>
+  <!-- ── MASTHEAD ─────────────────────────────────────────── -->
+  <div class="masthead">
+    <div class="masthead-kicker">Classified Access Portal</div>
+    <h1>The Vault</h1>
+    <div class="masthead-sub">Secure Document Retrieval System</div>
+    <div class="stamp">Restricted</div>
   </div>
 
-  <!-- ══════════════════════════════════════════════
+  <!-- ── STEP PROGRESS ─────────────────────────────────────── -->
+  <div class="progress">
+    <div class="prog-step active" id="step-dot-1">
+      <div class="dot" id="dot1">1</div>
+      <div class="label">Password</div>
+    </div>
+    <div class="prog-line" id="line1"></div>
+    <div class="prog-step" id="step-dot-2">
+      <div class="dot" id="dot2">2</div>
+      <div class="label">Puzzle</div>
+    </div>
+    <div class="prog-line" id="line2"></div>
+    <div class="prog-step" id="step-dot-3">
+      <div class="dot" id="dot3">3</div>
+      <div class="label">Download</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
        STEP 1 — PASSWORD
-  ══════════════════════════════════════════════ -->
+  ══════════════════════════════════════════════════════════ -->
   <div class="section active" id="step-password">
-    <label class="field-label" for="passwordInput">Enter Access Password</label>
+    <label class="field-label" for="passwordInput">Access Password</label>
     <input
       class="input"
       id="passwordInput"
       type="password"
-      placeholder="••••••••••"
+      placeholder="Enter password…"
       autocomplete="off"
       spellcheck="false"
     />
     <div class="msg" id="passMsg"></div>
 
     <!--
-      BACKEND HOOK:
-      Replace checkPassword() below with a fetch() call to your
-      serverless function (e.g. /api/verify-password) that validates
-      the password server-side. Never expose the real password in
-      client-side JS in production.
+      BACKEND HOOK (Password):
+      Replace checkPassword() in js/app.js with a fetch() POST to your
+      serverless endpoint (e.g. /.netlify/functions/verify-password).
+      That function reads the password from an environment variable and
+      responds with { ok: true } or { ok: false }. Never put the real
+      password in client-side JS for production.
     -->
-    <button class="btn btn-primary" onclick="checkPassword()">
-      Verify Password →
+    <button class="btn" onclick="checkPassword()">
+      Verify Password &rarr;
     </button>
   </div>
 
-  <!-- ══════════════════════════════════════════════
+  <!-- ══════════════════════════════════════════════════════════
        STEP 2 — PUZZLE
-  ══════════════════════════════════════════════ -->
+  ══════════════════════════════════════════════════════════ -->
   <div class="section" id="step-puzzle">
     <div class="puzzle-box">
       <div class="puzzle-type" id="puzzleType"></div>
@@ -409,206 +81,60 @@
       class="input"
       id="puzzleInput"
       type="text"
-      placeholder="Type your answer…"
+      placeholder="Your answer…"
       autocomplete="off"
       spellcheck="false"
     />
     <div class="msg" id="puzzleMsg"></div>
 
     <!--
-      BACKEND HOOK:
-      For higher security, send the puzzle ID + answer to your backend
-      (e.g. /api/verify-puzzle) instead of checking client-side.
-      Store puzzle answers in a server-side session or signed JWT.
+      BACKEND HOOK (Puzzle):
+      Replace checkPuzzle() in js/app.js with a POST to
+      /.netlify/functions/verify-puzzle. Store puzzle answers
+      server-side (session / signed JWT) so they can't be
+      inspected in client source.
     -->
-    <button class="btn btn-primary" onclick="checkPuzzle()">
-      Check Answer →
+    <button class="btn" onclick="checkPuzzle()">
+      Submit Answer &rarr;
     </button>
   </div>
 
-  <!-- ══════════════════════════════════════════════
+  <!-- ══════════════════════════════════════════════════════════
        STEP 3 — DOWNLOAD
-  ══════════════════════════════════════════════ -->
+  ══════════════════════════════════════════════════════════ -->
   <div class="section" id="step-download">
-    <div class="success-icon">✅</div>
-    <div class="success-title">Access Granted</div>
-    <p class="success-sub">
-      Both checks passed. Your secure file is ready.<br />
-      Click below to download.
-    </p>
+    <div class="success-wrap">
+      <span class="success-seal">🏆</span>
+      <div class="success-title">Access Granted</div>
+      <p class="success-sub">
+        Password verified &amp; puzzle solved.<br />
+        Your classified file is ready for retrieval.
+      </p>
 
-    <!--
-      BACKEND HOOK:
-      In production, replace this with a time-limited signed URL
-      generated by your server (e.g. AWS S3 presigned URL, Netlify
-      Function returning a one-time token). Never expose the real
-      file URL in client-side code.
-    -->
-    <a href="secret.txt" download="secret.txt">
-      <button class="btn btn-download">
-        ⬇ Download Secret File
-      </button>
-    </a>
+      <!--
+        BACKEND HOOK (File Delivery):
+        In production, replace this static href with a call to
+        /.netlify/functions/get-download-url which returns a
+        time-limited signed URL. Never expose the real file path
+        in client-side code for sensitive content.
+      -->
+      <a href="files/secret.txt" download="secret.txt">
+        <button class="btn btn-download">
+          ⬇&nbsp; Download Secret File
+        </button>
+      </a>
+    </div>
   </div>
 
-  <!-- Security transparency note -->
-  <div class="security-note">
-    <strong>⚠ Dev mode:</strong> password &amp; puzzle answers are checked client-side.
-    Search for <strong>BACKEND HOOK</strong> comments to add server-side verification.
+  <!-- ── FOOTER NOTE ───────────────────────────────────────── -->
+  <div class="footer-note">
+    <strong>⚠ Dev mode:</strong> checks run client-side. Search for
+    <strong>BACKEND HOOK</strong> in <code>index.html</code> &amp;
+    <code>js/app.js</code> to add server-side verification before going live.
   </div>
-</div>
 
-<script>
-  // ============================================================
-  //  CONFIG — change these to customize
-  // ============================================================
+</div><!-- /.card -->
 
-  // BACKEND HOOK: Move this to an environment variable or server-side check.
-  const CORRECT_PASSWORD = 'secret123';
-
-  // Puzzle bank — add/remove entries freely
-  const PUZZLE_BANK = [
-    // ── 1. MATH ──────────────────────────────────────────────
-    { type: 'Math Problem',    question: 'What is 7 + 3?',              answer: '10' },
-    { type: 'Math Problem',    question: 'What is 12 × 4?',             answer: '48' },
-    { type: 'Math Problem',    question: 'What is 144 ÷ 12?',           answer: '12' },
-    { type: 'Math Problem',    question: 'What is 9² − 1?',             answer: '80' },
-
-    // ── 2. WORD SCRAMBLE ─────────────────────────────────────
-    { type: 'Word Scramble',   question: 'Unscramble: "tca"',           answer: 'cat' },
-    { type: 'Word Scramble',   question: 'Unscramble: "lpape"',         answer: 'apple' },
-    { type: 'Word Scramble',   question: 'Unscramble: "nceao"',         answer: 'ocean' },
-    { type: 'Word Scramble',   question: 'Unscramble: "tciyk"',         answer: 'tricky' },
-
-    // ── 3. SEQUENCE ──────────────────────────────────────────
-    { type: 'Number Sequence', question: 'Next number: 2, 4, 8, 16, ?',  answer: '32' },
-    { type: 'Number Sequence', question: 'Next number: 1, 1, 2, 3, 5, ?', answer: '8' },
-    { type: 'Number Sequence', question: 'Next number: 3, 6, 9, 12, ?',  answer: '15' },
-    { type: 'Number Sequence', question: 'Next number: 100, 50, 25, ?',  answer: '12.5' },
-
-    // ── 4. RIDDLE ────────────────────────────────────────────
-    { type: 'Riddle',          question: 'What has keys but can\'t open locks?',          answer: 'piano' },
-    { type: 'Riddle',          question: 'I speak without a mouth. What am I?',           answer: 'echo' },
-    { type: 'Riddle',          question: 'The more you take, the more you leave behind. What am I?', answer: 'footsteps' },
-    { type: 'Riddle',          question: 'I have cities but no houses, mountains but no trees. What am I?', answer: 'map' },
-  ];
-
-  // ============================================================
-  //  STATE
-  // ============================================================
-  let currentPuzzle = null;
-
-  // ============================================================
-  //  STEP NAVIGATION
-  // ============================================================
-  function showStep(stepId) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.getElementById(stepId).classList.add('active');
-
-    const stepNum = { 'step-password': 1, 'step-puzzle': 2, 'step-download': 3 }[stepId];
-    ['dot1', 'dot2', 'dot3'].forEach((id, i) => {
-      const dot = document.getElementById(id);
-      dot.className = 'step-dot';
-      if (i + 1 === stepNum) dot.classList.add('active');
-      if (i + 1 < stepNum)  dot.classList.add('done');
-    });
-  }
-
-  // ============================================================
-  //  STEP 1 — PASSWORD CHECK
-  //  BACKEND HOOK: Replace body with fetch('/api/verify-password', ...)
-  // ============================================================
-  function checkPassword() {
-    const val     = document.getElementById('passwordInput').value.trim();
-    const input   = document.getElementById('passwordInput');
-    const msg     = document.getElementById('passMsg');
-
-    if (!val) {
-      showMsg(msg, 'error', 'Please enter a password.');
-      return;
-    }
-
-    // ─── CLIENT-SIDE CHECK (replace with server call in production) ───
-    if (val === CORRECT_PASSWORD) {
-      input.classList.remove('error');
-      input.classList.add('ok');
-      showMsg(msg, 'success', 'Password accepted. Loading puzzle…');
-      setTimeout(() => {
-        loadPuzzle();
-        showStep('step-puzzle');
-      }, 700);
-    } else {
-      input.classList.add('error');
-      input.classList.remove('ok');
-      showMsg(msg, 'error', 'Incorrect password. Try again.');
-      shake(input);
-    }
-  }
-
-  // ============================================================
-  //  STEP 2 — PUZZLE
-  // ============================================================
-  function loadPuzzle() {
-    // Pick a random puzzle from the bank
-    currentPuzzle = PUZZLE_BANK[Math.floor(Math.random() * PUZZLE_BANK.length)];
-    document.getElementById('puzzleType').textContent     = '// ' + currentPuzzle.type;
-    document.getElementById('puzzleQuestion').textContent = currentPuzzle.question;
-    document.getElementById('puzzleInput').value = '';
-    document.getElementById('puzzleInput').classList.remove('error', 'ok');
-    const msg = document.getElementById('puzzleMsg');
-    msg.className = 'msg';
-  }
-
-  //  BACKEND HOOK: Replace body with fetch('/api/verify-puzzle', ...)
-  function checkPuzzle() {
-    const val   = document.getElementById('puzzleInput').value.trim().toLowerCase();
-    const input = document.getElementById('puzzleInput');
-    const msg   = document.getElementById('puzzleMsg');
-
-    if (!val) {
-      showMsg(msg, 'error', 'Please enter an answer.');
-      return;
-    }
-
-    // ─── CLIENT-SIDE CHECK (replace with server call in production) ───
-    if (val === currentPuzzle.answer.toLowerCase()) {
-      input.classList.add('ok');
-      showMsg(msg, 'success', 'Correct! Unlocking file…');
-      setTimeout(() => showStep('step-download'), 700);
-    } else {
-      input.classList.add('error');
-      input.classList.remove('ok');
-      showMsg(msg, 'error', 'Wrong answer. Try again!');
-      shake(input);
-    }
-  }
-
-  // Allow Enter key to submit
-  document.getElementById('passwordInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') checkPassword();
-  });
-  document.getElementById('puzzleInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') checkPuzzle();
-  });
-
-  // ============================================================
-  //  HELPERS
-  // ============================================================
-  function showMsg(el, type, text) {
-    el.className = 'msg ' + type;
-    el.textContent = text;
-  }
-
-  function shake(el) {
-    el.animate([
-      { transform: 'translateX(0)' },
-      { transform: 'translateX(-8px)' },
-      { transform: 'translateX(8px)' },
-      { transform: 'translateX(-6px)' },
-      { transform: 'translateX(6px)' },
-      { transform: 'translateX(0)' },
-    ], { duration: 400, easing: 'ease-out' });
-  }
-</script>
+<script src="js/app.js"></script>
 </body>
 </html>

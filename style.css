@@ -1,0 +1,414 @@
+/* ============================================================
+   VARIABLES
+============================================================ */
+:root {
+  --paper:       #f5f0e8;
+  --paper-dark:  #ede7d9;
+  --ink:         #1a1208;
+  --ink-mid:     #4a3f2f;
+  --ink-faint:   #9a8f7f;
+  --red:         #c0392b;
+  --red-light:   #c0392b18;
+  --green:       #2d6a4f;
+  --green-light: #2d6a4f18;
+  --rule:        #c8bfae;
+  --shadow:      #1a120820;
+
+  --font-head:   'Playfair Display', serif;
+  --font-body:   'Courier Prime', monospace;
+  --radius:      4px;
+  --card-w:      480px;
+  --ease:        cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   RESET & BASE
+============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper-dark);
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 31px,
+      var(--rule) 31px,
+      var(--rule) 32px
+    );
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+
+/* ============================================================
+   CARD
+============================================================ */
+.card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: var(--card-w);
+  padding: 48px 44px 40px;
+  box-shadow:
+    4px 4px 0 var(--rule),
+    8px 8px 0 var(--shadow),
+    0 24px 64px var(--shadow);
+  position: relative;
+  animation: cardIn 0.5s var(--ease) both;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(24px) rotate(-0.3deg); }
+  to   { opacity: 1; transform: translateY(0) rotate(0deg); }
+}
+
+/* Corner fold */
+.card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 24px; height: 24px;
+  background: linear-gradient(135deg, var(--paper) 50%, var(--rule) 50%);
+  border-radius: 0 0 var(--radius) 0;
+}
+
+/* ============================================================
+   MASTHEAD
+============================================================ */
+.masthead {
+  text-align: center;
+  border-bottom: 3px double var(--ink);
+  padding-bottom: 20px;
+  margin-bottom: 28px;
+}
+
+.masthead-kicker {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 6px;
+}
+
+.masthead h1 {
+  font-family: var(--font-head);
+  font-size: 2.4rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.masthead-sub {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* Stamp */
+.stamp {
+  display: inline-block;
+  border: 2px solid var(--red);
+  color: var(--red);
+  font-family: var(--font-head);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 2px;
+  transform: rotate(-3deg);
+  margin-top: 10px;
+  opacity: 0.85;
+}
+
+/* ============================================================
+   STEP PROGRESS
+============================================================ */
+.progress {
+  display: flex;
+  align-items: center;
+  margin-bottom: 28px;
+  gap: 0;
+}
+
+.prog-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  gap: 6px;
+}
+
+.prog-step .dot {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--rule);
+  background: var(--paper);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  transition: all 0.3s var(--ease);
+  position: relative;
+  z-index: 1;
+}
+
+.prog-step.active .dot {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.prog-step.done .dot {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+
+.prog-step .label {
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.prog-step.active .label { color: var(--ink); font-weight: 700; }
+.prog-step.done .label   { color: var(--green); }
+
+.prog-line {
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+  margin-top: -20px; /* align with center of dots */
+}
+
+.prog-line.done { background: var(--green); }
+
+/* ============================================================
+   SECTIONS
+============================================================ */
+.section { display: none; }
+.section.active {
+  display: block;
+  animation: fadeIn 0.35s var(--ease) both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   FORM ELEMENTS
+============================================================ */
+.field-label {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.input {
+  width: 100%;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-bottom: 2px solid var(--ink);
+  border-radius: var(--radius) var(--radius) 0 0;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+}
+
+.input:focus {
+  border-bottom-color: var(--red);
+  box-shadow: 0 2px 0 var(--red);
+}
+
+.input.err { border-bottom-color: var(--red); box-shadow: 0 2px 0 var(--red); }
+.input.ok  { border-bottom-color: var(--green); box-shadow: 0 2px 0 var(--green); }
+
+/* ============================================================
+   MESSAGES
+============================================================ */
+.msg {
+  font-size: 0.76rem;
+  margin-top: 8px;
+  padding: 7px 12px;
+  border-radius: var(--radius);
+  display: none;
+  line-height: 1.4;
+}
+
+.msg.error   { display: block; color: var(--red);   background: var(--red-light);   border-left: 3px solid var(--red); }
+.msg.success { display: block; color: var(--green); background: var(--green-light); border-left: 3px solid var(--green); }
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+.btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px 24px;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-head);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, transform 0.15s, box-shadow 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn:hover {
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  transform: translate(-1px, -1px);
+}
+
+.btn:active { transform: translate(1px, 1px); box-shadow: none; }
+
+.btn-download {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+  font-size: 1.05rem;
+  padding: 14px 24px;
+  animation: nudge 2.5s ease-in-out infinite;
+}
+
+.btn-download:hover {
+  background: #fff;
+  color: var(--green);
+  border-color: var(--green);
+  box-shadow: 3px 3px 0 var(--green);
+}
+
+@keyframes nudge {
+  0%, 90%, 100% { transform: translate(0, 0); }
+  93%  { transform: translate(-2px, -2px); }
+  96%  { transform: translate(1px, 1px); }
+}
+
+/* ============================================================
+   PUZZLE BOX
+============================================================ */
+.puzzle-box {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  background: var(--paper-dark);
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.puzzle-box::before {
+  content: '§';
+  position: absolute;
+  top: -10px; left: 16px;
+  background: var(--paper-dark);
+  padding: 0 6px;
+  font-family: var(--font-head);
+  font-size: 1rem;
+  color: var(--ink-faint);
+}
+
+.puzzle-type {
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--red);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.puzzle-question {
+  font-family: var(--font-head);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+/* ============================================================
+   SUCCESS
+============================================================ */
+.success-wrap {
+  text-align: center;
+  padding: 8px 0;
+}
+
+.success-seal {
+  font-size: 3.5rem;
+  animation: sealIn 0.5s var(--ease) both 0.1s;
+  display: block;
+  margin-bottom: 16px;
+}
+
+@keyframes sealIn {
+  from { opacity: 0; transform: scale(0.4) rotate(-20deg); }
+  to   { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+.success-title {
+  font-family: var(--font-head);
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.success-sub {
+  font-size: 0.82rem;
+  color: var(--ink-mid);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+/* ============================================================
+   FOOTER NOTE
+============================================================ */
+.footer-note {
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+  font-size: 0.65rem;
+  color: var(--ink-faint);
+  line-height: 1.6;
+  text-align: center;
+}
+
+.footer-note strong { color: var(--red); }
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 520px) {
+  .card { padding: 32px 20px 28px; }
+  .masthead h1 { font-size: 1.8rem; }
+  .prog-step .label { display: none; }
+}
