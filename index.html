@@ -242,6 +242,32 @@
     .kb-del{min-width:44px;color:var(--error)}
 
 
+
+    /* ── PASSWORD DISPLAY ─────────────────────────────────────── */
+    .pw-display-wrap{
+      background:var(--bg);border:1px solid var(--border);border-radius:8px;
+      padding:14px 16px;position:relative;
+    }
+    .pw-display{
+      font-family:var(--font-mono);font-size:.82rem;color:var(--accent);
+      letter-spacing:.06em;line-height:1.6;word-break:break-all;display:block;
+      user-select:none;-webkit-user-select:none;-moz-user-select:none;
+      pointer-events:none;
+    }
+    .pw-display-note{
+      display:block;font-family:var(--font-mono);font-size:.62rem;color:var(--muted);
+      margin-top:6px;
+    }
+    .input-row{position:relative;display:flex;gap:8px;align-items:center}
+    .input-row .input{flex:1}
+    .toggle-vis{
+      flex-shrink:0;width:42px;height:42px;background:var(--surface2);
+      border:1px solid var(--border);border-radius:8px;cursor:pointer;
+      font-size:1.1rem;display:flex;align-items:center;justify-content:center;
+      transition:background .2s,border-color .2s;
+    }
+    .toggle-vis:hover{background:var(--accent-dim);border-color:var(--accent)}
+
     /* ── WORDLE ──────────────────────────────────────────────── */
     .wordle-grid{display:flex;flex-direction:column;gap:5px;align-items:center;margin-bottom:12px}
     .wordle-row{display:flex;gap:5px}
@@ -341,8 +367,16 @@
 
   <!-- STEP 1 — PASSWORD -->
   <div class="section active" id="step-password">
-    <label class="field-label" for="passwordInput">Enter Access Password</label>
-    <input class="input" id="passwordInput" type="password" placeholder="••••••••••" autocomplete="off" spellcheck="false"/>
+    <label class="field-label">Your Password For This Session</label>
+    <div class="pw-display-wrap" id="pwDisplayWrap">
+      <span class="pw-display" id="pwDisplay" aria-label="session password"></span>
+      <span class="pw-display-note">Cannot be copied — type it manually</span>
+    </div>
+    <label class="field-label" for="passwordInput" style="margin-top:16px">Enter the Password Above</label>
+    <div class="input-row">
+      <input class="input" id="passwordInput" type="password" placeholder="Type the password shown above…" autocomplete="off" spellcheck="false"/>
+      <button class="toggle-vis" id="toggleVis" onclick="togglePasswordVis()" title="Show/hide password" type="button">👁</button>
+    </div>
     <div class="msg" id="passMsg"></div>
     <!-- BACKEND HOOK: Replace checkPassword() with fetch('/api/verify-password') -->
     <button class="btn btn-primary" onclick="checkPassword()">Verify Password →</button>
@@ -395,7 +429,35 @@
 //  CONFIG
 // ════════════════════════════════════════════════════════════════
 // BACKEND HOOK: Move to env variable / server-side check.
-const CORRECT_PASSWORD = 'FXWc8bG0&xmsNm(n=cAG1F#%&=r$WVP9*CS2%zB^r?E(#XD^yFR&9';
+// ── PASSWORD LIST ────────────────────────────────────────────────
+//  All passwords that are valid. One is chosen at random each session
+//  and displayed (uncopyable) to the user.
+//  BACKEND HOOK: move this list to a server env variable.
+const PASSWORD_LIST = [
+    'kzpG~aK/Y/{EUPY6gf6A+YF/^Ua{R[0#+3yD%x*~sdae:Dq$Vu',
+    'vu4(LXRPcFoIk@?w!-F0:TN+HgWzb[GMrW^2`?ePB(?K7.s2Is',
+    '+4BmUYOH(e9=xC$=3~1q?1!dX`4#O9AMdlbkos$j@.h7_~!*82',
+    '!>0:N?3xPKJSpFdY[F1O_7_}ps[p-T49[98O8/oM]2r$6CumIp',
+    'J4^t/W`o{v$PvELkR~i(Q-.|RMs#8v(VP-C;crs{+O|7sy^w;z',
+    'Rs8$ES%%k]f7tkaSVKT6.G(lb+>S^kXDr}~Z~Y8yRp%jfU|Hm`',
+    '7]xb>H6usicGvE>@d^!b9^I&wy.Y5Vs6%|LD6]iH|?{LC#YgSC',
+    '{vf![zdmh[sX/WT:S;V4Qg_{EtY7J7)VEU@lAi[~=@/;_+UT^:',
+    '.zxr;Shg0>IM|u{[zpB..{cy0U%Trk43ZSNqH(B,(k-w8+Ph[!',
+    '26aMjXsuzn-@,w|rF`kTr>4d0v/[Z{dlOwKv|ObQQ`s_FY10bE',
+    'i:ll6AOM>9vD|YJA1~V]tI,mdz#^T/j#|{3_>v(,;F>jzgG*`M',
+    'uyc_S07HpqqPwun(Jm_HuP@:p}?a54_1^7PJ%1$bw^vk)h#7O8',
+    'qTB(`7c-F[]9v(BW#UCPbs,*7.xyP-JALDxx-9^zrKP}(.MJB8',
+    '4[:PZAY6LW:W/I0R-t<Ro6Hn=ucP>fuEUp)J#|2uh0|1be5QB|',
+    'HJSShl5l>!)|?{C1#O+(L]]&Kc.N0wpx9a+?kvene$d6e9fG>G',
+    'bAzt;le&T*>/qb/KKMw;S#lb8|A<&TGQRJL52BNKXtsUGWSL)v',
+    ']vi~r54^^LrTab_;)Q|r9`3v*-|Ko}1a`?lv2{A=#k~Cf?T9IE',
+    '1xZVNw.q8!`l7e;1dBjiZ8]|agEc,co>:-+l;H~95$g$$I*@6&',
+    'qF&?b]{lq&-N}A_lmb[(07?TB6g(KYOu?%k7NjvKRj7Gd?x+-L',
+    'gKfs*Y3lt1lnm`tuW2.0LJO.,.z6zWzVn)G/=VvUROxuEfCxbM'
+  ];
+
+// Pick one at random when the page loads (stable for this session)
+const CORRECT_PASSWORD = PASSWORD_LIST[Math.floor(Math.random()*PASSWORD_LIST.length)];
 const TOTAL_PUZZLES    = 5;
 
 // ════════════════════════════════════════════════════════════════
@@ -751,6 +813,40 @@ function showStep(id){
 //  PASSWORD
 //  BACKEND HOOK: replace with fetch('/api/verify-password',...)
 // ════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
+//  RENDER PASSWORD DISPLAY (uncopyable, no-select)
+// ════════════════════════════════════════════════════════════════
+function renderPasswordDisplay(){
+  const el = document.getElementById('pwDisplay');
+  if(!el) return;
+  // Render each character as a separate span so selection/copy is meaningless
+  el.innerHTML = '';
+  CORRECT_PASSWORD.split('').forEach(ch => {
+    const s = document.createElement('span');
+    s.textContent = ch;
+    // CSS already blocks user-select; also block drag
+    s.draggable = false;
+    el.appendChild(s);
+  });
+  // Block all copy/cut/contextmenu on the display
+  const wrap = document.getElementById('pwDisplayWrap');
+  ['copy','cut','contextmenu','dragstart'].forEach(ev =>
+    wrap.addEventListener(ev, e => e.preventDefault())
+  );
+}
+
+function togglePasswordVis(){
+  const inp = document.getElementById('passwordInput');
+  const btn = document.getElementById('toggleVis');
+  if(inp.type === 'password'){
+    inp.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    inp.type = 'password';
+    btn.textContent = '👁';
+  }
+}
+
 function checkPassword(){
   const val=document.getElementById('passwordInput').value;
   const input=document.getElementById('passwordInput');
@@ -1823,6 +1919,7 @@ function buildSnakeWidget(p, container) {
 //  BLOCK COPY/PASTE
 // ════════════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
+  renderPasswordDisplay();
   // Restore lockout state on page load
   const lockUntil=parseInt(localStorage.getItem('vaultLockUntil')||'0');
   if(Date.now()<lockUntil){
