@@ -350,30 +350,30 @@
 </head>
 <body>
 <!--
-  VAULT PASSWORD LIST
-  Any of these passwords will work (one is chosen randomly each session).
-  Keep this comment — it is for authorised reference only.
+  VAULT PASSWORD LIST (base64-reversed encoded)
+  To decode: atob(entry.split('').reverse().join(''))
+  e.g. in browser console: atob("=UnVkEHR6UWYkNnfqgXJEl3MrMCMbJ1ehVlXvYUWrEkNmdmNZBVVFt3LZ9ySh53Rwp3a".split('').reverse().join(''))
 
-   1. kzpG~aK/Y/{EUPY6gf6A+YF/^Ua{R[0#+3yD%x*~sdae:Dq$Vu
-   2. vu4(LXRPcFoIk@?w!-F0:TN+HgWzb[GMrW^2`?ePB(?K7.s2Is
-   3. +4BmUYOH(e9=xC$=3~1q?1!dX`4#O9AMdlbkos$j@.h7_~!*82
-   4. !>0:N?3xPKJSpFdY[F1O_7_}ps[p-T49[98O8/oM]2r$6CumIp
-   5. J4^t/W`o{v$PvELkR~i(Q-.|RMs#8v(VP-C;crs{+O|7sy^w;z
-   6. Rs8$ES%%k]f7tkaSVKT6.G(lb+>S^kXDr}~Z~Y8yRp%jfU|Hm`
-   7. 7]xb>H6usicGvE>@d^!b9^I&wy.Y5Vs6%|LD6]iH|?{LC#YgSC
-   8. {vf![zdmh[sX/WT:S;V4Qg_{EtY7J7)VEU@lAi[~=@/;_+UT^:
-   9. .zxr;Shg0>IM|u{[zpB..{cy0U%Trk43ZSNqH(B,(k-w8+Ph[!
-  10. 26aMjXsuzn-@,w|rF`kTr>4d0v/[Z{dlOwKv|ObQQ`s_FY10bE
-  11. i:ll6AOM>9vD|YJA1~V]tI,mdz#^T/j#|{3_>v(,;F>jzgG*`M
-  12. uyc_S07HpqqPwun(Jm_HuP@:p}?a54_1^7PJ%1$bw^vk)h#7O8
-  13. qTB(`7c-F[]9v(BW#UCPbs,*7.xyP-JALDxx-9^zrKP}(.MJB8
-  14. 4[:PZAY6LW:W/I0R-t<Ro6Hn=ucP>fuEUp)J#|2uh0|1be5QB|
-  15. HJSShl5l>!)|?{C1#O+(L]]&Kc.N0wpx9a+?kvene$d6e9fG>G
-  16. bAzt;le&T*>/qb/KKMw;S#lb8|A<&TGQRJL52BNKXtsUGWSL)v
-  17. ]vi~r54^^LrTab_;)Q|r9`3v*-|Ko}1a`?lv2{A=#k~Cf?T9IE
-  18. 1xZVNw.q8!`l7e;1dBjiZ8]|agEc,co>:-+l;H~95$g$$I*@6&
-  19. qF&?b]{lq&-N}A_lmb[(07?TB6g(KYOu?%k7NjvKRj7Gd?x+-L
-  20. gKfs*Y3lt1lnm`tuW2.0LJO.,.z6zWzVn)G/=VvUROxuEfCxbM
+   1. =UnVkEHR6UWYkNnfqgXJEl3MrMCMbJ1ehVlXvYUWrEkNmdmNZBVVFt3LZ9ySh53Rwp3a
+   2. =MXSyMnL3s0PoIEUl9DYy41Vy10RbJmeXdGSr4EV6AjRtEyd/A0aJ9mRjBlUYxEK0Und
+   3. =IDOqEiffdDauAkakM3brJGbk1UQ580I0AGWkFSM/EXM+NTPkMEe9kTZog0TZVVbCRzK
+   4. =AXStV3Q2Qicy0VTv9COPhTOblDNU1CcbNHc991Nf9UMGtVWkZEcTp0SQh3M/4kOw4TI
+   5. =o3O35VezdDfPtyezJ3Y7MULQZFK2hzIz1kU85SLRhSa+J1aMVkdQRid79GYX9CdeRjS
+   6. =AWbIxXVmpWJwJVe4klfa5XfyREWr51U+siYshyRuYDVLZ1UhtGd3YWXrVSJTVEJ4MnU
+   7. =M0Unl1IDx0e/wHSp1lNExEflYzcWVTWuk3dmkkX5IWIeRGQ+UkdHNWazVnNI5jY411N
+   8. =ojXUV1KftzLA1jfblWQsBUVFZVK3o0NZRXR791ZRRjV7MlOUd1LYN3Wo1GZ6tVImZ3e
+   9. =EyWoB1K4cXLrhCLChCSx50UaNDNrJHVlUFM5N2eu4iQwp3W7VHfNlkPwcGaTtjc4pnL
+  10. =UkYwETWG91cgFVUi9Ef2t0dPxGZ7p1WvYHMkRjPyR1agZkc8dHLA1ib6V3cYpWThZjM
+  11. =0EYqc0Z6pmPGtDLoYnPfNze8NiavQlXjoHZtxSS01lV+FTQKlFfEZXO+00TBZDbspTa
+  12. =gzT3MCapsmdednYkETJKB1NeFzX0UTY/0Hc6AEU1h0XtpEKuV3dQFXcwh0NwM1XjlXd
+  13. =gjQK1kLo0HULJneelTL4hHRMFkStAVe45yNqwyciB1QVNyVChid501WG1yY3AGKCRVc
+  14. =wnQRVTZiFDfwgWdyw3IKlCcVVUdm5DUjVXPuhkNvJFP01iUwk0LXpzVMZTWBpFU6sFN
+  15. =ckPHZWOlZDZkUmblZ3a/sSY5gHc3BjTuM2Sm0VXMhyKPNSMDt3P8lSI+wWNsh2UTpES
+  16. =YXKMN1VHV1c0h1SOJkM1wkSSF1RUZCPBxHOix2ITtzdNt0SvIWcv4jKUZSZstDd6FkY
+  17. =UUS5Q1PmNkfrNSPBtnM2x2PgFWM992S81iK2NDY5IHfRlyOfJWYUJHTe5FN1InfpZXX
+  18. =YiNApSSkQyZkUTO+h0OstSL64zbjxyYFdWY81FOalmaCRWM7U2NsBWI4EnL35kVahXM
+  19. =wULrg3Pkd0NqJ1S2pmT3sWJ/U3TZtEKnZjQU9zNwgyWi1GbfFUfO1iJxx2edJ2PmYUc
+  20. =0kY4NkZFVHePJVV2ZVPvcUKuZleXpnN65CLu8kSMBjLycVd0BWbuxWM0x2MZpycmt0Z
 -->
 <div class="card">
   <div class="vault-icon">🔒</div>
@@ -452,34 +452,10 @@
 //  CONFIG
 // ════════════════════════════════════════════════════════════════
 // BACKEND HOOK: Move to env variable / server-side check.
-// ── PASSWORD LIST ────────────────────────────────────────────────
-//  All passwords that are valid. One is chosen at random each session
-//  and displayed (uncopyable) to the user.
-//  BACKEND HOOK: move this list to a server env variable.
-const PASSWORD_LIST = [
-    'kzpG~aK/Y/{EUPY6gf6A+YF/^Ua{R[0#+3yD%x*~sdae:Dq$Vu',
-    'vu4(LXRPcFoIk@?w!-F0:TN+HgWzb[GMrW^2`?ePB(?K7.s2Is',
-    '+4BmUYOH(e9=xC$=3~1q?1!dX`4#O9AMdlbkos$j@.h7_~!*82',
-    '!>0:N?3xPKJSpFdY[F1O_7_}ps[p-T49[98O8/oM]2r$6CumIp',
-    'J4^t/W`o{v$PvELkR~i(Q-.|RMs#8v(VP-C;crs{+O|7sy^w;z',
-    'Rs8$ES%%k]f7tkaSVKT6.G(lb+>S^kXDr}~Z~Y8yRp%jfU|Hm`',
-    '7]xb>H6usicGvE>@d^!b9^I&wy.Y5Vs6%|LD6]iH|?{LC#YgSC',
-    '{vf![zdmh[sX/WT:S;V4Qg_{EtY7J7)VEU@lAi[~=@/;_+UT^:',
-    '.zxr;Shg0>IM|u{[zpB..{cy0U%Trk43ZSNqH(B,(k-w8+Ph[!',
-    '26aMjXsuzn-@,w|rF`kTr>4d0v/[Z{dlOwKv|ObQQ`s_FY10bE',
-    'i:ll6AOM>9vD|YJA1~V]tI,mdz#^T/j#|{3_>v(,;F>jzgG*`M',
-    'uyc_S07HpqqPwun(Jm_HuP@:p}?a54_1^7PJ%1$bw^vk)h#7O8',
-    'qTB(`7c-F[]9v(BW#UCPbs,*7.xyP-JALDxx-9^zrKP}(.MJB8',
-    '4[:PZAY6LW:W/I0R-t<Ro6Hn=ucP>fuEUp)J#|2uh0|1be5QB|',
-    'HJSShl5l>!)|?{C1#O+(L]]&Kc.N0wpx9a+?kvene$d6e9fG>G',
-    'bAzt;le&T*>/qb/KKMw;S#lb8|A<&TGQRJL52BNKXtsUGWSL)v',
-    ']vi~r54^^LrTab_;)Q|r9`3v*-|Ko}1a`?lv2{A=#k~Cf?T9IE',
-    '1xZVNw.q8!`l7e;1dBjiZ8]|agEc,co>:-+l;H~95$g$$I*@6&',
-    'qF&?b]{lq&-N}A_lmb[(07?TB6g(KYOu?%k7NjvKRj7Gd?x+-L',
-    'gKfs*Y3lt1lnm`tuW2.0LJO.,.z6zWzVn)G/=VvUROxuEfCxbM'
-  ];
-
-// Pick one at random when the page loads (stable for this session)
+// ── PASSWORD LIST (obfuscated — base64 reversed, decoded at runtime) ──
+//  To recover plain-text: atob(e.split('').reverse().join('')) on each entry.
+const _PL = ["=UnVkEHR6UWYkNnfqgXJEl3MrMCMbJ1ehVlXvYUWrEkNmdmNZBVVFt3LZ9ySh53Rwp3a", "=MXSyMnL3s0PoIEUl9DYy41Vy10RbJmeXdGSr4EV6AjRtEyd/A0aJ9mRjBlUYxEK0Und", "=IDOqEiffdDauAkakM3brJGbk1UQ580I0AGWkFSM/EXM+NTPkMEe9kTZog0TZVVbCRzK", "=AXStV3Q2Qicy0VTv9COPhTOblDNU1CcbNHc991Nf9UMGtVWkZEcTp0SQh3M/4kOw4TI", "=o3O35VezdDfPtyezJ3Y7MULQZFK2hzIz1kU85SLRhSa+J1aMVkdQRid79GYX9CdeRjS", "=AWbIxXVmpWJwJVe4klfa5XfyREWr51U+siYshyRuYDVLZ1UhtGd3YWXrVSJTVEJ4MnU", "=M0Unl1IDx0e/wHSp1lNExEflYzcWVTWuk3dmkkX5IWIeRGQ+UkdHNWazVnNI5jY411N", "=ojXUV1KftzLA1jfblWQsBUVFZVK3o0NZRXR791ZRRjV7MlOUd1LYN3Wo1GZ6tVImZ3e", "=EyWoB1K4cXLrhCLChCSx50UaNDNrJHVlUFM5N2eu4iQwp3W7VHfNlkPwcGaTtjc4pnL", "=UkYwETWG91cgFVUi9Ef2t0dPxGZ7p1WvYHMkRjPyR1agZkc8dHLA1ib6V3cYpWThZjM", "=0EYqc0Z6pmPGtDLoYnPfNze8NiavQlXjoHZtxSS01lV+FTQKlFfEZXO+00TBZDbspTa", "=gzT3MCapsmdednYkETJKB1NeFzX0UTY/0Hc6AEU1h0XtpEKuV3dQFXcwh0NwM1XjlXd", "=gjQK1kLo0HULJneelTL4hHRMFkStAVe45yNqwyciB1QVNyVChid501WG1yY3AGKCRVc", "=wnQRVTZiFDfwgWdyw3IKlCcVVUdm5DUjVXPuhkNvJFP01iUwk0LXpzVMZTWBpFU6sFN", "=ckPHZWOlZDZkUmblZ3a/sSY5gHc3BjTuM2Sm0VXMhyKPNSMDt3P8lSI+wWNsh2UTpES", "=YXKMN1VHV1c0h1SOJkM1wkSSF1RUZCPBxHOix2ITtzdNt0SvIWcv4jKUZSZstDd6FkY", "=UUS5Q1PmNkfrNSPBtnM2x2PgFWM992S81iK2NDY5IHfRlyOfJWYUJHTe5FN1InfpZXX", "=YiNApSSkQyZkUTO+h0OstSL64zbjxyYFdWY81FOalmaCRWM7U2NsBWI4EnL35kVahXM", "=wULrg3Pkd0NqJ1S2pmT3sWJ/U3TZtEKnZjQU9zNwgyWi1GbfFUfO1iJxx2edJ2PmYUc", "=0kY4NkZFVHePJVV2ZVPvcUKuZleXpnN65CLu8kSMBjLycVd0BWbuxWM0x2MZpycmt0Z"];
+const PASSWORD_LIST = _PL.map(e => atob(e.split('').reverse().join('')));
 const CORRECT_PASSWORD = PASSWORD_LIST[Math.floor(Math.random()*PASSWORD_LIST.length)];
 const TOTAL_PUZZLES    = 5;
 
@@ -560,7 +536,7 @@ const PUZZLE_BANK = [
     items:['Red','Blue','Green','Violet'], answer:['Violet','Blue','Green','Red'] },
   { uiType:'order', label:'Put In Order',
     question:'Order these programming languages by year of creation (oldest first):',
-    items:['Python','JavaScript','C','Java'], answer:['C','Python','Java','JavaScript'] },
+    items:['Python','Go','C','Java'], answer:['C','Python','Java','Go'] },
 
   // ── SLIDER (8) ────────────────────────────────────────────────
   { uiType:'slider', label:'Slider Puzzle',
@@ -665,7 +641,7 @@ const PUZZLE_BANK = [
     question:'The capital of Australia (not Sydney!):',
     answer:'CANBERRA' },
   { uiType:'typeword', label:'Spell It Out',
-    question:'The chemical formula for water, spelled out:',
+    question:'Type the chemical formula for water (capital H, number 2, capital O):',
     answer:'H2O' },
   { uiType:'typeword', label:'Spell It Out',
     question:'A word meaning "the study of maps":',
@@ -674,13 +650,13 @@ const PUZZLE_BANK = [
     question:'The only even prime number:',
     answer:'TWO' },
   { uiType:'typeword', label:'Spell It Out',
-    question:'The fear of long words (ironically):',
-    answer:'HIPPOPOTOMONSTROSESQUIPPEDALIOPHOBIA' },
+    question:'The largest planet in our solar system:',
+    answer:'JUPITER' },
   { uiType:'typeword', label:'Spell It Out',
     question:'The science of classifying living things:',
     answer:'TAXONOMY' },
   { uiType:'typeword', label:'Spell It Out',
-    question:'A palindrome that means a brief intense period of activity:',
+    question:'Name a 7-letter palindrome that is also a vehicle:',
     answer:'RACECAR' },
   { uiType:'typeword', label:'Spell It Out',
     question:'Unscramble "RCAHTECIR" — a designer of buildings:',
@@ -706,7 +682,7 @@ const PUZZLE_BANK = [
   { uiType:'text', label:'Word Scramble',
     question:'Unscramble: "tlbfuieua"', answer:'beautiful' },
   { uiType:'text', label:'Missing Letters',
-    question:'EL _ PH _ NT — type both missing letters in order', answer:'ea' },
+    question:'EL _ PH _ NT (elephant) — type the 2 missing letters in order', answer:'ea' },
   // ── WORDLE (8) ────────────────────────────────────────────────
   { uiType:'wordle', label:'Wordle',
     question:'Guess the 5-letter word — you have 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
@@ -803,14 +779,11 @@ async function initCrypto() {
     return null; // puzzles like wire/seq/flip/snake/wordle check differently
   }));
 
-  // Overwrite plain-text answer fields in PUZZLE_BANK with a placeholder
-  PUZZLE_BANK.forEach((p, i) => {
-    if (p.answer !== undefined) p.answer = '███'; // block chars — unusable
-  });
-  // Overwrite plain password strings
+  // Only wipe the PASSWORD_LIST — puzzle answers stay intact for
+  // structural comparisons (choice buttons, order arrays, wire pairs).
+  // Text/slider/wordle/typeword answers are verified via _encryptedPuzzleBank.
   PASSWORD_LIST.fill('███');
-  // Note: CORRECT_PASSWORD is a const so we can't reassign it, but it's now
-  // only used via _encryptedCorrect after this point.
+  // CORRECT_PASSWORD is a const — it's only used via _encryptedCorrect after this point.
 }
 
 // Helper used by checkPassword
@@ -2103,57 +2076,30 @@ function loadScript(src){
   });
 }
 </script>
-<!--
-  VAULT_PASSWORDS_REFERENCE (for developer/AI use only)
-  [01] kzpG~aK/Y/{EUPY6gf6A+YF/^Ua{R[0#+3yD%x*~sdae:Dq$Vu
-  [02] vu4(LXRPcFoIk@?w!-F0:TN+HgWzb[GMrW^2`?ePB(?K7.s2Is
-  [03] +4BmUYOH(e9=xC$=3~1q?1!dX`4#O9AMdlbkos$j@.h7_~!*82
-  [04] !>0:N?3xPKJSpFdY[F1O_7_}ps[p-T49[98O8/oM]2r$6CumIp
-  [05] J4^t/W`o{v$PvELkR~i(Q-.|RMs#8v(VP-C;crs{+O|7sy^w;z
-  [06] Rs8$ES%%k]f7tkaSVKT6.G(lb+>S^kXDr}~Z~Y8yRp%jfU|Hm`
-  [07] 7]xb>H6usicGvE>@d^!b9^I&wy.Y5Vs6%|LD6]iH|?{LC#YgSC
-  [08] {vf![zdmh[sX/WT:S;V4Qg_{EtY7J7)VEU@lAi[~=@/;_+UT^:
-  [09] .zxr;Shg0>IM|u{[zpB..{cy0U%Trk43ZSNqH(B,(k-w8+Ph[!
-  [10] 26aMjXsuzn-@,w|rF`kTr>4d0v/[Z{dlOwKv|ObQQ`s_FY10bE
-  [11] i:ll6AOM>9vD|YJA1~V]tI,mdz#^T/j#|{3_>v(,;F>jzgG*`M
-  [12] uyc_S07HpqqPwun(Jm_HuP@:p}?a54_1^7PJ%1$bw^vk)h#7O8
-  [13] qTB(`7c-F[]9v(BW#UCPbs,*7.xyP-JALDxx-9^zrKP}(.MJB8
-  [14] 4[:PZAY6LW:W/I0R-t<Ro6Hn=ucP>fuEUp)J#|2uh0|1be5QB|
-  [15] HJSShl5l>!)|?{C1#O+(L]]&Kc.N0wpx9a+?kvene$d6e9fG>G
-  [16] bAzt;le&T*>/qb/KKMw;S#lb8|A<&TGQRJL52BNKXtsUGWSL)v
-  [17] ]vi~r54^^LrTab_;)Q|r9`3v*-|Ko}1a`?lv2{A=#k~Cf?T9IE
-  [18] 1xZVNw.q8!`l7e;1dBjiZ8]|agEc,co>:-+l;H~95$g$$I*@6&
-  [19] qF&?b]{lq&-N}A_lmb[(07?TB6g(KYOu?%k7NjvKRj7Gd?x+-L
-  [20] gKfs*Y3lt1lnm`tuW2.0LJO.,.z6zWzVn)G/=VvUROxuEfCxbM
--->
+
 
 <!--
-  ============================================================
-  VAULT PASSWORD LIST — FOR REFERENCE ONLY
-  One of these is chosen at random each session and displayed
-  to the user. Only the displayed password will work.
-  ============================================================
-  01. kzpG~aK/Y/{EUPY6gf6A+YF/^Ua{R[0#+3yD%x*~sdae:Dq$Vu
-  02. vu4(LXRPcFoIk@?w!-F0:TN+HgWzb[GMrW^2`?ePB(?K7.s2Is
-  03. +4BmUYOH(e9=xC$=3~1q?1!dX`4#O9AMdlbkos$j@.h7_~!*82
-  04. !>0:N?3xPKJSpFdY[F1O_7_}ps[p-T49[98O8/oM]2r$6CumIp
-  05. J4^t/W`o{v$PvELkR~i(Q-.|RMs#8v(VP-C;crs{+O|7sy^w;z
-  06. Rs8$ES%%k]f7tkaSVKT6.G(lb+>S^kXDr}~Z~Y8yRp%jfU|Hm`
-  07. 7]xb>H6usicGvE>@d^!b9^I&wy.Y5Vs6%|LD6]iH|?{LC#YgSC
-  08. {vf![zdmh[sX/WT:S;V4Qg_{EtY7J7)VEU@lAi[~=@/;_+UT^:
-  09. .zxr;Shg0>IM|u{[zpB..{cy0U%Trk43ZSNqH(B,(k-w8+Ph[!
-  10. 26aMjXsuzn-@,w|rF`kTr>4d0v/[Z{dlOwKv|ObQQ`s_FY10bE
-  11. i:ll6AOM>9vD|YJA1~V]tI,mdz#^T/j#|{3_>v(,;F>jzgG*`M
-  12. uyc_S07HpqqPwun(Jm_HuP@:p}?a54_1^7PJ%1$bw^vk)h#7O8
-  13. qTB(`7c-F[]9v(BW#UCPbs,*7.xyP-JALDxx-9^zrKP}(.MJB8
-  14. 4[:PZAY6LW:W/I0R-t<Ro6Hn=ucP>fuEUp)J#|2uh0|1be5QB|
-  15. HJSShl5l>!)|?{C1#O+(L]]&Kc.N0wpx9a+?kvene$d6e9fG>G
-  16. bAzt;le&T*>/qb/KKMw;S#lb8|A<&TGQRJL52BNKXtsUGWSL)v
-  17. ]vi~r54^^LrTab_;)Q|r9`3v*-|Ko}1a`?lv2{A=#k~Cf?T9IE
-  18. 1xZVNw.q8!`l7e;1dBjiZ8]|agEc,co>:-+l;H~95$g$$I*@6&
-  19. qF&?b]{lq&-N}A_lmb[(07?TB6g(KYOu?%k7NjvKRj7Gd?x+-L
-  20. gKfs*Y3lt1lnm`tuW2.0LJO.,.z6zWzVn)G/=VvUROxuEfCxbM
-  ============================================================
+  VAULT PASSWORDS (base64-reversed — decode: atob(e.split('').reverse().join('')))
+  01. =UnVkEHR6UWYkNnfqgXJEl3MrMCMbJ1ehVlXvYUWrEkNmdmNZBVVFt3LZ9ySh53Rwp3a
+  02. =MXSyMnL3s0PoIEUl9DYy41Vy10RbJmeXdGSr4EV6AjRtEyd/A0aJ9mRjBlUYxEK0Und
+  03. =IDOqEiffdDauAkakM3brJGbk1UQ580I0AGWkFSM/EXM+NTPkMEe9kTZog0TZVVbCRzK
+  04. =AXStV3Q2Qicy0VTv9COPhTOblDNU1CcbNHc991Nf9UMGtVWkZEcTp0SQh3M/4kOw4TI
+  05. =o3O35VezdDfPtyezJ3Y7MULQZFK2hzIz1kU85SLRhSa+J1aMVkdQRid79GYX9CdeRjS
+  06. =AWbIxXVmpWJwJVe4klfa5XfyREWr51U+siYshyRuYDVLZ1UhtGd3YWXrVSJTVEJ4MnU
+  07. =M0Unl1IDx0e/wHSp1lNExEflYzcWVTWuk3dmkkX5IWIeRGQ+UkdHNWazVnNI5jY411N
+  08. =ojXUV1KftzLA1jfblWQsBUVFZVK3o0NZRXR791ZRRjV7MlOUd1LYN3Wo1GZ6tVImZ3e
+  09. =EyWoB1K4cXLrhCLChCSx50UaNDNrJHVlUFM5N2eu4iQwp3W7VHfNlkPwcGaTtjc4pnL
+  10. =UkYwETWG91cgFVUi9Ef2t0dPxGZ7p1WvYHMkRjPyR1agZkc8dHLA1ib6V3cYpWThZjM
+  11. =0EYqc0Z6pmPGtDLoYnPfNze8NiavQlXjoHZtxSS01lV+FTQKlFfEZXO+00TBZDbspTa
+  12. =gzT3MCapsmdednYkETJKB1NeFzX0UTY/0Hc6AEU1h0XtpEKuV3dQFXcwh0NwM1XjlXd
+  13. =gjQK1kLo0HULJneelTL4hHRMFkStAVe45yNqwyciB1QVNyVChid501WG1yY3AGKCRVc
+  14. =wnQRVTZiFDfwgWdyw3IKlCcVVUdm5DUjVXPuhkNvJFP01iUwk0LXpzVMZTWBpFU6sFN
+  15. =ckPHZWOlZDZkUmblZ3a/sSY5gHc3BjTuM2Sm0VXMhyKPNSMDt3P8lSI+wWNsh2UTpES
+  16. =YXKMN1VHV1c0h1SOJkM1wkSSF1RUZCPBxHOix2ITtzdNt0SvIWcv4jKUZSZstDd6FkY
+  17. =UUS5Q1PmNkfrNSPBtnM2x2PgFWM992S81iK2NDY5IHfRlyOfJWYUJHTe5FN1InfpZXX
+  18. =YiNApSSkQyZkUTO+h0OstSL64zbjxyYFdWY81FOalmaCRWM7U2NsBWI4EnL35kVahXM
+  19. =wULrg3Pkd0NqJ1S2pmT3sWJ/U3TZtEKnZjQU9zNwgyWi1GbfFUfO1iJxx2edJ2PmYUc
+  20. =0kY4NkZFVHePJVV2ZVPvcUKuZleXpnN65CLu8kSMBjLycVd0BWbuxWM0x2MZpycmt0Z
 -->
 </body>
 </html>
