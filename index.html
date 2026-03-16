@@ -941,11 +941,11 @@ function checkPassword(){
     setInput(input,'error');
     shake(input);
     if(fails>=2){
-      const lockUntil=Date.now()+10*60*1000; // 10 minutes
+      const lockUntil=Date.now()+2*60*1000; // 2 minutes
       localStorage.setItem('vaultLockUntil',lockUntil);
       localStorage.removeItem('vaultPassFails');
       input.disabled=true;
-      showMsg(msg,'error','Too many failed attempts — locked for 10 minutes.');
+      showMsg(msg,'error','Too many failed attempts — locked for 2 minutes.');
       startLockCountdown(lockUntil,msg,input);
     }else{
       showMsg(msg,'error',`Incorrect password. ${2-fails} attempt${2-fails!==1?'s':''} remaining before lockout.`);
