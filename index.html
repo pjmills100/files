@@ -1905,7 +1905,8 @@ function buildTypeWordWidget(p,container){
   _dec(_encryptedPuzzleBank[bankIdx2]).then(plainTW => {
   const answer=plainTW.toUpperCase();
   let typed='';
-  let kbListener=null; // track so we can remove it when puzzle changes
+  let inputLocked=false;
+  let kbListener=null;
 
   const wrap=document.createElement('div');wrap.className='typeword-wrap';
 
@@ -1917,11 +1918,11 @@ function buildTypeWordWidget(p,container){
   });
   wrap.appendChild(display);
 
-  // On-screen keyboard
-  const rows=[['Q','W','E','R','T','Y','U','I','O','P'],['A','S','D','F','G','H','J','K','L'],['Z','X','C','V','B','N','M','1','2','3','4','5','6','7','8','9','0','⌫']];
-  const kbWrap=document.createElement('div');kbWrap.className='typeword-keyboard';
-  // Map key char -> button element so we can highlight physical keypresses
-  const keyEls={};
+  // Hint: how many characters
+  const hint=document.createElement('div');
+  hint.style.cssText='font-family:var(--font-mono);font-size:.7rem;color:var(--muted);text-align:center;margin-top:8px;';
+  hint.textContent=answer.length+' characters — type with your keyboard, Backspace to delete';
+  wrap.appendChild(hint);
 
   function updateDisplay(){
     const boxes=[...display.querySelectorAll('.typeword-letter')];
@@ -1932,12 +1933,11 @@ function buildTypeWordWidget(p,container){
     });
   }
 
-  let inputLocked=false;
   function handleKey(k){
     if(inputLocked)return;
-    if(k==='⌫'||k==='BACKSPACE'){
+    if(k==='BACKSPACE'){
       typed=typed.slice(0,-1);updateDisplay();
-    }else if(typed.length<answer.length){
+    }else if(/^[A-Z0-9]$/.test(k)&&typed.length<answer.length){
       typed+=k;updateDisplay();
       if(typed.length===answer.length){
         inputLocked=true;
@@ -1947,48 +1947,26 @@ function buildTypeWordWidget(p,container){
           setTimeout(()=>advancePuzzle(),600);
         }else{
           boxes.forEach(b=>{b.classList.remove('filled');b.classList.add('wrong-letter')});
-          setTimeout(()=>failPuzzle(),800);
+          // Unlock after flash so failPuzzle can clean up properly
+          setTimeout(()=>{inputLocked=false;failPuzzle();},800);
         }
       }
     }
   }
 
-  rows.forEach(row=>{
-    const rowEl=document.createElement('div');rowEl.className='kb-row';
-    row.forEach(k=>{
-      const key=document.createElement('button');
-      key.className='kb-key'+(k==='⌫'?' kb-del':'');
-      key.textContent=k;
-      key.addEventListener('click',()=>handleKey(k));
-      keyEls[k]=key;
-      rowEl.appendChild(key);
-    });
-    kbWrap.appendChild(rowEl);
-  });
-
-  // Physical keyboard listener — attach to document, clean up when widget is replaced
+  // Physical keyboard only — no on-screen keyboard
   kbListener=function(e){
-    // Only fire when typeword puzzle is active
     if(!document.getElementById('step-puzzle').classList.contains('active'))return;
     if(e.ctrlKey||e.metaKey||e.altKey)return;
     const k=e.key.toUpperCase();
-    if(k==='BACKSPACE'){
+    if(k==='BACKSPACE'||/^[A-Z0-9]$/.test(k)){
       e.preventDefault();
-      // Flash the backspace key
-      const delBtn=keyEls['⌫'];
-      if(delBtn){delBtn.style.background='var(--accent-dim)';setTimeout(()=>delBtn.style.background='',150);}
-      handleKey('BACKSPACE');
-    }else if(/^[A-Z0-9]$/.test(k)){
-      e.preventDefault();
-      // Flash the on-screen key
-      const btn=keyEls[k];
-      if(btn){btn.style.background='var(--accent-dim)';setTimeout(()=>btn.style.background='',150);}
       handleKey(k);
     }
   };
   document.addEventListener('keydown',kbListener);
 
-  // Clean up listener when the widget container is removed (next puzzle loads)
+  // Clean up listener when widget is swapped out
   const observer=new MutationObserver(()=>{
     if(!document.body.contains(wrap)){
       document.removeEventListener('keydown',kbListener);
@@ -1997,10 +1975,10 @@ function buildTypeWordWidget(p,container){
   });
   observer.observe(document.getElementById('puzzleWidget'),{childList:true});
 
-  wrap.appendChild(kbWrap);
   container.appendChild(wrap);
   }); // end _dec promise
 }
+
 
 
 // ════════════════════════════════════════════════════════════════
