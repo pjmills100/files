@@ -543,8 +543,8 @@ const PUZZLE_BANK = [
     question:'Set the slider to the number of degrees in a right angle:',
     min:0,max:360,step:1,answer:90,hint:'Range: 0 – 360' },
   { uiType:'slider', label:'Slider Puzzle',
-    question:'Set the slider to the number of sides on a hexagon:',
-    min:3,max:12,step:1,answer:6,hint:'Range: 3 – 12' },
+    question:'Set the slider to the number of bones in the human hand:',
+    min:15,max:40,step:1,answer:27,hint:'Range: 15 – 40' },
   { uiType:'slider', label:'Slider Puzzle',
     question:'Set the slider to 2⁷ (2 to the power of 7):',
     min:64,max:256,step:2,answer:128,hint:'Range: 64 – 256' },
@@ -558,11 +558,11 @@ const PUZZLE_BANK = [
     question:'Set the slider to the number of keys on a standard piano:',
     min:50,max:100,step:1,answer:88,hint:'Range: 50 – 100' },
   { uiType:'slider', label:'Slider Puzzle',
-    question:'Set the slider to the boiling point of water in °C:',
-    min:0,max:200,step:1,answer:100,hint:'Range: 0 – 200' },
+    question:'Set the slider to the melting point of iron in Celsius (approx):',
+    min:1200,max:1800,step:2,answer:1538,hint:'Range: 1200 – 1800' },
   { uiType:'slider', label:'Slider Puzzle',
-    question:'Set the slider to the number of players on a football (soccer) team:',
-    min:5,max:20,step:1,answer:11,hint:'Range: 5 – 20' },
+    question:'Set the slider to the speed of sound in air at 20 degrees C (m/s):',
+    min:200,max:500,step:1,answer:343,hint:'Range: 200 – 500' },
 
   // ── MEMORY SEQUENCE (6) ───────────────────────────────────────
   { uiType:'seq', label:'Memory Sequence',
@@ -682,7 +682,7 @@ const PUZZLE_BANK = [
   { uiType:'text', label:'Word Scramble',
     question:'Unscramble: "tlbfuieua"', answer:'beautiful' },
   { uiType:'text', label:'Missing Letters',
-    question:'EL _ PH _ NT (elephant) — type the 2 missing letters in order', answer:'ea' },
+    question:'S _ _ _ _ _ _ _ _ _ T — this 10-letter word means a small group that breaks from a larger one (a political ___)', answer:'SPLINTER' },
   // ── WORDLE (8) ────────────────────────────────────────────────
   { uiType:'wordle', label:'Wordle',
     question:'Guess the 5-letter word — you have 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
@@ -728,6 +728,456 @@ const PUZZLE_BANK = [
   { uiType:'snake', label:'Snake',
     question:'Use WASD or arrow keys to eat apples. Collect 18 apples without hitting yourself or the wall.',
     target:18 },
+  // ── CHOICE — extra rounds (15 more) ──────────────────────────
+  { uiType:'choice', label:'Geography',
+    question:'What is the smallest country in the world by area?',
+    options:['Monaco','San Marino','Vatican City','Liechtenstein'], answer:'Vatican City' },
+  { uiType:'choice', label:'Science',
+    question:'What is the speed of light in a vacuum (approx)?',
+    options:['300,000 km/s','150,000 km/s','450,000 km/s','1,000,000 km/s'], answer:'300,000 km/s' },
+  { uiType:'choice', label:'Math',
+    question:'What is the remainder when 2^10 is divided by 3?',
+    options:['0','1','2','3'], answer:'1' },
+  { uiType:'choice', label:'Logic',
+    question:'If you have me, you want to share me. If you share me, you no longer have me. What am I?',
+    options:['Money','A secret','Love','Time'], answer:'A secret' },
+  { uiType:'choice', label:'History',
+    question:'In what year did World War I begin?',
+    options:['1912','1914','1916','1918'], answer:'1914' },
+  { uiType:'choice', label:'Science',
+    question:'What is the approximate surface temperature of Venus in Celsius?',
+    options:['200°C','350°C','465°C','600°C'], answer:'465°C' },
+  { uiType:'choice', label:'Science',
+    question:'How many moons does Jupiter have (approximately as of 2024)?',
+    options:['16','54','79','95'], answer:'95' },
+  { uiType:'choice', label:'Math',
+    question:'What is 15% of 200?',
+    options:['25','30','35','40'], answer:'30' },
+  { uiType:'choice', label:'Language',
+    question:'Which language has the most native speakers in the world?',
+    options:['English','Spanish','Hindi','Mandarin Chinese'], answer:'Mandarin Chinese' },
+  { uiType:'choice', label:'Science',
+    question:'What type of bond holds the two strands of a DNA double helix together?',
+    options:['Covalent','Ionic','Hydrogen','Metallic'], answer:'Hydrogen' },
+  { uiType:'choice', label:'Logic Trap',
+    question:'A plane crashes on the border of the USA and Canada. Where do they bury the survivors?',
+    options:['USA','Canada','Both countries','Survivors are not buried'], answer:'Survivors are not buried' },
+  { uiType:'choice', label:'History',
+    question:'In what year was the Magna Carta signed?',
+    options:['1066','1215','1348','1492'], answer:'1215' },
+  { uiType:'choice', label:'Science',
+    question:'What is the chemical symbol for gold?',
+    options:['Go','Gd','Au','Ag'], answer:'Au' },
+  { uiType:'choice', label:'Logic',
+    question:'I have no voice yet I speak to you. I tell of the things in the world that people do. What am I?',
+    options:['A radio','A dream','A book','A painting'], answer:'A book' },
+  { uiType:'choice', label:'Geography',
+    question:'What is the deepest lake in the world?',
+    options:['Lake Superior','Caspian Sea','Lake Baikal','Crater Lake'], answer:'Lake Baikal' },
+
+  // ── ORDER — extra rounds (6 more) ─────────────────────────────
+  { uiType:'order', label:'Put In Order',
+    question:'Order the planets by size, smallest to largest:',
+    items:['Earth','Jupiter','Mars','Neptune'], answer:['Mars','Earth','Neptune','Jupiter'] },
+  { uiType:'order', label:'Put In Order',
+    question:'Order these fractions from smallest to largest:',
+    items:['1/2','1/8','3/4','1/4'], answer:['1/8','1/4','1/2','3/4'] },
+  { uiType:'order', label:'Put In Order',
+    question:'Order these world records from smallest to largest distance:',
+    items:['Marathon','100m sprint','Tour de France','Moon distance'], answer:['100m sprint','Marathon','Tour de France','Moon distance'] },
+  { uiType:'order', label:'Put In Order',
+    question:'Order these animals by average lifespan, shortest to longest:',
+    items:['Dog','Tortoise','Human','Elephant'], answer:['Dog','Human','Elephant','Tortoise'] },
+  { uiType:'order', label:'Put In Order',
+    question:'Order these elements by atomic number, lowest to highest:',
+    items:['Carbon','Oxygen','Hydrogen','Nitrogen'], answer:['Hydrogen','Carbon','Nitrogen','Oxygen'] },
+  { uiType:'order', label:'Put In Order',
+    question:'Order these by population size, smallest to largest:',
+    items:['Australia','USA','China','Brazil'], answer:['Australia','Brazil','USA','China'] },
+
+  // ── SLIDER — extra rounds (6 more) ────────────────────────────
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the number of teeth an adult human has:',
+    min:20, max:40, step:1, answer:32, hint:'Range: 20 – 40' },
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the number of stripes on the US flag:',
+    min:5, max:20, step:1, answer:13, hint:'Range: 5 – 20' },
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the number of chromosomes in a human cell:',
+    min:20, max:60, step:2, answer:46, hint:'Range: 20 – 60' },
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the number of squares on a chess board:',
+    min:32, max:96, step:1, answer:64, hint:'Range: 32 – 96' },
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the freezing point of water in Fahrenheit:',
+    min:-20, max:50, step:1, answer:32, hint:'Range: -20 – 50' },
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the number of elements in the periodic table:',
+    min:80,max:150,step:1,answer:118,hint:'Range: 80 – 150' },
+
+  // ── SEQUENCE — extra rounds (4 more) ──────────────────────────
+  { uiType:'seq', label:'Memory Sequence',
+    question:'Watch the space sequence then repeat it:',
+    emojis:['🌍','🌕','☀️','🪐','⭐','☄️','🔭','🌌','🛸'],
+    sequence:[2,0,5,3,8] },
+  { uiType:'seq', label:'Memory Sequence',
+    question:'Watch the weather sequence then repeat it:',
+    emojis:['🌩','🌈','❄️','🌊','🌋','🌪','🌤','🌙','⚡'],
+    sequence:[3,1,6,0,4,7] },
+  { uiType:'seq', label:'Memory Sequence',
+    question:'Watch the sport sequence then repeat it:',
+    emojis:['⚽','🏀','🎾','🏈','⚾','🏐','🎱','🏓','🥊'],
+    sequence:[4,1,7,0,5] },
+  { uiType:'seq', label:'Memory Sequence',
+    question:'Watch the tech sequence then repeat it:',
+    emojis:['💻','📱','🖥','⌨️','🖱','📡','🔋','💾','📷'],
+    sequence:[0,5,2,7,3,6] },
+
+  // ── WIRE — extra rounds (6 more) ──────────────────────────────
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each country to its capital city:',
+    pairs:[{left:'Germany',right:'Berlin'},{left:'Japan',right:'Tokyo'},{left:'Brazil',right:'Brasilia'},{left:'Australia',right:'Canberra'}] },
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each scientist to their discovery:',
+    pairs:[{left:'Newton',right:'Gravity'},{left:'Darwin',right:'Evolution'},{left:'Einstein',right:'Relativity'},{left:'Curie',right:'Radioactivity'}] },
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each sport to the number of players per team:',
+    pairs:[{left:'Football',right:'11'},{left:'Basketball',right:'5'},{left:'Baseball',right:'9'},{left:'Volleyball',right:'6'}] },
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each planet to a key feature:',
+    pairs:[{left:'Saturn',right:'Rings'},{left:'Mars',right:'Red surface'},{left:'Jupiter',right:'Great Red Spot'},{left:'Venus',right:'Hottest planet'}] },
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each word to its antonym:',
+    pairs:[{left:'Ancient',right:'Modern'},{left:'Ascend',right:'Descend'},{left:'Opaque',right:'Transparent'},{left:'Frugal',right:'Lavish'}] },
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each unit to what it measures:',
+    pairs:[{left:'Decibel',right:'Sound'},{left:'Kelvin',right:'Temperature'},{left:'Hertz',right:'Frequency'},{left:'Pascal',right:'Pressure'}] },
+
+  // ── FLIP — extra rounds (4 more) ──────────────────────────────
+  { uiType:'flip', label:'Memory Match',
+    question:'Match the weather pairs hidden in the tiles:',
+    pairs:['🌩','🌈','❄️','🌪'] },
+  { uiType:'flip', label:'Memory Match',
+    question:'Match the sport pairs:',
+    pairs:['⚽','🏀','🎾','🏈'] },
+  { uiType:'flip', label:'Memory Match',
+    question:'Match the animal pairs:',
+    pairs:['🦁','🐘','🦒','🐆'] },
+  { uiType:'flip', label:'Memory Match',
+    question:'Match the space pairs:',
+    pairs:['🚀','🌍','☀️','🛸'] },
+
+  // ── TYPEWORD — extra rounds (8 more) ──────────────────────────
+  { uiType:'typeword', label:'Spell It Out',
+    question:'The process by which water moves through a plant and evaporates from leaves:',
+    answer:'TRANSPIRATION' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'A triangle with all three sides of different lengths:',
+    answer:'SCALENE' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'The SI unit of electrical resistance:',
+    answer:'OHM' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'The study of earthquakes:',
+    answer:'SEISMOLOGY' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'A word that reads the same forwards and backwards:',
+    answer:'PALINDROME' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'The longest bone in the human body:',
+    answer:'FEMUR' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'The number 1000 in Roman numerals:',
+    answer:'M' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'A figure of speech comparing two things using like or as:',
+    answer:'SIMILE' },
+
+  // ── TEXT — extra rounds (10 more) ─────────────────────────────
+  { uiType:'text', label:'Hard Math',
+    question:'What is 23 x 19?', answer:'437' },
+  { uiType:'text', label:'Hard Math',
+    question:'What is log base 2 of 1024?', answer:'10' },
+  { uiType:'text', label:'Number Sequence',
+    question:'What comes next? 3, 6, 12, 24, 48, ?', answer:'96' },
+  { uiType:'text', label:'Number Sequence',
+    question:'What comes next? 0, 1, 4, 9, 16, 25, ?', answer:'36' },
+  { uiType:'text', label:'Roman Numerals',
+    question:'What number is MMXXIV?', answer:'2024' },
+  { uiType:'text', label:'Roman Numerals',
+    question:'What is 17 in Roman numerals?', answer:'XVII' },
+  { uiType:'text', label:'Word Scramble',
+    question:'Unscramble: "EISMTYHD" (a feeling of unease)', answer:'MYSTIFIED' },
+  { uiType:'text', label:'Missing Letters',
+    question:'_ Y R A M I D — type the first missing letter', answer:'P' },
+  { uiType:'text', label:'Hard Math',
+    question:'What is the 10th Fibonacci number?', answer:'55' },
+  { uiType:'text', label:'Hard Math',
+    question:'What is 7 factorial (7!)?', answer:'5040' },
+
+  // ── WORDLE — extra rounds (12 more) ───────────────────────────
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'TRAIN' },
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'CHESS' },
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'GRAPE' },
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'BENCH' },
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'SWORD' },
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'FROWN' },
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'PRIZE' },
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'BLEND' },
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'CHUNK' },
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'DWARF' },
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'PLUMB' },
+  { uiType:'wordle', label:'Wordle',
+    question:'Guess the 5-letter word — 8 tries. Green = right place, Yellow = wrong place, Grey = not in word.',
+    answer:'GLOOM' },
+
+  // ── SNAKE — extra rounds (2 more) ─────────────────────────────
+  { uiType:'snake', label:'Snake',
+    question:'Use WASD or arrow keys to eat apples. Collect 14 apples without hitting yourself or the wall.',
+    target:14 },
+  { uiType:'snake', label:'Snake',
+    question:'Use WASD or arrow keys to eat apples. Collect 20 apples without hitting yourself or the wall.',
+    target:20 },
+  // ── EXTRA CHOICE (15 more) ───────────────────────────────────
+  { uiType:'choice', label:'Science',
+    question:'What is the chemical symbol for mercury?',
+    options:['Me','Mr','Hg','Mc'], answer:'Hg' },
+  { uiType:'choice', label:'Geography',
+    question:'What is the capital of Australia?',
+    options:['Sydney','Melbourne','Canberra','Brisbane'], answer:'Canberra' },
+  { uiType:'choice', label:'Riddle',
+    question:'I have hands but cannot clap. What am I?',
+    options:['A robot','A scarecrow','A clock','A puppet'], answer:'A clock' },
+  { uiType:'choice', label:'Logic Trap',
+    question:'If you overtake the person in 2nd place in a race, what place are you in?',
+    options:['1st','2nd','3rd','4th'], answer:'2nd' },
+  { uiType:'choice', label:'Math',
+    question:'What is the sum of all integers from 1 to 100?',
+    options:['4050','5000','5050','5500'], answer:'5050' },
+  { uiType:'choice', label:'Science',
+    question:'Which planet is closest to the Sun?',
+    options:['Venus','Earth','Mars','Mercury'], answer:'Mercury' },
+  { uiType:'choice', label:'History',
+    question:'In which year did the Berlin Wall fall?',
+    options:['1987','1989','1991','1993'], answer:'1989' },
+  { uiType:'choice', label:'Science',
+    question:'Which organelle is responsible for protein synthesis?',
+    options:['Nucleus','Ribosome','Mitochondria','Lysosome'], answer:'Ribosome' },
+  { uiType:'choice', label:'Logic Trap',
+    question:'A plane crashes on the US/Canada border. Where do they bury the survivors?',
+    options:['US side','Canada side','Both sides','Survivors are not buried'], answer:'Survivors are not buried' },
+  { uiType:'choice', label:'Math',
+    question:'What is the sum of interior angles of a pentagon?',
+    options:['360°','450°','540°','720°'], answer:'540°' },
+  { uiType:'choice', label:'Geography',
+    question:'Which country has the most time zones?',
+    options:['Russia','USA','China','France'], answer:'France' },,
+  { uiType:'choice', label:'Science',
+    question:'At what temperature are Celsius and Fahrenheit equal?',
+    options:['-20','-40','-32','-50'], answer:'-40' },,
+  { uiType:'choice', label:'Riddle',
+    question:'The more you remove from me, the bigger I get. What am I?',
+    options:['A balloon','A hole','A shadow','A fire'], answer:'A hole' },
+  { uiType:'choice', label:'History',
+    question:'What year did the Byzantine Empire fall?',
+    options:['1204','1347','1453','1517'], answer:'1453' },,
+  { uiType:'choice', label:'Science',
+    question:'What is the rarest blood type in humans?',
+    options:['AB-','O-','B-','A-'], answer:'AB-' },
+
+  // ── EXTRA ORDER (6 more) ─────────────────────────────────────
+  { uiType:'order', label:'Put In Order',
+    question:'Order these from smallest to largest population:',
+    items:['China','Vatican City','Australia','Brazil'],
+    answer:['Vatican City','Australia','Brazil','China'] },
+  { uiType:'order', label:'Put In Order',
+    question:'Order these US presidents chronologically:',
+    items:['Obama','Lincoln','Washington','Kennedy'],
+    answer:['Washington','Lincoln','Kennedy','Obama'] },
+  { uiType:'order', label:'Put In Order',
+    question:'Order these from shortest to longest wavelength:',
+    items:['X-ray','Radio wave','Visible light','Infrared'],
+    answer:['X-ray','Visible light','Infrared','Radio wave'] },
+  { uiType:'order', label:'Put In Order',
+    question:'Order these from lowest to highest boiling point:',
+    items:['Water','Oxygen','Iron','Nitrogen'],
+    answer:['Nitrogen','Oxygen','Water','Iron'] },
+  { uiType:'order', label:'Put In Order',
+    question:'Order these countries by land area (smallest to largest):',
+    items:['Russia','Japan','Canada','France'],
+    answer:['Japan','France','Canada','Russia'] },
+  { uiType:'order', label:'Put In Order',
+    question:'Order these inventions from oldest to most recent:',
+    items:['Internet','Printing press','Telephone','Steam engine'],
+    answer:['Printing press','Steam engine','Telephone','Internet'] },
+
+  // ── EXTRA SLIDER (6 more) ────────────────────────────────────
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the number of bones in the human skull:',
+    min:10,max:35,step:1,answer:22,hint:'Range: 10 – 35' },
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the atomic number of gold:',
+    min:50,max:100,step:1,answer:79,hint:'Range: 50 – 100' },
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the number of dots on a standard die (all faces):',
+    min:10, max:30, step:1, answer:21, hint:'Range: 10 – 30' },
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the number of hours in 3 days:',
+    min:48, max:96, step:1, answer:72, hint:'Range: 48 – 96' },
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the atomic number of carbon:',
+    min:1, max:20, step:1, answer:6, hint:'Range: 1 – 20' },
+  { uiType:'slider', label:'Slider Puzzle',
+    question:'Set the slider to the number of states in the USA:',
+    min:40, max:60, step:1, answer:50, hint:'Range: 40 – 60' },
+
+  // ── EXTRA WIRE (6 more) ──────────────────────────────────────
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each scientist to their discovery:',
+    pairs:[{left:'Newton',right:'Gravity'},{left:'Darwin',right:'Evolution'},{left:'Curie',right:'Radioactivity'},{left:'Fleming',right:'Penicillin'}] },
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each country to its capital:',
+    pairs:[{left:'Germany',right:'Berlin'},{left:'Spain',right:'Madrid'},{left:'Italy',right:'Rome'},{left:'Greece',right:'Athens'}] },
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each sport to its equipment:',
+    pairs:[{left:'Fencing',right:'Foil'},{left:'Archery',right:'Bow'},{left:'Polo',right:'Mallet'},{left:'Curling',right:'Stone'}] },
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each planet to a unique feature:',
+    pairs:[{left:'Saturn',right:'Rings'},{left:'Mars',right:'Red colour'},{left:'Jupiter',right:'Great Red Spot'},{left:'Venus',right:'Hottest planet'}] },
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each word to its antonym:',
+    pairs:[{left:'Ancient',right:'Modern'},{left:'Coward',right:'Brave'},{left:'Chaos',right:'Order'},{left:'Scarce',right:'Abundant'}] },
+  { uiType:'wire', label:'Match the Pairs',
+    question:'Match each number to its square:',
+    pairs:[{left:'7',right:'49'},{left:'8',right:'64'},{left:'9',right:'81'},{left:'11',right:'121'}] },
+
+  // ── EXTRA SEQ (4 more) ───────────────────────────────────────
+  { uiType:'seq', label:'Memory Sequence',
+    question:'Watch the number tiles flash — then repeat the sequence:',
+    emojis:['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣'],
+    sequence:[4,1,7,2,5] },
+  { uiType:'seq', label:'Memory Sequence',
+    question:'Watch the weather tiles — then tap them in order:',
+    emojis:['☀️','🌧️','❄️','🌪️','🌈','⛅','🌊','🔥','🌙'],
+    sequence:[0,3,6,1,8,4] },
+  { uiType:'seq', label:'Memory Sequence',
+    question:'Memorise the flag sequence and repeat it:',
+    emojis:['🇺🇸','🇬🇧','🇫🇷','🇩🇪','🇯🇵','🇧🇷','🇦🇺','🇨🇦','🇮🇳'],
+    sequence:[2,5,0,7,3] },
+  { uiType:'seq', label:'Memory Sequence',
+    question:'Watch the sport tiles — then tap in the same order:',
+    emojis:['⚽','🏀','🎾','🏈','⚾','🏒','🎱','🏓','🥊'],
+    sequence:[1,4,6,0,3,7] },
+
+  // ── EXTRA FLIP (4 more) ──────────────────────────────────────
+  { uiType:'flip', label:'Memory Match',
+    question:'Find the matching science symbol pairs:',
+    pairs:['⚛️','🧬','🔬','⚗️'] },
+  { uiType:'flip', label:'Memory Match',
+    question:'Match the transport pairs:',
+    pairs:['✈️','🚂','🚢','🚀'] },
+  { uiType:'flip', label:'Memory Match',
+    question:'Match the weather pairs:',
+    pairs:['☀️','❄️','🌧️','⚡'] },
+  { uiType:'flip', label:'Memory Match',
+    question:'Find the matching flag pairs:',
+    pairs:['🇺🇸','🇬🇧','🇯🇵','🇫🇷'] },
+
+  // ── EXTRA TYPEWORD (8 more) ──────────────────────────────────
+  { uiType:'typeword', label:'Spell It Out',
+    question:'The closest star to Earth (other than our Sun):',
+    answer:'PROXIMA' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'The study of earthquakes:',
+    answer:'SEISMOLOGY' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'A word meaning the same forwards and backwards (like LEVEL):',
+    answer:'PALINDROME' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'The currency of Japan:',
+    answer:'YEN' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'The process by which plants make food from sunlight:',
+    answer:'PHOTOSYNTHESIS' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'The hardest natural mineral on the Mohs scale:',
+    answer:'DIAMOND' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'The speed of sound travels faster through this than air (one word):',
+    answer:'WATER' },
+  { uiType:'typeword', label:'Spell It Out',
+    question:'The only continent with no permanent human settlement:',
+    answer:'ANTARCTICA' },
+
+  // ── EXTRA TEXT (10 more) ─────────────────────────────────────
+  { uiType:'text', label:'Hard Math',
+    question:'What is 144 ÷ 12?', answer:'12' },
+  { uiType:'text', label:'Hard Math',
+    question:'What is 15²?', answer:'225' },
+  { uiType:'text', label:'Hard Math',
+    question:'What is 7 × 8 × 2?', answer:'112' },
+  { uiType:'text', label:'Number Sequence',
+    question:'What comes next? 3, 6, 12, 24, 48, ?', answer:'96' },
+  { uiType:'text', label:'Number Sequence',
+    question:'What comes next? 100, 91, 83, 76, 70, ?', answer:'65' },
+  { uiType:'text', label:'Roman Numerals',
+    question:'What number is MMXXIV?', answer:'2024' },
+  { uiType:'text', label:'Roman Numerals',
+    question:'Write 49 as a Roman numeral:', answer:'XLIX' },
+  { uiType:'text', label:'Word Scramble',
+    question:'Unscramble: "GNIRPSS" (a season)', answer:'SPRING' },
+  { uiType:'text', label:'Word Scramble',
+    question:'Unscramble: "EOCANIC" (a volcano type)', answer:'OCEANIC' },
+  { uiType:'text', label:'Missing Letters',
+    question:'_ _ IGHT _ ING _ R — fill in to make a job title (2+1 letters)', answer:'NIGHTSINGER' },
+
+  // ── EXTRA WORDLE (12 more) ───────────────────────────────────
+  { uiType:'wordle', label:'Wordle', answer:'BRAVE',
+    question:'Guess the 5-letter word — 8 tries. Green=right place, Yellow=wrong place, Grey=not in word.' },
+  { uiType:'wordle', label:'Wordle', answer:'SHARK',
+    question:'Guess the 5-letter word — 8 tries. Green=right place, Yellow=wrong place, Grey=not in word.' },
+  { uiType:'wordle', label:'Wordle', answer:'FROST',
+    question:'Guess the 5-letter word — 8 tries. Green=right place, Yellow=wrong place, Grey=not in word.' },
+  { uiType:'wordle', label:'Wordle', answer:'GROAN',
+    question:'Guess the 5-letter word — 8 tries. Green=right place, Yellow=wrong place, Grey=not in word.' },
+  { uiType:'wordle', label:'Wordle', answer:'PIXEL',
+    question:'Guess the 5-letter word — 8 tries. Green=right place, Yellow=wrong place, Grey=not in word.' },
+  { uiType:'wordle', label:'Wordle', answer:'FLINT',
+    question:'Guess the 5-letter word — 8 tries. Green=right place, Yellow=wrong place, Grey=not in word.' },
+  { uiType:'wordle', label:'Wordle', answer:'TROVE',
+    question:'Guess the 5-letter word — 8 tries. Green=right place, Yellow=wrong place, Grey=not in word.' },
+  { uiType:'wordle', label:'Wordle', answer:'PLAID',
+    question:'Guess the 5-letter word — 8 tries. Green=right place, Yellow=wrong place, Grey=not in word.' },
+  { uiType:'wordle', label:'Wordle', answer:'PRUNE',
+    question:'Guess the 5-letter word — 8 tries. Green=right place, Yellow=wrong place, Grey=not in word.' },
+  { uiType:'wordle', label:'Wordle', answer:'YACHT',
+    question:'Guess the 5-letter word — 8 tries. Green=right place, Yellow=wrong place, Grey=not in word.' },
+  { uiType:'wordle', label:'Wordle', answer:'BLAZE',
+    question:'Guess the 5-letter word — 8 tries. Green=right place, Yellow=wrong place, Grey=not in word.' },
+  { uiType:'wordle', label:'Wordle', answer:'CHIMP',
+    question:'Guess the 5-letter word — 8 tries. Green=right place, Yellow=wrong place, Grey=not in word.' },
 ];
 
 // ════════════════════════════════════════════════════════════════
@@ -797,8 +1247,9 @@ async function checkPuzzleAnswer(idx, candidate) {
   return _matchCI(_encryptedPuzzleBank[idx], candidate);
 }
 
-let puzzleQueue = [];
-let puzzleIndex = 0;
+let puzzleQueue  = [];
+let puzzleIndex  = 0;
+const usedPuzzleIds = new Set(); // questions seen this session (pass or fail — never repeat)
 
 // ════════════════════════════════════════════════════════════════
 //  HELPERS
@@ -813,22 +1264,22 @@ function shake(el){el.animate([{transform:'translateX(0)'},{transform:'translate
 //  PICK 5 PUZZLES — all different uiTypes
 // ════════════════════════════════════════════════════════════════
 function pickPuzzles(){
-  // Pick one puzzle per uiType, then ensure no two consecutive types
-  const shuffled = shuffle(PUZZLE_BANK);
+  // Only pick from puzzles not yet seen this session
+  const available = PUZZLE_BANK.filter(p => !usedPuzzleIds.has(p.question));
+  const pool = available.length >= TOTAL_PUZZLES ? available : PUZZLE_BANK; // fallback if exhausted
+  const shuffled = shuffle(pool);
   const chosen   = [];
   const usedTypes = new Set();
   for(const p of shuffled){
     if(!usedTypes.has(p.uiType)){chosen.push(p);usedTypes.add(p.uiType)}
     if(chosen.length===TOTAL_PUZZLES)break;
   }
-  // Fill remaining slots with unique questions, different type from neighbour
   while(chosen.length<TOTAL_PUZZLES){
     const lastType=chosen[chosen.length-1].uiType;
     const usedQs=new Set(chosen.map(p=>p.question));
-    const candidates=shuffle(PUZZLE_BANK).filter(p=>p.uiType!==lastType&&!usedQs.has(p.question));
-    chosen.push(candidates[0]||shuffle(PUZZLE_BANK).find(p=>!usedQs.has(p.question))||PUZZLE_BANK[0]);
+    const candidates=shuffle(pool).filter(p=>p.uiType!==lastType&&!usedQs.has(p.question));
+    chosen.push(candidates[0]||shuffle(pool).find(p=>!usedQs.has(p.question))||pool[0]);
   }
-  // Shuffle the array but fix no-consecutive-same-type constraint
   return ensureNoConsecutiveSameType(chosen);
 }
 
@@ -977,6 +1428,8 @@ function startLockCountdown(lockUntil,msg,input){
 //  ADVANCE TO NEXT PUZZLE OR DOWNLOAD
 // ════════════════════════════════════════════════════════════════
 function advancePuzzle(){
+  // Mark this puzzle as used so it never appears again this session
+  usedPuzzleIds.add(puzzleQueue[puzzleIndex].question);
   puzzleIndex++;
   const remaining=TOTAL_PUZZLES-puzzleIndex;
   if(puzzleIndex<TOTAL_PUZZLES){
@@ -990,17 +1443,17 @@ function advancePuzzle(){
 
 // FAIL A PUZZLE: step back one, replace that slot with a new puzzle of same type
 function failPuzzle(){
+  // Mark the failed puzzle as used — it won't appear again this session
+  usedPuzzleIds.add(puzzleQueue[puzzleIndex].question);
   const failedType=puzzleQueue[puzzleIndex].uiType;
   // Step back (never below 0)
   puzzleIndex=Math.max(0,puzzleIndex-1);
-  // Determine forbidden types for the slot we're replacing:
-  // must differ from the puzzle BEFORE it (index-1) and AFTER it (index+1)
-  const forbidden=new Set([failedType]); // always different from what just failed
+  // Determine forbidden types: different from failed, previous, and next
+  const forbidden=new Set([failedType]);
   if(puzzleIndex>0) forbidden.add(puzzleQueue[puzzleIndex-1].uiType);
   if(puzzleIndex<puzzleQueue.length-1) forbidden.add(puzzleQueue[puzzleIndex+1].uiType);
-  const usedQs=new Set(puzzleQueue.map(p=>p.question));
-  const candidates=shuffle(PUZZLE_BANK).filter(p=>!forbidden.has(p.uiType)&&!usedQs.has(p.question));
-  // Fallback: relax the "not in queue" constraint if needed
+  // Pick a fresh puzzle: not used this session, not a forbidden type
+  const candidates=shuffle(PUZZLE_BANK).filter(p=>!forbidden.has(p.uiType)&&!usedPuzzleIds.has(p.question));
   const fallback=shuffle(PUZZLE_BANK).filter(p=>!forbidden.has(p.uiType));
   puzzleQueue[puzzleIndex]=candidates[0]||fallback[0]||shuffle(PUZZLE_BANK)[0];
   const goingTo=puzzleIndex+1;
@@ -1554,88 +2007,7 @@ function buildTypeWordWidget(p,container){
 //  WIDGET: WORDLE (8 attempts, physical + on-screen keyboard)
 // ════════════════════════════════════════════════════════════════
 // Valid 5-letter word list (subset) used to validate guesses
-const VALID_WORDS = new Set([
-  'ABOUT','ABOVE','ABUSE','ACTOR','ACUTE','ADMIT','ADOPT','ADULT','AFTER','AGAIN',
-  'AGENT','AGREE','AHEAD','ALARM','ALBUM','ALERT','ALIEN','ALIGN','ALIKE','ALIVE',
-  'ALLEY','ALLOW','ALONE','ALONG','ALTER','ANGEL','ANGER','ANGLE','ANGRY','ANIME',
-  'ANNEX','ANTIC','ANVIL','APART','APPLE','APPLY','APRON','ARENA','ARGUE','ARISE',
-  'ARMOR','AROMA','AROSE','ARROW','ASSET','ATTIC','AUDIO','AUDIT','AVOID','AWAKE',
-  'AWARD','AWARE','AWFUL','BAKER','BASIC','BATCH','BEACH','BEARD','BEAST','BEGIN',
-  'BELLE','BELLY','BELOW','BENCH','BERRY','BIRTH','BISON','BITCH','BLACK','BLADE',
-  'BLAME','BLAND','BLANK','BLAST','BLAZE','BLEED','BLEND','BLESS','BLIND','BLOCK',
-  'BLOOD','BLOOM','BLOWN','BLUES','BLUNT','BOARD','BONUS','BOOST','BOOTH','BOUND',
-  'BOXER','BRAIN','BRAND','BRAVE','BREAD','BREAK','BREED','BRICK','BRIDE','BRIEF',
-  'BRINE','BRING','BRINK','BROAD','BROKE','BROWN','BRUSH','BUILD','BUILT','BUNCH',
-  'BURST','BUYER','CABIN','CACHE','CAMEL','CANOE','CARRY','CARVE','CATCH','CAUSE',
-  'CEASE','CHAIN','CHAIR','CHALK','CHAOS','CHASE','CHEAP','CHECK','CHEEK','CHESS',
-  'CHEST','CHIEF','CHILD','CHINA','CIVIC','CIVIL','CLAMP','CLANK','CLASH','CLASP',
-  'CLASS','CLAW','CLEAN','CLEAR','CLIMB','CLING','CLOCK','CLONE','CLOSE','CLOTH',
-  'CLOUD','COAST','COMET','COMIC','CORAL','COUNT','COURT','COVER','CRAFT','CRANE',
-  'CRASH','CRAZY','CREEK','CRISP','CROSS','CROWD','CROWN','CRUSH','CURVE','CYCLE',
-  'DAILY','DAIRY','DANCE','DATUM','DEALS','DEALT','DEBUT','DECOY','DEFER','DELAY',
-  'DELTA','DEMON','DENSE','DEPOT','DERBY','DEPTH','DERBY','DEVIL','DIRTY','DISCO',
-  'DITCH','DODGE','DOING','DOLLY','DRAFT','DRAIN','DRAMA','DRANK','DRAWL','DRAWN',
-  'DREAD','DREAM','DRESS','DRIFT','DRINK','DRIVE','DROVE','DRYER','DUNES','DWARF',
-  'EAGLE','EARLY','EARTH','EIGHT','ELITE','EMBER','EMPTY','ENDED','ENEMY','ENJOY',
-  'ENTER','ENTRY','EQUAL','ERROR','ESSAY','EVADE','EVENT','EVERY','EXACT','EXIST',
-  'EXTRA','FABLE','FAINT','FAIRY','FAITH','FALSE','FANCY','FATAL','FAVOR','FEAST',
-  'FENCE','FEVER','FIBRE','FIELD','FIFTH','FIFTY','FIGHT','FINAL','FIRST','FIXED',
-  'FJORD','FLAKE','FLAME','FLANK','FLARE','FLASH','FLASK','FLESH','FLOOD','FLOOR',
-  'FLORA','FLOUR','FLUTE','FOCAL','FOCUS','FORCE','FORGE','FORTH','FOUND','FRAME',
-  'FRANK','FRAUD','FRESH','FRONT','FROST','FROZE','FRUIT','FULLY','FUNGI','FUNNY',
-  'GHOST','GIVEN','GLAND','GLASS','GLEAM','GLIDE','GLOOM','GLOSS','GLOVE','GOING',
-  'GRACE','GRADE','GRAIN','GRAND','GRANT','GRAPH','GRASP','GRASS','GRAVE','GREAT',
-  'GREED','GREET','GRIEF','GRIND','GROAN','GROOM','GROSS','GROUP','GROWL','GROWN',
-  'GUARD','GUIDE','GUILD','GUILE','GUILT','GUISE','GULCH','GUSTS','HABIT','HARDY',
-  'HARSH','HASTE','HAVEN','HEART','HEAVY','HEDGE','HEIST','HELLO','HENCE','HERBS',
-  'HINGE','HIPPO','HOBBY','HOLLY','HONEY','HONOR','HORSE','HOTEL','HOUSE','HUMAN',
-  'HUMOR','HUNCH','HURRY','HYPER','IDEAL','IMAGE','IMPLY','INANE','INDEX','INDIE',
-  'INFER','INNER','INPUT','INTER','INTRO','INURE','IVORY','JAZZY','JEWEL','JOKER',
-  'JOUST','JUDGE','JUICE','JUICY','JUMBO','KAYAK','KEBAB','KNACK','KNEEL','KNIFE',
-  'KNOCK','KNOWN','LABEL','LARGE','LASER','LATER','LAUGH','LAYER','LEARN','LEASE',
-  'LEAST','LEAVE','LEGAL','LEMON','LEVEL','LIGHT','LIMIT','LINGO','LITER','LIVER',
-  'LOCAL','LODGE','LOGIC','LOGIN','LOOSE','LOVER','LOWER','LOYAL','LUCKY','LUNAR',
-  'LUSTY','MAGIC','MAJOR','MAKER','MANOR','MAPLE','MARCH','MASON','MATCH','MAYOR',
-  'MEDIA','METAL','MINOR','MINUS','MODEL','MONEY','MONTH','MORAL','MOTOR','MOURN',
-  'MOUSE','MOUTH','MOVIE','MULTI','MUSTY','NAIVE','NAVAL','NIGHT','NOBLE','NORTH',
-  'NOTED','NOVEL','NURSE','NYMPH','OCEAN','OFFER','OFTEN','OLIVE','ONSET','OPERA',
-  'ORDER','OUTER','OUNCE','OXIDE','OZONE','PAINT','PANIC','PAPER','PARTY','PAUSE',
-  'PEACE','PEARL','PEDAL','PENNY','PHASE','PHONE','PHOTO','PIANO','PIECE','PILOT',
-  'PINCH','PIXEL','PIZZA','PLACE','PLAIN','PLANE','PLANT','PLATE','PLAZA','PLEAD',
-  'PLUCK','PLUMB','PLUME','PLUTO','POINT','POLAR','POPPY','PORCH','POWER','PRIDE',
-  'PRIME','PRINT','PRIOR','PRIZE','PROBE','PRONE','PROOF','PROSE','PROUD','PROVE',
-  'PROXY','PULSE','PUPPY','PURSE','QUEST','QUEUE','QUICK','QUIET','QUOTA','QUOTE',
-  'RABBI','RADAR','RADIO','RAISE','RANGE','RANCH','RAPID','RATIO','REACH','REACT',
-  'REALM','REBEL','REIGN','RELAX','REMIX','REPAY','RESIN','RETRO','RIDER','RIDGE',
-  'RIFLE','RIGHT','RISKY','RIVAL','RIVER','ROBOT','ROCKY','ROMAN','ROUGE','ROUGH',
-  'ROUND','ROUTE','ROYAL','RUGBY','RULER','RURAL','RUSTY','SAFER','SAINT','SALAD',
-  'SAUCE','SCALE','SCENE','SCOPE','SCORE','SCOUT','SEIZE','SENSE','SEVEN','SHADE',
-  'SHAFT','SHAKE','SHALL','SHAME','SHAPE','SHARE','SHARK','SHARP','SHAWL','SHEEN',
-  'SHELF','SHELL','SHIFT','SHINE','SHIRE','SHIRT','SHOCK','SHORE','SHORT','SHOUT',
-  'SHOVE','SIGHT','SINCE','SIXTH','SIXTY','SKILL','SKULL','SLATE','SLAVE','SLEEP',
-  'SLEET','SLICK','SLIDE','SLING','SLOTH','SMALL','SMART','SMELL','SMILE','SNAIL',
-  'SNAKE','SNARE','SOLAR','SOLID','SOLVE','SORRY','SOUTH','SPACE','SPARK','SPAWN',
-  'SPEAR','SPEED','SPEND','SPICE','SPINE','SPITE','SPLIT','SPOKE','SPOOK','SPRAY',
-  'SQUAD','STACK','STAFF','STAIN','STAIR','STAKE','STALE','STALL','STAMP','STAND',
-  'STARK','START','STASH','STATE','STEAM','STEEL','STEEP','STEER','STERN','STICK',
-  'STIFF','STILL','STOCK','STOMP','STORE','STORM','STORY','STRAP','STRAW','STRAY',
-  'STRIP','STUCK','STUDY','STUFF','STUNT','STYLE','SUGAR','SUITE','SUNNY','SUPER',
-  'SURGE','SWAMP','SWEAR','SWEAT','SWEEP','SWEET','SWEPT','SWIFT','SWIPE','SWIRL',
-  'SWORD','SYRUP','TABBY','TABLE','TAINT','TAKEN','TASTE','TAUNT','TENSE','TENTH',
-  'THORN','THOSE','THINK','THIRD','TIDAL','TIGHT','TIMER','TIRED','TITLE','TOAST',
-  'TOUCH','TOUGH','TOWEL','TOWER','TOXIC','TRACE','TRACK','TRADE','TRAIL','TRAIN',
-  'TRAMP','TRASH','TRAWL','TREAD','TREAT','TRICK','TRIED','TROOP','TROUT','TRUCE',
-  'TRUCK','TRULY','TRUMP','TRUNK','TRUST','TRUTH','TULIP','TUMOR','TUNER','TUNIC',
-  'TWICE','TWIST','ULTRA','UNCLE','UNDER','UNITE','UNITY','UNTIL','UPPER','UPSET',
-  'USAGE','USHER','USUAL','UTTER','VALID','VALUE','VALVE','VAPOR','VAULT','VERSE',
-  'VIDEO','VIGOR','VICAR','VINYL','VIOLA','VIPER','VIRAL','VISIT','VISOR','VISTA',
-  'VITAL','VIVID','VOCAL','VOICE','VOMIT','VOTER','WAFER','WAGER','WASTE','WATCH',
-  'WATER','WEARY','WEDGE','WEIGH','WEIRD','WHALE','WHEAT','WHEEL','WHERE','WHICH',
-  'WHILE','WNITE','WHOLE','WHOSE','WIDER','WITTY','WOMAN','WORLD','WRATH','WRIST',
-  'WRONG','XENON','YACHT','YIELD','YOUNG','YOUTH','ZESTY','ZONAL',
-  // ensure puzzle answers are always valid
-  'CRANE','PLANT','BRICK','FLAME','STORM','GHOST','CLIMB','SWIFT'
-]);
+const VALID_WORDS = new Set(['ABACK','ABASE','ABATE','ABBEY','ABBOT','ABHOR','ABIDE','ABLER','ABODE','ABORE','ABORT','ABOUT','ABOVE','ABUSE','ABYSS','ACHED','ACHOO','ACIDS','ACORN','ACRES','ACTED','ACUTE','ADAGE','ADAPT','ADDED','ADDER','ADEPT','ADMIT','ADOBE','ADOPT','ADORE','ADORN','ADULT','AFFIX','AFOOT','AFOUL','AFTER','AGAIN','AGATE','AGAVE','AGAZE','AGENT','AGILE','AGLOW','AGONY','AGREE','AHEAD','AIDED','AIMER','AIRED','AISLE','ALARM','ALBUM','ALDER','ALERT','ALGAE','ALIKE','ALLAY','ALLEY','ALLOT','ALLOY','ALOFT','ALONE','ALONG','ALOOF','ALTER','AMBER','AMBLE','AMEND','AMISS','AMONG','AMOUR','AMPLE','ANGEL','ANGER','ANGLE','ANGRY','ANIME','ANNEX','ANNOY','ANTIC','ANTSY','ANVIL','AORTA','APART','APPLE','APPLY','APRON','APTLY','ARBOR','ARDOR','ARENA','ARGUE','ARISE','ARMOR','AROMA','AROSE','ARROW','ARSON','ASIDE','ASKEW','ASSET','ATONE','ATTIC','AUDIO','AUDIT','AUGUR','AUNTS','AVAIL','AVOID','AWAKE','AWARD','AWARE','AWFUL','AWOKE','AXLES','AZURE','BABEL','BADGE','BADLY','BAGEL','BAKER','BANDS','BANGS','BASIC','BASIL','BASIS','BATCH','BATHE','BEACH','BEADY','BEARD','BEAST','BEECH','BEGIN','BEIGE','BELLE','BELLY','BELOW','BENCH','BEVEL','BIRCH','BIRTH','BISON','BLACK','BLADE','BLAME','BLAND','BLANK','BLAST','BLAZE','BLEED','BLEND','BLESS','BLIND','BLOCK','BLOOD','BLOOM','BLOWN','BLUES','BLUNT','BLURB','BLURT','BOARD','BONUS','BOOST','BOOTH','BOUND','BOWEL','BOWER','BOXER','BRACE','BRAID','BRAIN','BRAND','BRAVE','BRAWN','BREAD','BREAK','BREED','BRICK','BRIDE','BRIEF','BRINE','BRING','BRINK','BRINY','BROAD','BROKE','BROOD','BROOK','BROTH','BROWN','BRUNT','BRUSH','BUILD','BUILT','BUMPY','BUNCH','BUNNY','BURST','BUYER','BYLAW','BYWAY','CABAL','CABIN','CACHE','CAMEL','CANNY','CANOE','CAPED','CAPER','CARRY','CARVE','CASTE','CATCH','CAULK','CAUSE','CEASE','CEDAR','CHAIN','CHAIR','CHALK','CHAOS','CHASE','CHEAP','CHECK','CHEEK','CHESS','CHEST','CHIEF','CHILD','CHIME','CHIMP','CHINA','CHOIR','CHORD','CHORE','CHUNK','CIVIL','CLAMP','CLANG','CLANK','CLASH','CLASP','CLASS','CLEAN','CLEAR','CLEFT','CLERK','CLICK','CLIFF','CLIMB','CLING','CLOCK','CLONE','CLOSE','CLOTH','CLOUD','CLOUT','CLOVE','CLUNK','COACH','COAST','COLON','COMET','COMIC','COMMA','CONGA','CONIC','CORAL','COULD','COUNT','COURT','COVER','COVET','CRAFT','CRAMP','CRANE','CRASH','CRAZY','CREAK','CREED','CREEK','CREEL','CREEP','CRIMP','CRISP','CROON','CROSS','CROWD','CROWN','CRUMB','CRUSH','CRUST','CRYPT','CURLY','CURRY','CURVE','CYCAD','CYCLE','CYNIC','DAFFY','DAILY','DAIRY','DAISY','DANCE','DANDY','DATUM','DEALS','DEALT','DEBUT','DECOY','DEFER','DELAY','DELTA','DEPOT','DERBY','DEVIL','DIRTY','DISCO','DITCH','DITTY','DIZZY','DODGE','DOGMA','DOLLY','DOWEL','DOWNY','DRAFT','DRAIN','DRAMA','DRANK','DRAWL','DRAWN','DREAD','DREAM','DRESS','DRIFT','DRINK','DRIVE','DROOL','DROOP','DROVE','DRUSY','DRYER','DUCHY','DUNCE','DUSKY','DUSTY','DWARF','DWELL','DWELT','DYING','EAGLE','EARLY','EARTH','EIGHT','EJECT','ELBOW','ELDER','ELECT','ELITE','EMBER','EMOTE','EMPTY','ENACT','ENDED','ENEMY','ENJOY','ENSUE','ENTER','ENTRY','ENVOY','EPOCH','EQUAL','ERROR','ERUPT','ESSAY','ETHIC','EVADE','EVENT','EVERY','EVICT','EVOKE','EXACT','EXCEL','EXERT','EXILE','EXIST','EXPEL','EXTRA','EXUDE','EXULT','EYRIE','FABLE','FACET','FAINT','FAIRY','FAITH','FALSE','FANCY','FARCE','FATAL','FAVOR','FEAST','FEIGN','FENCE','FEVER','FIFTH','FIFTY','FIGHT','FILTH','FINAL','FIRST','FIXED','FJORD','FLAIL','FLAIR','FLAKE','FLAME','FLANK','FLARE','FLASH','FLASK','FLEER','FLEET','FLESH','FLINT','FLOOD','FLOOR','FLORA','FLOSS','FLOUR','FLOWN','FLUTE','FLYER','FOCAL','FOCUS','FOGGY','FOLLY','FORAY','FORCE','FORGE','FORTE','FORTH','FOUND','FRAIL','FRAME','FRANK','FRAUD','FRESH','FRONT','FROST','FROTH','FROWN','FROZE','FRUIT','FUDGE','FULLY','FUNGI','FUNNY','FUZZY','GAMUT','GAUDY','GAUNT','GAUZE','GECKO','GENRE','GHOST','GIDDY','GILDS','GIRLY','GIRTH','GIVEN','GIZMO','GLAND','GLARE','GLASS','GLEAM','GLEAN','GLIDE','GLINT','GLOAT','GLOBS','GLOOM','GLORE','GLOSS','GLOVE','GLYPH','GNASH','GNOME','GOING','GORGE','GOUGE','GOURD','GRABS','GRACE','GRADE','GRAIN','GRAND','GRANT','GRAPE','GRAPH','GRASP','GRASS','GRAVE','GRAZE','GREAT','GREBE','GREED','GREER','GREET','GRIEF','GRIME','GRIMY','GRIND','GRIPE','GRISE','GROAN','GROOM','GROSS','GROUP','GROWL','GROWN','GRUFF','GRUMP','GRUNT','GUARD','GUAVA','GUIDE','GUILD','GUILE','GUILT','GUISE','GULCH','GUSTO','GUSTS','HABIT','HANDY','HARSH','HASTE','HATCH','HAUNT','HAVEN','HEART','HEAVE','HEAVY','HEDGE','HEFTY','HEIST','HELLO','HELMM','HENCE','HENNA','HERBS','HINGE','HIPPO','HIPPY','HOBBY','HOIST','HOLLY','HONEY','HONOR','HORDE','HORSE','HOTEL','HOUSE','HUMAN','HUMOR','HUMUS','HUNCH','HURRY','HYDRA','HYENA','HYPER','ICIER','ICING','IDEAL','IDIOM','IGLOO','IMAGE','IMPLY','INDEX','INDIE','INFER','INNER','INPUT','INTER','INTRO','INURE','IRATE','IRONY','ISSUE','ITCHY','IVORY','JAZZY','JEWEL','JINXY','JOKER','JOKEY','JOUST','JUDGE','JUICE','JUICY','JUMBO','JUMPY','JUNKY','JUROR','KABOB','KAYAK','KEBAB','KNACK','KNEEL','KNELL','KNIFE','KNOCK','KNOWN','KUDOS','LABEL','LAPEL','LARCH','LARDY','LARGE','LARKY','LARVA','LASER','LATCH','LATER','LATHY','LATTE','LAUGH','LAYER','LEACH','LEAFY','LEAKY','LEAPT','LEARN','LEASE','LEAST','LEAVE','LEDGE','LEECH','LEFTY','LEGAL','LEGGY','LEMON','LEMUR','LEVEL','LIGHT','LILAC','LIMIT','LINGO','LITHE','LIVER','LLAMA','LOCAL','LODGE','LOFTY','LOGIC','LOGIN','LOOPY','LOOSE','LORRY','LOVER','LOWER','LOYAL','LUCKY','LUNAR','LUSTY','LYRIC','MAGIC','MAJOR','MAKER','MANGY','MANLY','MANOR','MAPLE','MARSH','MASON','MATCH','MAUVE','MAYOR','MEALY','MEATY','MEDIA','MEDIC','MELEE','MERCY','MERRY','MESSY','METAL','MILKY','MINOR','MINTY','MINUS','MIRKY','MIRTH','MITRE','MIXED','MOCHA','MODEL','MOLDY','MONEY','MONKS','MONTH','MORAL','MORPH','MOSSY','MOTIF','MOTOR','MOUND','MOURN','MOUSE','MOUSY','MOUTH','MOVIE','MUDDY','MUGGY','MULCH','MULTI','MURKY','MUSHY','MUSTY','MYRRH','NAIVE','NAMED','NASAL','NASTY','NATTY','NAVAL','NEEDY','NERVY','NEWSY','NIGHT','NINNY','NIPPY','NOBLE','NODDY','NOISY','NONCE','NOOSE','NORTH','NOTED','NOVEL','NOWAY','NURSE','NUTTY','NYMPH','OAKEN','OBESE','OCEAN','OCTET','OFFAL','OFFER','OFLAG','OFTEN','OLDIE','OLIVE','ONSET','OPERA','OPINE','OPTIC','ORBIT','ORDER','ORGAN','OUNCE','OUTDO','OUTER','OVERT','OVOID','OXIDE','OZONE','PAGAN','PAINT','PANIC','PAPER','PARKA','PARRY','PARSE','PARTY','PATSY','PAUSE','PAWKY','PEACE','PEARL','PEDAL','PENNY','PERKY','PESKY','PETTY','PHASE','PHONE','PHONY','PHOTO','PIANO','PIECE','PILOT','PINCH','PITHY','PIXEL','PIZZA','PLACE','PLAID','PLAIN','PLAIT','PLANE','PLANK','PLANT','PLATE','PLAZA','PLEAD','PLIED','PLONK','PLUCK','PLUMB','PLUME','PLUMP','PLUNK','PLUTO','POACH','PODGY','POINT','POKEY','POLAR','POPPY','PORCH','PORKY','POUTY','POWER','PRAWN','PRIDE','PRIME','PRINT','PRIOR','PRIVY','PRIZE','PROBE','PRONE','PROOF','PROSE','PROUD','PROVE','PROXY','PRUDE','PRUNE','PSALM','PUFFY','PUGGY','PULPY','PULSE','PUNNY','PUPAL','PUPPY','PURSE','PYGMY','QUAFF','QUAKY','QUALM','QUELL','QUERY','QUEST','QUEUE','QUICK','QUIET','QUIRK','QUOTA','QUOTE','RABBI','RABID','RADAR','RADIO','RAINY','RAISE','RANCH','RANGE','RAPID','RASPY','RATIO','RATTY','RAVIN','REACH','REACT','REALM','REBEL','REEDY','REFIT','REFRY','REHAB','REIGN','RELAX','REMIX','RENEW','REPAY','REPEL','REPOT','RERUN','RESET','RESIN','RETRO','REUSE','REVUE','RIDER','RIDGE','RIFLE','RIGHT','RIGID','RISEN','RISKY','RITZY','RIVAL','RIVER','RIVET','ROBOT','ROCKY','ROOMY','ROOST','ROUGE','ROUGH','ROUND','ROUTE','ROWDY','ROYAL','RUDDY','RUGBY','RULER','RUNNY','RURAL','RUSHY','RUSTY','SADLY','SAFER','SAINT','SALAD','SATED','SAUCE','SAUCY','SAVVY','SCALD','SCALE','SCALP','SCALY','SCAMP','SCANT','SCARY','SCENE','SCONE','SCOPE','SCORE','SCOUT','SEDAN','SEEDY','SEEPY','SEIZE','SENSE','SERUM','SETUP','SEVEN','SHADE','SHADY','SHAFT','SHAKE','SHAKY','SHALE','SHALL','SHALY','SHAME','SHANK','SHAPE','SHARE','SHARK','SHARP','SHAWL','SHEEN','SHEEP','SHEER','SHELF','SHELL','SHEWN','SHIFT','SHINE','SHIRE','SHIRT','SHISH','SHOAL','SHOCK','SHORE','SHORT','SHOUT','SHOVE','SHRUB','SHUCK','SHUNT','SICKO','SIEGE','SIGHT','SILKY','SINCE','SIREN','SIXTH','SIXTY','SKIFF','SKILL','SKIMP','SKIVY','SKULK','SKULL','SKYEY','SLACK','SLAIN','SLANG','SLANT','SLASH','SLATE','SLAVE','SLEEK','SLEEP','SLEET','SLICK','SLIDE','SLIMY','SLING','SLOTH','SLUNG','SLUNK','SLYLY','SMACK','SMALL','SMART','SMEAR','SMELL','SMELT','SMILE','SMOCK','SNAIL','SNAKE','SNAKY','SNARE','SNEER','SNIDE','SNIFF','SNOOP','SNORE','SNORT','SNOWY','SOGGY','SOLAR','SOLID','SOLVE','SOOTY','SOPPY','SORRY','SOUND','SOUTH','SPACE','SPALL','SPANK','SPARK','SPASM','SPAWN','SPEAR','SPECK','SPEED','SPELL','SPEND','SPICE','SPIEL','SPIKY','SPILL','SPINE','SPINY','SPIRE','SPITE','SPLIT','SPOKE','SPOOK','SPOOL','SPORE','SPRAY','SPUNK','SQUAB','SQUAD','SQUAT','SQUID','STACK','STAFF','STAIN','STAIR','STAKE','STALE','STALL','STAMP','STAND','STANK','STARK','START','STASH','STATE','STAVE','STEAD','STEAK','STEAL','STEAM','STEEL','STEEP','STEER','STEIN','STERN','STICK','STIFF','STILL','STOCK','STOIC','STOKE','STOMP','STONY','STOOL','STORE','STORM','STORY','STOVE','STRAP','STRAW','STRAY','STREW','STRIA','STRIP','STROP','STRUM','STRUT','STUCK','STUDY','STUFF','STUNG','STUNK','STUNT','STYLE','SUAVE','SUGAR','SUITE','SUNNY','SUPER','SURGE','SURLY','SWAMP','SWANK','SWATH','SWEAR','SWEAT','SWEEP','SWEET','SWELL','SWEPT','SWIFT','SWILL','SWINE','SWIPE','SWIRL','SWORD','SWORE','SWUNG','SYRUP','TABBY','TABLE','TACKY','TAFFY','TAINT','TAKEN','TALLY','TALON','TANGY','TAPIR','TARDY','TARRY','TASTE','TATTY','TAUNT','TAWNY','TEARY','TECHY','TEDDY','TENSE','TENTH','TEPID','TERSE','TESTY','THANE','THEME','THERE','THIEF','THINK','THIRD','THORN','THOSE','TIDAL','TIGHT','TIMER','TIMID','TIPSY','TIRED','TITLE','TOAST','TOKEN','TOLLY','TONIC','TOPAZ','TORSO','TOUCH','TOUGH','TOWEL','TOWER','TOXIC','TRACE','TRACK','TRADE','TRAIL','TRAIN','TRAMP','TRAPS','TRASH','TRAWL','TREAD','TREAT','TRICE','TRICK','TRIED','TRIPE','TRITE','TROLL','TROMP','TROOP','TROUT','TROVE','TRUCE','TRUCK','TRULY','TRUMP','TRUNK','TRUSS','TRUST','TRUTH','TUFFY','TULIP','TUMOR','TUNER','TUNIC','TUQUE','TURBO','TURFY','TWERP','TWICE','TWIGG','TWIST','UDDER','ULTRA','UNCLE','UNDER','UNITE','UNITY','UNTIL','UPPER','UPSET','USAGE','USHER','USUAL','UTERI','UTTER','VALID','VALUE','VALVE','VAPOR','VAULT','VAUNT','VEGAN','VENAL','VENGY','VENOM','VERSE','VIBES','VICAR','VIDEO','VIGOR','VINYL','VIOLA','VIPER','VIRAL','VISIT','VISOR','VISTA','VITAL','VIVID','VOCAL','VOICE','VOTER','VOWEL','VYING','WAFER','WAGER','WALTZ','WARTY','WASTE','WATCH','WATER','WAXEN','WEARY','WEDGE','WEEDY','WEIGH','WEIRD','WHALE','WHEAT','WHEEL','WHERE','WHICH','WHILE','WHOLE','WHOSE','WIDER','WIMPY','WINDY','WISPY','WITCH','WITTY','WOKEN','WOMAN','WORDY','WORLD','WORMY','WOUND','WRACK','WRATH','WREST','WRING','WRIST','WRONG','WROTH','YACHT']);
 
 function buildWordleWidget(p, container) {
   const MAX_TRIES = 8;
