@@ -275,8 +275,9 @@
       width:46px;height:46px;border:2px solid var(--border);border-radius:4px;
       display:flex;align-items:center;justify-content:center;
       font-family:var(--font-mono);font-size:1.2rem;font-weight:700;color:#fff;
-      text-transform:uppercase;transition:background .3s,border-color .3s;
-      user-select:none;
+      text-transform:uppercase;user-select:none;
+      transform-style:preserve-3d;will-change:transform;
+      transition:border-color .2s;
     }
     .wordle-cell.filled{border-color:var(--muted)}
     .wordle-cell.correct{background:#538d4e;border-color:#538d4e}
@@ -1991,7 +1992,6 @@ function buildWordleWidget(p, container) {
   const MAX_TRIES = 8;
   const WORD_LEN  = 5;
   const bankIdx   = PUZZLE_BANK.indexOf(p);
-  // Decrypt the answer async, then build the widget
   _dec(_encryptedPuzzleBank[bankIdx]).then(plainAnswer => {
   const answer = plainAnswer.toUpperCase();
   let currentRow  = 0;
@@ -1999,10 +1999,10 @@ function buildWordleWidget(p, container) {
   let board       = Array.from({length: MAX_TRIES}, () => Array(WORD_LEN).fill(''));
   let gameOver    = false;
 
-  // ── Grid ────────────────────────────────────────────────────
+  // ── Grid ──────────────────────────────────────────────────────
   const triesEl = document.createElement('div');
   triesEl.className = 'wordle-tries';
-  triesEl.textContent = `Attempt 1 of ${MAX_TRIES}`;
+  triesEl.textContent = 'Attempt 1 of ' + MAX_TRIES;
 
   const grid = document.createElement('div');
   grid.className = 'wordle-grid';
@@ -2021,7 +2021,7 @@ function buildWordleWidget(p, container) {
     cellEls.push(rowCells);
   }
 
-  // ── On-screen keyboard ───────────────────────────────────────
+  // ── On-screen keyboard ────────────────────────────────────────
   const kbRows = [['Q','W','E','R','T','Y','U','I','O','P'],
                   ['A','S','D','F','G','H','J','K','L'],
                   ['ENTER','Z','X','C','V','B','N','M','⌫']];
@@ -2043,15 +2043,16 @@ function buildWordleWidget(p, container) {
     kb.appendChild(rowEl);
   });
 
-  // ── Key logic ────────────────────────────────────────────────
+  // ── Input ─────────────────────────────────────────────────────
   function handleKey(k) {
     if (gameOver) return;
     if (k === '⌫' || k === 'BACKSPACE') {
       if (currentTile > 0) {
         currentTile--;
         board[currentRow][currentTile] = '';
-        cellEls[currentRow][currentTile].textContent = '';
-        cellEls[currentRow][currentTile].classList.remove('filled');
+        const cell = cellEls[currentRow][currentTile];
+        cell.textContent = '';
+        cell.classList.remove('filled');
       }
     } else if (k === 'ENTER') {
       submitGuess();
@@ -2060,79 +2061,102 @@ function buildWordleWidget(p, container) {
       const cell = cellEls[currentRow][currentTile];
       cell.textContent = k;
       cell.classList.add('filled');
-      cell.style.animation = 'wPop .15s ease';
-      setTimeout(() => cell.style.animation = '', 200);
+      // pop animation
+      cell.style.transform = 'scale(1.1)';
+      setTimeout(() => cell.style.transform = '', 100);
       currentTile++;
     }
   }
 
+  function revealRow(rowIdx, result, onDone) {
+    // Flip each cell one by one with a 300ms gap
+    // Uses CSS transform: rotateX so we swap content at the midpoint
+    result.forEach((state, i) => {
+      const cell = cellEls[rowIdx][i];
+      const delay = i * 300;
+
+      setTimeout(() => {
+        // Start flip — rotate to 90deg (face hidden)
+        cell.style.transition = 'transform 0.2s ease-in';
+        cell.style.transform  = 'rotateX(90deg)';
+      }, delay);
+
+      setTimeout(() => {
+        // At midpoint: apply colour, then rotate back
+        cell.classList.remove('filled', 'active-row');
+        cell.classList.add(state);
+        cell.style.transition = 'transform 0.2s ease-out';
+        cell.style.transform  = 'rotateX(0deg)';
+        // Update keyboard
+        const btn = keyMap[board[rowIdx][i]];
+        if (btn) {
+          const cur = btn.classList;
+          if (state === 'correct') { cur.remove('present','absent'); cur.add('correct'); }
+          else if (state === 'present' && !cur.contains('correct')) { cur.remove('absent'); cur.add('present'); }
+          else if (state === 'absent'  && !cur.contains('correct') && !cur.contains('present')) cur.add('absent');
+        }
+      }, delay + 200);
+    });
+
+    // After all tiles revealed
+    setTimeout(onDone, result.length * 300 + 250);
+  }
+
   function submitGuess() {
     if (currentTile < WORD_LEN) {
-      // Shake row
-      cellEls[currentRow].forEach(c => { c.style.animation = 'wShake .4s ease'; setTimeout(() => c.style.animation = '', 500); });
+      cellEls[currentRow].forEach(c => {
+        c.style.animation = 'wShake .4s ease';
+        setTimeout(() => c.style.animation = '', 500);
+      });
       showMsg(document.getElementById('puzzleMsg'), 'error', 'Not enough letters!');
-      setTimeout(() => clearMsg(document.getElementById('puzzleMsg')), 1000);
-      return;
-    }
-    const guess = board[currentRow].join('');
-    if (!VALID_WORDS.has(guess)) {
-      cellEls[currentRow].forEach(c => { c.style.animation = 'wShake .4s ease'; setTimeout(() => c.style.animation = '', 500); });
-      showMsg(document.getElementById('puzzleMsg'), 'error', 'Not a valid word!');
-      setTimeout(() => clearMsg(document.getElementById('puzzleMsg')), 1000);
+      setTimeout(() => clearMsg(document.getElementById('puzzleMsg')), 1200);
       return;
     }
 
+    const guess = board[currentRow].join('');
+    // Any 5-letter combination is accepted — no word list restriction
+
     // Score the guess
-    const result = Array(WORD_LEN).fill('absent');
-    const ansArr = answer.split('');
-    const gArr   = guess.split('');
-    // First pass: correct
-    gArr.forEach((ch, i) => { if (ch === ansArr[i]) { result[i] = 'correct'; ansArr[i] = null; gArr[i] = null; } });
-    // Second pass: present
+    const result  = Array(WORD_LEN).fill('absent');
+    const ansArr  = answer.split('');
+    const gArr    = guess.split('');
+    // Pass 1: exact matches
+    gArr.forEach((ch, i) => {
+      if (ch === ansArr[i]) { result[i] = 'correct'; ansArr[i] = null; gArr[i] = null; }
+    });
+    // Pass 2: present but wrong position
     gArr.forEach((ch, i) => {
       if (!ch) return;
       const j = ansArr.indexOf(ch);
       if (j !== -1) { result[i] = 'present'; ansArr[j] = null; }
     });
 
-    // Animate cells flipping in sequence
-    result.forEach((state, i) => {
-      setTimeout(() => {
-        const cell = cellEls[currentRow][i];
-        cell.style.animation = 'wFlip .5s ease';
-        setTimeout(() => { cell.classList.add(state); cell.style.animation = ''; }, 250);
-        // Update keyboard key colour (only upgrade: correct > present > absent)
-        const btn = keyMap[board[currentRow][i]];
-        if (btn) {
-          const cur = btn.classList;
-          if (state === 'correct') { cur.remove('present','absent'); cur.add('correct'); }
-          else if (state === 'present' && !cur.contains('correct')) { cur.remove('absent'); cur.add('present'); }
-          else if (state === 'absent' && !cur.contains('correct') && !cur.contains('present')) cur.add('absent');
-        }
-      }, i * 120);
-    });
-
     const won = result.every(r => r === 'correct');
+    const rowJustGuessed = currentRow;
     currentRow++;
     currentTile = 0;
 
-    setTimeout(() => {
+    // Disable input during reveal
+    gameOver = true;
+
+    revealRow(rowJustGuessed, result, () => {
+      gameOver = false;
       if (won) {
         gameOver = true;
         showMsg(document.getElementById('puzzleMsg'), 'success', 'Brilliant! You got it!');
         setTimeout(() => advancePuzzle(), 900);
       } else if (currentRow >= MAX_TRIES) {
         gameOver = true;
-        showMsg(document.getElementById('puzzleMsg'), 'error', `Out of tries! The word was ${answer}.`);
+        showMsg(document.getElementById('puzzleMsg'), 'error', 'Out of tries! The word was ' + answer + '.');
         setTimeout(() => failPuzzle(), 1400);
       } else {
-        triesEl.textContent = `Attempt ${currentRow + 1} of ${MAX_TRIES}`;
+        triesEl.textContent = 'Attempt ' + (currentRow + 1) + ' of ' + MAX_TRIES;
         cellEls[currentRow].forEach(c => c.classList.add('active-row'));
       }
-    }, WORD_LEN * 120 + 200);
+    });
   }
 
-  // ── Physical keyboard ────────────────────────────────────────
+  // ── Physical keyboard ──────────────────────────────────────────
   let kbListener = e => {
     if (!document.getElementById('step-puzzle').classList.contains('active')) return;
     if (e.ctrlKey || e.metaKey) return;
@@ -2140,14 +2164,13 @@ function buildWordleWidget(p, container) {
     if (k === 'BACKSPACE' || k === 'ENTER' || /^[A-Z]$/.test(k)) {
       e.preventDefault();
       handleKey(k === 'BACKSPACE' ? '⌫' : k);
-      // Flash on-screen key
       const btn = keyMap[k === 'BACKSPACE' ? '⌫' : k === 'ENTER' ? 'ENTER' : k];
-      if (btn) { btn.style.opacity = '.5'; setTimeout(() => btn.style.opacity = '', 120); }
+      if (btn) { btn.style.opacity = '.5'; setTimeout(() => btn.style.opacity = '', 100); }
     }
   };
   document.addEventListener('keydown', kbListener);
   new MutationObserver(() => {
-    if (!document.body.contains(grid)) { document.removeEventListener('keydown', kbListener); }
+    if (!document.body.contains(grid)) document.removeEventListener('keydown', kbListener);
   }).observe(document.getElementById('puzzleWidget'), {childList: true});
 
   container.appendChild(triesEl);
@@ -2155,6 +2178,7 @@ function buildWordleWidget(p, container) {
   container.appendChild(kb);
   }); // end _dec promise
 }
+
 
 // ════════════════════════════════════════════════════════════════
 //  WIDGET: SNAKE  (WASD / arrow keys + d-pad, fail = go back)
