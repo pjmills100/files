@@ -1476,6 +1476,8 @@ function failPuzzle(){
 // ════════════════════════════════════════════════════════════════
 function loadPuzzle(){
   _failLock = false; // reset fail lock for new puzzle
+  const btn=document.getElementById('puzzleSubmitBtn');
+  if(btn)btn.disabled=false;
   const p=puzzleQueue[puzzleIndex];
 
   document.getElementById('puzzleCounter').textContent =`Challenge ${puzzleIndex+1} of ${TOTAL_PUZZLES}`;
@@ -1548,6 +1550,9 @@ function loadPuzzle(){
 //  BACKEND HOOK: replace with fetch('/api/verify-puzzle',...)
 // ════════════════════════════════════════════════════════════════
 function checkPuzzle(){
+  const btn=document.getElementById('puzzleSubmitBtn');
+  if(btn&&btn.disabled)return;
+  if(btn){btn.disabled=true;setTimeout(()=>{if(btn)btn.disabled=false;},1500);}
   const p  =puzzleQueue[puzzleIndex];
   const msg=document.getElementById('puzzleMsg');
 
@@ -1563,9 +1568,11 @@ function checkPuzzle(){
     return;
 
   }else if(p.uiType==='order'){
-    const current=[...document.querySelectorAll('.drag-item')].map(el=>el.dataset.val);
+    const widget=document.getElementById('puzzleWidget');
+    const current=[...widget.querySelectorAll('.drag-item')].map(el=>el.dataset.val);
+    if(!current.length){showMsg(msg,'error','Drag the items into order first.');return;}
     if(JSON.stringify(current)===JSON.stringify(p.answer)){advancePuzzle();}
-    else{failPuzzle();}
+    else{showMsg(msg,'error','Wrong order — try rearranging!');setTimeout(()=>failPuzzle(),1000);}
 
   }else if(p.uiType==='slider'){
     const val=parseInt(document.getElementById('puzzleSlider').value);
@@ -1605,6 +1612,7 @@ function buildChoiceWidget(p,container){
 function buildOrderWidget(p,container){
   const list=document.createElement('div');
   list.className='drag-list';
+  list.id='orderList';
   let items=shuffle(p.items);
   let attempts=0;
   while(JSON.stringify(items)===JSON.stringify(p.answer)&&attempts<10){items=shuffle(p.items);attempts++;}
