@@ -2133,13 +2133,13 @@ function buildWordleWidget(p, container) {
 
     const won = result.every(r => r === 'correct');
     const rowJustGuessed = currentRow;
-    currentRow++;
     currentTile = 0;
 
     // Disable input during reveal
     gameOver = true;
 
     revealRow(rowJustGuessed, result, () => {
+      currentRow++;
       gameOver = false;
       if (won) {
         gameOver = true;
