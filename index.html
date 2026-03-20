@@ -287,17 +287,17 @@
     .wordle-keyboard{display:flex;flex-direction:column;gap:5px;align-items:center;margin-top:8px}
     .wordle-kb-row{display:flex;gap:4px}
     .wordle-key{
-      min-width:32px;height:40px;padding:0 6px;background:var(--surface2);
-      border:1px solid var(--border);border-radius:4px;color:var(--text);
+      min-width:32px;height:40px;padding:0 6px;background:#3a4150;
+      border:1px solid #4a5160;border-radius:4px;color:var(--text);
       font-family:var(--font-mono);font-size:.78rem;font-weight:700;cursor:pointer;
-      transition:background .2s,border-color .2s,transform .1s;user-select:none;
+      transition:background .2s,border-color .2s,color .2s,transform .1s;user-select:none;
       display:flex;align-items:center;justify-content:center;
     }
     .wordle-key:hover{background:var(--accent-dim);border-color:var(--accent)}
     .wordle-key:active{transform:scale(.92)}
     .wordle-key.correct{background:#538d4e!important;border-color:#538d4e!important;color:#fff}
     .wordle-key.present{background:#b59f3b!important;border-color:#b59f3b!important;color:#fff}
-    .wordle-key.absent {background:#3a3a3c!important;border-color:#3a3a3c!important;color:#6b6b80}
+    .wordle-key.absent {background:#1e2025!important;border-color:#1e2025!important;color:#3a4450!important;text-decoration:none}
     .wordle-tries{font-family:var(--font-mono);font-size:.7rem;color:var(--muted);text-align:center;margin-bottom:8px}
     @keyframes wPop{0%{transform:scale(1)}50%{transform:scale(1.12)}100%{transform:scale(1)}}
     @keyframes wShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
