@@ -1251,6 +1251,11 @@ async function checkPuzzleAnswer(idx, candidate) {
 let puzzleQueue  = [];
 let puzzleIndex  = 0;
 const usedPuzzleIds = new Set(); // questions seen this session (pass or fail — never repeat)
+const _widgetCleanups = []; // functions to call before loading a new puzzle widget
+
+function _cleanupWidget() {
+  while (_widgetCleanups.length) _widgetCleanups.pop()();
+}
 
 // ════════════════════════════════════════════════════════════════
 //  HELPERS
@@ -1443,7 +1448,10 @@ function advancePuzzle(){
 }
 
 // FAIL A PUZZLE: step back one, replace that slot with a new puzzle of same type
+let _failLock = false;
 function failPuzzle(){
+  if (_failLock) return;
+  _failLock = true;
   // Mark the failed puzzle as used — it won't appear again this session
   usedPuzzleIds.add(puzzleQueue[puzzleIndex].question);
   const failedType=puzzleQueue[puzzleIndex].uiType;
@@ -1467,6 +1475,7 @@ function failPuzzle(){
 //  LOAD PUZZLE
 // ════════════════════════════════════════════════════════════════
 function loadPuzzle(){
+  _failLock = false; // reset fail lock for new puzzle
   const p=puzzleQueue[puzzleIndex];
 
   document.getElementById('puzzleCounter').textContent =`Challenge ${puzzleIndex+1} of ${TOTAL_PUZZLES}`;
@@ -1485,6 +1494,7 @@ function loadPuzzle(){
   const widget    =document.getElementById('puzzleWidget');
   const textArea  =document.getElementById('puzzleTextArea');
   const submitBtn =document.getElementById('puzzleSubmitBtn');
+  _cleanupWidget(); // remove all stale event listeners from previous widget
   widget.innerHTML='';
   textArea.style.display='none';
   submitBtn.style.display='';
@@ -1676,14 +1686,15 @@ function buildSeqWidget(p,container){
   });
   container.appendChild(hint);container.appendChild(grid);
   const cells=[...grid.querySelectorAll('.seq-cell')];
-  let userInput=[],accepting=false;
+  let userInput=[],accepting=false,_seqCancelled=false;
+  _widgetCleanups.push(()=>{_seqCancelled=true;accepting=false;});
   function flash(idx,delay){
     return new Promise(res=>setTimeout(()=>{
       cells[idx].classList.add('flash');
       setTimeout(()=>{cells[idx].classList.remove('flash');res()},500);
     },delay));
   }
-  async function playSequence(){
+  async function playSequence(){if(_seqCancelled)return;
     hint.textContent='Watch the sequence…';
     cells.forEach(c=>c.style.pointerEvents='none');
     await new Promise(r=>setTimeout(r,600));
@@ -1695,7 +1706,7 @@ function buildSeqWidget(p,container){
   }
   cells.forEach(cell=>{
     cell.addEventListener('click',()=>{
-      if(!accepting)return;
+      if(!accepting||_seqCancelled)return;
       const idx=parseInt(cell.dataset.idx);
       userInput.push(idx);
       cell.classList.add('flash');setTimeout(()=>cell.classList.remove('flash'),300);
@@ -1885,11 +1896,9 @@ function buildFlipWidget(p,container){
   };
   document.addEventListener('keydown',kbListener);
 
-  new MutationObserver(()=>{
-    if(!document.body.contains(grid)){
-      document.removeEventListener('keydown',kbListener);
-    }
-  }).observe(document.getElementById('puzzleWidget'),{childList:true});
+  _widgetCleanups.push(() => {
+    document.removeEventListener('keydown', kbListener);
+  });
 
   container.appendChild(attemptsBar);
   container.appendChild(hint);
@@ -1968,13 +1977,9 @@ function buildTypeWordWidget(p,container){
   document.addEventListener('keydown',kbListener);
 
   // Clean up listener when widget is swapped out
-  const observer=new MutationObserver(()=>{
-    if(!document.body.contains(wrap)){
-      document.removeEventListener('keydown',kbListener);
-      observer.disconnect();
-    }
+  _widgetCleanups.push(() => {
+    document.removeEventListener('keydown', kbListener);
   });
-  observer.observe(document.getElementById('puzzleWidget'),{childList:true});
 
   container.appendChild(wrap);
   }); // end _dec promise
@@ -1998,6 +2003,8 @@ function buildWordleWidget(p, container) {
   let currentTile = 0;
   let board       = Array.from({length: MAX_TRIES}, () => Array(WORD_LEN).fill(''));
   let gameOver    = false;
+  let _wCancelled = false;
+  _widgetCleanups.push(() => { _wCancelled = true; gameOver = true; });
 
   // ── Grid ──────────────────────────────────────────────────────
   const triesEl = document.createElement('div');
@@ -2069,6 +2076,7 @@ function buildWordleWidget(p, container) {
   }
 
   function revealRow(rowIdx, result, onDone) {
+    if (_wCancelled) return;
     // Flip each cell one by one with a 300ms gap
     // Uses CSS transform: rotateX so we swap content at the midpoint
     result.forEach((state, i) => {
@@ -2169,9 +2177,9 @@ function buildWordleWidget(p, container) {
     }
   };
   document.addEventListener('keydown', kbListener);
-  new MutationObserver(() => {
-    if (!document.body.contains(grid)) document.removeEventListener('keydown', kbListener);
-  }).observe(document.getElementById('puzzleWidget'), {childList: true});
+  _widgetCleanups.push(() => {
+    document.removeEventListener('keydown', kbListener);
+  });
 
   container.appendChild(triesEl);
   container.appendChild(grid);
@@ -2288,6 +2296,7 @@ function buildSnakeWidget(p, container) {
   }
 
   function tick() {
+    if (!running) return;
     dir = nextDir;
     const head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
 
@@ -2354,12 +2363,10 @@ function buildSnakeWidget(p, container) {
     if (d) { e.preventDefault(); setDir(d); }
   };
   document.addEventListener('keydown', kbListener);
-  new MutationObserver(() => {
-    if (!document.body.contains(canvas)) {
-      document.removeEventListener('keydown', kbListener);
-      if (intervalId) clearInterval(intervalId);
-    }
-  }).observe(document.getElementById('puzzleWidget'), {childList: true});
+  _widgetCleanups.push(() => {
+    document.removeEventListener('keydown', kbListener);
+    if (intervalId) clearInterval(intervalId);
+  });
 
   draw();
   wrap.appendChild(hud);
